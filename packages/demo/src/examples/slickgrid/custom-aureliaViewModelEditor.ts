@@ -1,5 +1,4 @@
-import type { ICustomElementController } from '@aurelia/runtime-html';
-import type { IBindingContext } from '@aurelia/runtime';
+import type { IBindingContext, ICustomElementController } from '@aurelia/runtime-html';
 
 import {
   AureliaUtilService,
@@ -40,9 +39,9 @@ export class CustomAureliaViewModelEditor implements Editor {
 
   /** Aurelia Util Service (could be inside the Grid Options Params or the Editor Params ) */
   get aureliaUtilService(): AureliaUtilService {
-    let aureliaUtilService = this.gridOptions && this.gridOptions.params && this.gridOptions.params.aureliaUtilService;
+    let aureliaUtilService = this.gridOptions?.params?.aureliaUtilService;
     if (!aureliaUtilService || !(aureliaUtilService instanceof AureliaUtilService)) {
-      aureliaUtilService = this.columnEditor && this.columnEditor.params && this.columnEditor.params.aureliaUtilService;
+      aureliaUtilService = this.columnEditor?.params?.aureliaUtilService;
     }
     return aureliaUtilService;
   }

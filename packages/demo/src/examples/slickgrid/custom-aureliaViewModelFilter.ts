@@ -1,5 +1,4 @@
-import type { ICustomElementController } from '@aurelia/runtime-html';
-import type { IBindingContext } from '@aurelia/runtime';
+import type { IBindingContext, ICustomElementController } from '@aurelia/runtime-html';
 
 import {
   AureliaUtilService,
