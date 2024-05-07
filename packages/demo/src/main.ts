@@ -5,6 +5,7 @@ import { MyApp } from './my-app';
 // However, css files imported in other js/ts files are processed by style-loader.
 // import shared from './shared.css';
 import { AureliaSlickGridConfiguration } from 'aurelia-slickgrid';
+import DOMPurify from 'dompurify';
 import { I18nConfiguration } from '@aurelia/i18n';
 import Fetch from 'i18next-fetch-backend';
 import { RouterConfiguration } from '@aurelia/router';
@@ -53,6 +54,9 @@ Aurelia
   .register(AureliaSlickGridConfiguration.customize(config => {
     // change any of the default global options
     config.options.gridMenu!.iconCssClass = 'mdi mdi-menu';
+
+    // we strongly suggest you add DOMPurify as a sanitizer
+    config.options.sanitizer = (dirtyHtml) => DOMPurify.sanitize(dirtyHtml, { ADD_ATTR: ['level'], RETURN_TRUSTED_TYPE: true });
   }))
   .register(DecimalValueConverter, StringifyValueConverter, DateFormatValueConverter)
   .app(MyApp)
