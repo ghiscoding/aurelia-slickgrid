@@ -9,10 +9,14 @@ const presetLowestDay = format(addDay(new Date(), -2), 'YYYY-MM-DD');
 const presetHighestDay = format(addDay(new Date(), today.getDate() < 14 ? 30 : 25), 'YYYY-MM-DD');
 
 function isBetween(inputDate: Date | string, minDate: Date | string, maxDate: Date | string, isInclusive = false) {
+  let valid = false;
   if (isInclusive) {
-    return isEqual(inputDate, minDate) || isEqual(inputDate, maxDate);
+    valid = isEqual(inputDate, minDate) || isEqual(inputDate, maxDate);
   }
-  return isAfter(inputDate, minDate) || isBefore(inputDate, maxDate);
+  if (!valid) {
+    valid = isAfter(inputDate, minDate) && isBefore(inputDate, maxDate);
+  }
+  return valid;
 }
 
 describe('Example 23 - Range Filters', () => {
