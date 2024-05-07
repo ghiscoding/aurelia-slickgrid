@@ -71,13 +71,12 @@ import { SlickRowDetailView } from '../extensions/slickRowDetailView';
 
 @customElement({
   name: 'aurelia-slickgrid',
-  /* eslint-disable */
   template: `
 <div id="slickGridContainer-$\{gridId\}" class="grid-pane">
   <!-- Header slot if you need to create a complex custom header -->
   <au-slot name="slickgrid-header"></au-slot>
 
-  <div id.bind="gridId" class="slickgrid-container" focusout.trigger="commitEdit($event.target)"
+  <div id.bind="gridId" class="slickgrid-container"
     ref="gridContainer">
   </div>
 
@@ -85,7 +84,6 @@ import { SlickRowDetailView } from '../extensions/slickRowDetailView';
   <au-slot name="slickgrid-footer"></au-slot>
 </div>
 ` })
-/* eslint-enable */
 export class AureliaSlickgridCustomElement {
   protected _columnDefinitions: Column[] = [];
   protected _currentDatasetLength = 0;
@@ -319,16 +317,13 @@ export class AureliaSlickgridCustomElement {
     // RxJS Resource is in this lot because it has to be registered before anything else and doesn't require SlickGrid to be initialized
     this.preRegisterResources();
 
-    // for convenience to the user, we provide the property "editor" as an Aurelia-Slickgrid editor complex object
-    // however "editor" is used internally by SlickGrid for it's own Editor Factory
-    // so in our lib we will swap "editor" and copy it into a new property called "internalColumnEditor"
-    // then take back "editor.model" and make it the new "editor" so that SlickGrid Editor Factory still works
+    // prepare and load all SlickGrid editors, if an async editor is found then we'll also execute it.
     // Wrap each editor class in the Factory resolver so consumers of this library can use
     // dependency injection. Aurelia will resolve all dependencies when we pass the container
     // and allow slickgrid to pass its arguments to the editors constructor last
     // when slickgrid creates the editor
     // https://github.com/aurelia/dependency-injection/blob/master/src/resolvers.js
-    this._columnDefinitions = this.swapInternalEditorToSlickGridFactoryEditor(this._columnDefinitions);
+    this._columnDefinitions = this.loadSlickGridEditors(this._columnDefinitions);
 
     // if the user wants to automatically add a Custom Editor Formatter, we need to call the auto add function again
     if (this.gridOptions.autoAddCustomEditorFormatter) {
@@ -590,28 +585,6 @@ export class AureliaSlickgridCustomElement {
   columnDefinitionsChanged() {
     this.columnDefinitionsHandler();
     this.observeColumnDefinitions();
-  }
-
-  /**
-   * Commits the current edit to the grid
-   */
-  commitEdit(target: Element) {
-    if (this.grid.getOptions().autoCommitEdit) {
-      const activeNode = this.grid.getActiveCellNode();
-
-      // a timeout must be set or this could come into conflict when slickgrid
-      // tries to commit the edit when going from one editor to another on the grid
-      // through the click event. If the timeout was not here it would
-      // try to commit/destroy the twice, which would throw an
-      // error about the element not being in the DOM
-      setTimeout(() => {
-        // make sure the target is the active editor so we do not
-        // commit prematurely
-        if (activeNode?.contains(target) && this.grid.getEditorLock().isActive() && !target?.classList?.contains('autocomplete')) {
-          this.grid.getEditorLock().commitCurrentEdit();
-        }
-      });
-    }
   }
 
   datasetChanged(newDataset: any[], oldValue: any[]) {
@@ -1042,8 +1015,8 @@ export class AureliaSlickgridCustomElement {
    */
   updateColumnDefinitionsList(newColumnDefinitions: Column[]) {
     if (newColumnDefinitions) {
-      // map/swap the internal library Editor to the SlickGrid Editor factory
-      newColumnDefinitions = this.swapInternalEditorToSlickGridFactoryEditor(newColumnDefinitions);
+      // map the Editor model to editorClass and load editor collectionAsync
+      newColumnDefinitions = this.loadSlickGridEditors(newColumnDefinitions);
 
       // if the user wants to automatically add a Custom Editor Formatter, we need to call the auto add function again
       if (this.gridOptions.autoAddCustomEditorFormatter) {
@@ -1477,13 +1450,8 @@ export class AureliaSlickgridCustomElement {
     return flatDatasetOutput;
   }
 
-  /**
-   * For convenience to the user, we provide the property "editor" as an Aurelia-Slickgrid editor complex object
-   * however "editor" is used internally by SlickGrid for it's own Editor Factory
-   * so in our lib we will swap "editor" and copy it into a new property called "internalColumnEditor"
-   * then take back "editor.model" and make it the new "editor" so that SlickGrid Editor Factory still works
-   */
-  protected swapInternalEditorToSlickGridFactoryEditor(columnDefinitions: Column[]) {
+  /** Prepare and load all SlickGrid editors, if an async editor is found then we'll also execute it. */
+  protected loadSlickGridEditors(columnDefinitions: Column[]): Column[] {
     if (columnDefinitions.some(col => `${col.id}`.includes('.'))) {
       console.error('[Aurelia-Slickgrid] Make sure that none of your Column Definition "id" property includes a dot in its name because that will cause some problems with the Editors. For example if your column definition "field" property is "user.firstName" then use "firstName" as the column "id".');
     }
@@ -1497,29 +1465,18 @@ export class AureliaSlickgridCustomElement {
       return {
         ...column,
         editorClass: column.editor && this.container.getFactory(column.editor.model).Type,
-        // @deprecated `internalColumnEditor`, this will no longer be useful in the next major
-        internalColumnEditor: { ...column.editor }
       };
     });
   }
 
   /**
-   * Update the "internalColumnEditor.collection" property.
+   * When the Editor(s) has a "editor.collection" property, we'll load the async collection.
    * Since this is called after the async call resolves, the pointer will not be the same as the "column" argument passed.
-   * Once we found the new pointer, we will reassign the "editor" and "collection" to the "internalColumnEditor" so it has newest collection
    */
   protected updateEditorCollection<T = any>(column: Column<T>, newCollection: T[]) {
     if (this.grid && column.editor) {
       column.editor.collection = newCollection;
       column.editor.disabled = false;
-
-      // find the new column reference pointer & re-assign the new editor to the internalColumnEditor
-      if (Array.isArray(this._columnDefinitions)) {
-        const columnRef = this._columnDefinitions.find((col: Column) => col.id === column.id);
-        if (columnRef) {
-          columnRef.internalColumnEditor = column.editor;
-        }
-      }
 
       // get current Editor, remove it from the DOM then re-enable it and re-render it with the new collection.
       const currentEditor = this.grid.getCellEditor() as AutocompleterEditor | SelectEditor;

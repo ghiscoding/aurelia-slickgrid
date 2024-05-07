@@ -51,8 +51,6 @@ Aurelia
     };
   }))
   .register(AureliaSlickGridConfiguration.customize(config => {
-    import('flatpickr/dist/l10n/fr');
-
     // change any of the default global options
     config.options.gridMenu!.iconCssClass = 'fa fa-bars';
   }))

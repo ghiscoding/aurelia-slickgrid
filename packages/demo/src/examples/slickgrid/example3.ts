@@ -12,13 +12,13 @@ import {
   type EditorValidator,
   FieldType,
   Filters,
-  type FlatpickrOption,
   Formatters,
   type GridOption,
   type OnEventArgs,
   OperatorType,
   SlickGlobalEditorLock,
   SortComparers,
+  type VanillaCalendarOption,
 } from 'aurelia-slickgrid';
 import { CustomInputEditor } from './custom-inputEditor';
 import { CustomInputFilter } from './custom-inputFilter';
@@ -253,9 +253,9 @@ export class Example3 {
         saveOutputType: FieldType.dateUtc, // save output date format
         editor: {
           model: Editors.date,
-          // override any of the Flatpickr options through "filterOptions"
+          // override any of the calendar options through "filterOptions"
           // please note that there's no TSlint on this property since it's generic for any filter, so make sure you entered the correct filter option(s)
-          editorOptions: { minDate: 'today' } as FlatpickrOption
+          editorOptions: { range: { min: 'today' } } as VanillaCalendarOption
         },
       }, {
         id: 'cityOfOrigin', name: 'City of Origin', field: 'cityOfOrigin',

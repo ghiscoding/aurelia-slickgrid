@@ -23,9 +23,3 @@ Object.defineProperty(window, 'getComputedStyle', {
     }
   })
 });
-
-// Jest has a hard time with Flatpickr/MomentJS because they export as default, to bypass this problem we can mock the require .default
-jest.mock('flatpickr', () => {
-  const actual = jest.requireActual('flatpickr');
-  return { __esModule: true, ...actual, default: actual };
-});
