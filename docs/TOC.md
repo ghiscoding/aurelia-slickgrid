@@ -10,7 +10,6 @@
 
 * [Dark Mode](styling/dark-mode.md)
 * [Styling CSS/SASS/Themes](styling/styling.md)
-* [SVG Icons](styling/svg-icons.md)
 
 ## Column Functionalities
 
@@ -18,6 +17,7 @@
 * [Editors](column-functionalities/editors.md)
   * [new Autocomplete (Kraaden-lib)](column-functionalities/editors/autocomplete-editor-kraaden.md)
   * [Date Picker (flatpickr)](column-functionalities/editors/date-editor-flatpickr.md)
+  * [Date Picker (vanilla-calendar)](column-functionalities/editors/date-editor-(vanilla-calendar).md)
   * [LongText (textarea)](column-functionalities/editors/longtext-editor-textarea.md)
   * [Select Dropdown Editor (single/multiple)](column-functionalities/editors/select-dropdown-editor.md)
 * [Filters](column-functionalities/filters/README.md)

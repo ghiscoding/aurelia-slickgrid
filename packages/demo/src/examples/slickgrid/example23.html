@@ -4,7 +4,7 @@
     <a style="font-size: 18px"
         target="_blank"
         href="https://github.com/ghiscoding/aurelia-slickgrid/blob/master/packages/demo/src/examples/slickgrid/example23.ts">
-      <span class="fa fa-link"></span> code
+      <span class="mdi mdi-link-variant"></span> code
     </a>
   </span>
 </h2>
@@ -19,25 +19,25 @@
 
 <div class="row row-cols-lg-auto g-1 align-items-center">
   <div class="col">
-    <button class="btn btn-outline-secondary btn-sm" data-test="clear-filters"
+    <button class="btn btn-outline-secondary btn-sm btn-icon" data-test="clear-filters"
             click.trigger="aureliaGrid.filterService.clearFilters()">
       Clear Filters
     </button>
   </div>
   <div class="col">
-    <button class="btn btn-outline-secondary btn-sm" data-test="clear-sorting"
+    <button class="btn btn-outline-secondary btn-sm btn-icon" data-test="clear-sorting"
             click.trigger="aureliaGrid.sortService.clearSorting()">
       Clear Sorting
     </button>
   </div>
   <div class="col">
-    <button class="btn btn-outline-secondary btn-sm" data-test="set-dynamic-filter"
+    <button class="btn btn-outline-secondary btn-sm btn-icon" data-test="set-dynamic-filter"
             click.trigger="setFiltersDynamically()">
       Set Filters Dynamically
     </button>
   </div>
   <div class="col">
-    <button class="btn btn-outline-secondary btn-sm" data-test="set-dynamic-sorting"
+    <button class="btn btn-outline-secondary btn-sm btn-icon" data-test="set-dynamic-sorting"
             click.trigger="setSortingDynamically()">
       Set Sorting Dynamically
     </button>
@@ -55,8 +55,8 @@
 
 <div class="row mt-2">
   <div class="col">
-    <button class="btn btn-outline-secondary btn-sm" data-test="language" click.trigger="switchLanguage()">
-      <i class="fa fa-language"></i>
+    <button class="btn btn-outline-secondary btn-sm btn-icon" data-test="language" click.trigger="switchLanguage()">
+      <i class="mdi mdi-translate"></i>
       Switch Language
     </button>
     <b>Locale:</b> <span style="font-style: italic" data-test="selected-locale">${selectedLanguage + '.json'}</span>

@@ -68,7 +68,7 @@ export class Example19 {
       {
         id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven',
         minWidth: 100,
-        formatter: Formatters.checkmark, type: FieldType.boolean,
+        formatter: Formatters.checkmarkMaterial, type: FieldType.boolean,
         filterable: true, sortable: true,
         filter: {
           collection: [{ value: '', label: '' }, { value: true, label: 'True' }, { value: false, label: 'False' }],

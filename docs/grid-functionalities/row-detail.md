@@ -136,7 +136,7 @@ Most of the time we would get data asynchronously, during that time we can show 
 ###### View (`preload.html`)
 ```html
 <template>
-  <h4><i class="fa fa-refresh fa-spin fa-2x fa-fw"></i>Loading...</h4>
+  <h4><i class="mdi mdi-sync mdi-spin-1s mdi-50px"></i>Loading...</h4>
 </template>
 ```
 
@@ -184,7 +184,7 @@ Same concept as the preload, we pass an Aurelia ViewModel to the `viewModel` tha
     <div class="row">
       <div class="col-xs-3"><label>Start:</label> <span>${model.start | dateFormat: 'YYYY-MM-DD'}</span></div>
       <div class="col-xs-3"><label>Finish:</label> <span>${model.finish | dateFormat: 'YYYY-MM-DD'}</span></div>
-      <div class="col-xs-2"><label>Effort Driven:</label> <i class.bind="model.effortDriven ? 'fa fa-check' : ''"></i></div>
+      <div class="col-xs-2"><label>Effort Driven:</label> <i class.bind="model.effortDriven ? 'mdi mdi-check' : ''"></i></div>
     </div>
 
     <hr>
@@ -192,7 +192,7 @@ Same concept as the preload, we pass an Aurelia ViewModel to the `viewModel` tha
     <h4>
       Find out who is the Assignee
       <small>
-        <button class="btn btn-primary btn-sm" click.delegate="alertAssignee(model.assignee)">Click Me</button>
+        <button class="btn btn-primary btn-sm btn-icon" click.delegate="alertAssignee(model.assignee)">Click Me</button>
       </small>
     </h4>
   </div>
@@ -217,9 +217,9 @@ export class DetailViewCustomElement {
   bind(bindingContext, overrideContext) {
     if (bindingContext.model) {
       this.model = bindingContext.model;
-    } else if (overrideContext && overrideContext.bindingContext && overrideContext.bindingContext.model) {
+    } else if (overrideContext?.bindingContext?.model) {
       this.model = overrideContext.bindingContext.model;
-    } else if (overrideContext && overrideContext.parentOverrideContext && overrideContext.parentOverrideContext.bindingContext && overrideContext.parentOverrideContext.bindingContext.model) {
+    } else if (overrideContext?.parentOverrideContext?.bindingContext?.model) {
       this.model = overrideContext.parentOverrideContext.bindingContext.model;
     }
   }

@@ -4,7 +4,7 @@
     <a style="font-size: 18px"
         target="_blank"
         href="https://github.com/ghiscoding/aurelia-slickgrid/blob/master/packages/demo/src/examples/slickgrid/example5.ts">
-      <span class="fa fa-link"></span> code
+      <span class="mdi mdi-link-variant"></span> code
     </a>
   </span>
 </h2>
@@ -24,7 +24,7 @@
     <div class.bind="status.class" role="alert" data-test="status">
       <strong>Status: </strong> ${status.text}
       <span hidden.bind="!processing">
-        <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
+        <i class="mdi mdi-sync mdi-spin"></i>
       </span>
     </div>
   </div>
@@ -37,11 +37,11 @@
 
 <div class="row">
   <div class="col-sm-4">
-    <button class="btn btn-outline-secondary btn-sm" data-test="set-dynamic-filter"
+    <button class="btn btn-outline-secondary btn-sm btn-icon" data-test="set-dynamic-filter"
             click.trigger="setFiltersDynamically()">
       Set Filters Dynamically
     </button>
-    <button class="btn btn-outline-secondary btn-sm" data-test="set-dynamic-sorting"
+    <button class="btn btn-outline-secondary btn-sm btn-icon" data-test="set-dynamic-sorting"
             click.trigger="setSortingDynamically()">
       Set Sorting Dynamically
     </button>
@@ -93,10 +93,10 @@
     <span class="ms-2">
       <label>Programmatically go to first/last page:</label>
       <button class="btn btn-outline-secondary btn-xs px-2" data-test="goto-first-page" click.trigger="goToFirstPage()">
-        <i class="fa fa-caret-left fa-lg"></i>
+        <i class="mdi mdi-page-first"></i>
       </button>
       <button class="btn btn-outline-secondary btn-xs px-2" data-test="goto-last-page" click.trigger="goToLastPage()">
-        <i class="fa fa-caret-right fa-lg"></i>
+        <i class="mdi mdi-page-last"></i>
       </button>
     </span>
   </div>

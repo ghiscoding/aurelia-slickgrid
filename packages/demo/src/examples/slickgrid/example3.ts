@@ -100,7 +100,7 @@ export class Example3 {
         excludeFromGridMenu: true,
         excludeFromHeaderMenu: true,
         formatter: Formatters.icon,
-        params: { iconCssClass: 'fa fa-pencil pointer' },
+        params: { iconCssClass: 'mdi mdi-pencil pointer' },
         minWidth: 30,
         maxWidth: 30,
         // use onCellClick OR grid.onClick.subscribe which you can see down below
@@ -117,7 +117,7 @@ export class Example3 {
         excludeFromGridMenu: true,
         excludeFromHeaderMenu: true,
         formatter: Formatters.icon,
-        params: { iconCssClass: 'fa fa-trash pointer' },
+        params: { iconCssClass: 'mdi mdi-trash-can pointer' },
         minWidth: 30,
         maxWidth: 30,
         // use onCellClick OR grid.onClick.subscribe which you can see down below
@@ -170,7 +170,10 @@ export class Example3 {
         minWidth: 100,
         sortable: true,
         type: FieldType.number,
-        filter: { model: Filters.slider, filterOptions: { hideSliderNumber: false } },
+        filter: {
+          model: Filters.slider,
+          filterOptions: { hideSliderNumber: false }
+        },
         editor: {
           model: Editors.slider,
           minValue: 0,
@@ -199,7 +202,7 @@ export class Example3 {
         editor: {
           // We can also add HTML text to be rendered (any bad script will be sanitized) but we have to opt-in, else it will be sanitized
           enableRenderHtml: true,
-          collection: Array.from(Array(101).keys()).map(k => ({ value: k, label: k, symbol: '<i class="fa fa-percent" style="color:cadetblue"></i>' })),
+          collection: Array.from(Array(101).keys()).map(k => ({ value: k, label: k, symbol: '<i class="mdi mdi-percent-outline" style="color:cadetblue"></i>' })),
           customStructure: {
             value: 'value',
             label: 'label',
@@ -254,7 +257,6 @@ export class Example3 {
         editor: {
           model: Editors.date,
           // override any of the calendar options through "filterOptions"
-          // please note that there's no TSlint on this property since it's generic for any filter, so make sure you entered the correct filter option(s)
           editorOptions: { range: { min: 'today' } } as VanillaCalendarOption
         },
       }, {
@@ -346,7 +348,7 @@ export class Example3 {
           model: Filters.singleSelect,
           collection: [{ value: '', label: '' }, { value: true, label: 'True' }, { value: false, label: 'False' }]
         },
-        formatter: Formatters.checkmark,
+        formatter: Formatters.checkmarkMaterial,
         editor: {
           model: Editors.checkbox,
         },
@@ -499,7 +501,7 @@ export class Example3 {
     // mock a dataset
     const tempDataset: any[] = [];
     for (let i = startingIndex; i < (startingIndex + itemCount); i++) {
-      const randomYear = 2000 + Math.floor(Math.random() * 10);
+      const randomYear = 2000 + this.randomBetween(4, 15);
       const randomFinishYear = (new Date().getFullYear() - 3) + Math.floor(Math.random() * 10); // use only years not lower than 3 years ago
       const randomMonth = Math.floor(Math.random() * 11);
       const randomDay = Math.floor((Math.random() * 29));
@@ -522,6 +524,10 @@ export class Example3 {
       });
     }
     return tempDataset;
+  }
+
+  randomBetween(min: number, max: number): number {
+    return Math.floor(Math.random() * (max - min + 1) + min);
   }
 
   onCellChanged(_e: Event, args: any) {

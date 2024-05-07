@@ -74,7 +74,7 @@ export class Example21 {
       {
         id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven',
         width: 100, sortable: true,
-        formatter: Formatters.checkmark,
+        formatter: Formatters.checkmarkMaterial,
         type: FieldType.number
       }
     ];

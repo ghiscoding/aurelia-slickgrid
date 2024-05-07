@@ -23,11 +23,11 @@ describe('Example 24 - Cell Menu & Context Menu Plugins', () => {
 
       cy.get('#grid24')
         .find('.slick-row .slick-cell:nth(5)')
-        .find('.fa-star.yellow');
+        .find('.mdi-star.yellow');
 
       cy.get('#grid24')
         .find('.slick-row .slick-cell:nth(6)')
-        .find('.fa-check.checkmark-icon');
+        .find('.mdi-check.checkmark-icon');
 
       cy.get('#grid24')
         .find('.slick-row .slick-cell:nth(7) .disabled')
@@ -391,7 +391,7 @@ describe('Example 24 - Cell Menu & Context Menu Plugins', () => {
 
       cy.get('#grid24')
         .find('.slick-row .slick-cell:nth(5)')
-        .find('.fa-star.orange');
+        .find('.mdi-star.orange');
 
       cy.get('#grid24')
         .find('.slick-row .slick-cell:nth(7) .disabled')
@@ -714,7 +714,7 @@ describe('Example 24 - Cell Menu & Context Menu Plugins', () => {
         .click();
 
       cy.get(`[style="top: ${GRID_ROW_HEIGHT * 0}px;"] .slick-cell:nth(5)`)
-        .find('.fa-star.red');
+        .find('.mdi-star.red');
     });
 
     it('should be able to open Context Menu from any other cell and click on Export->Text and expect alert triggered with Text Export', () => {

@@ -44,6 +44,9 @@ importers:
       cypress:
         specifier: ^13.8.1
         version: 13.8.1
+      cypress-real-events:
+        specifier: ^1.12.0
+        version: 1.12.0(cypress@13.8.1)
       eslint:
         specifier: ^9.1.1
         version: 9.1.1
@@ -143,6 +146,9 @@ importers:
       sortablejs:
         specifier: ^1.15.2
         version: 1.15.2
+      vanilla-calendar-picker:
+        specifier: ^2.11.4
+        version: 2.11.4
     devDependencies:
       '@types/dompurify':
         specifier: ^3.0.5
@@ -292,9 +298,6 @@ importers:
       fetch-jsonp:
         specifier: ^1.3.0
         version: 1.3.0
-      font-awesome:
-        specifier: ^4.7.0
-        version: 4.7.0
       html-webpack-plugin:
         specifier: ^5.6.0
         version: 5.6.0(webpack@5.91.0)
@@ -304,6 +307,9 @@ importers:
       isomorphic-fetch:
         specifier: ^3.0.0
         version: 3.0.0
+      multiple-select-vanilla:
+        specifier: ^3.1.0
+        version: 3.1.0
       npm-run-all2:
         specifier: ^6.1.2
         version: 6.1.2
@@ -3761,6 +3767,14 @@ packages:
     dependencies:
       rrweb-cssom: 0.6.0
 
+  /cypress-real-events@1.12.0(cypress@13.8.1):
+    resolution: {integrity: sha512-oiy+4kGKkzc2PT36k3GGQqkGxNiVypheWjMtfyi89iIk6bYmTzeqxapaLHS3pnhZOX1IEbTDUVxh8T4Nhs1tyQ==}
+    peerDependencies:
+      cypress: ^4.x || ^5.x || ^6.x || ^7.x || ^8.x || ^9.x || ^10.x || ^11.x || ^12.x || ^13.x
+    dependencies:
+      cypress: 13.8.1
+    dev: true
+
   /cypress@13.8.1:
     resolution: {integrity: sha512-Uk6ovhRbTg6FmXjeZW/TkbRM07KPtvM5gah1BIMp4Y2s+i/NMxgaLw0+PbYTOdw1+egE0FP3mWRiGcRkjjmhzA==}
     engines: {node: ^16.0.0 || ^18.0.0 || >=20.0.0}
@@ -4977,11 +4991,6 @@ packages:
     peerDependenciesMeta:
       debug:
         optional: true
-    dev: true
-
-  /font-awesome@4.7.0:
-    resolution: {integrity: sha512-U6kGnykA/6bFmg1M/oT9EkFeIYv7JlX3bozwQJWiiLz6L0w3F5vBVPxHlwyX/vtNq1ckcpRKOB9f2Qal/VtFpg==}
-    engines: {node: '>=0.10.3'}
     dev: true
 
   /for-each@0.3.3:
@@ -7317,6 +7326,10 @@ packages:
     resolution: {integrity: sha512-uhXpYwHFeiTbY9KSgPPRoo1nt8OxNVdMVoTBYHfSEKeRkIkwGpO+gERmhuhBtzfaeOyTkykSrm2+noJBgqt3Hg==}
     dev: false
 
+  /moment-tiny@2.30.3:
+    resolution: {integrity: sha512-FgTYWVw+j63lHaUex7u1W0ix+2K5r4xEpGkLwkdIfuvl4g1v7NJgCQMHCi7BsSp3IcFdXOnCoroRUPRPlJGr5w==}
+    dev: false
+
   /mrmime@2.0.0:
     resolution: {integrity: sha512-eu38+hdgojoyq63s+yTpN4XMBdt5l8HhMhc4VKLO9KM5caLIBvUm4thi7fFaxyTmCKeNnXZ5pAlBwCUnhA09uw==}
     engines: {node: '>=10'}
@@ -7339,6 +7352,12 @@ packages:
     dependencies:
       dns-packet: 5.6.1
       thunky: 1.1.0
+    dev: true
+
+  /multiple-select-vanilla@3.1.0:
+    resolution: {integrity: sha512-2UtPlinsO+dYH6bLisLLlvcsMAd1A6LnWpbiPNBT+97xSYSPnipEqlAQTwkxg9MoekpvG2jMZrthAHuZwki+vA==}
+    dependencies:
+      '@types/trusted-types': 2.0.7
     dev: true
 
   /multiple-select-vanilla@3.1.3:

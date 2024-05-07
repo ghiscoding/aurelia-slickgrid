@@ -48,7 +48,7 @@ this.columnDefinitions = [
     }
   },
   {
-    id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', formatter: Formatters.checkmark,
+    id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', formatter: Formatters.checkmarkMaterial,
     type: FieldType.number, editor: { model: Editors.checkbox }
   }
 ];
@@ -91,7 +91,7 @@ this.columnDefinitions = [
 ];
 ```
 
-So to make it more clear, the `saveOutputType` is the format that will be sent to the `onCellChange` event, then the `outputType` is how the date will show up in the date picker (Flatpickr) and finally the `type` is basically the input format (coming from your dataset). Note however that each property are cascading, if 1 property is missing it will go to the next one until 1 is found... for example, on the `onCellChange` if you aren't defining `saveOutputType`, it will try to use `outputType`, if again none is provided it will try to use `type` and finally if none is provided it will use `FieldType.dateIso` as the default.
+So to make it more clear, the `saveOutputType` is the format that will be sent to the `onCellChange` event, then the `outputType` is how the date will show up in the date picker (Vanilla-Calendar) and finally the `type` is basically the input format (coming from your dataset). Note however that each property are cascading, if 1 property is missing it will go to the next one until 1 is found... for example, on the `onCellChange` if you aren't defining `saveOutputType`, it will try to use `outputType`, if again none is provided it will try to use `type` and finally if none is provided it will use `FieldType.dateIso` as the default.
 
 ## Perform an action After Inline Edit
 #### Recommended way
@@ -325,12 +325,12 @@ By default HTML is not rendered and the `label` will simply show HTML as text. B
 this.columnDefinitions = [
   {
     id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven',
-    formatter: Formatters.checkmark,
+    formatter: Formatters.checkmarkMaterial,
     type: FieldType.boolean,
     editor: {
       // display checkmark icon when True
       enableRenderHtml: true,
-      collection: [{ value: '', label: '' }, { value: true, label: 'True', labelPrefix: `<i class="fa fa-check"></i> ` }, { value: false, label: 'False' }],
+      collection: [{ value: '', label: '' }, { value: true, label: 'True', labelPrefix: `<i class="mdi mdi-check"></i> ` }, { value: false, label: 'False' }],
       model: Editors.singleSelect
     }
   }
@@ -386,7 +386,7 @@ this.columnDefinitions = [{
   id: 'start', name: 'Start Date', field: 'start',
   editor: {
     model: Editors.date,
-    editorOptions: { minDate: 'today' }
+    editorOptions: { range: { date: 'today' } } as VanillaCalendarOption
   }
 }];
 ```
@@ -398,7 +398,7 @@ You could also define certain options as a global level (for the entire grid or 
 this.gridOptions = {
   defaultEditorOptions: {
     autocompleter: { debounceWaitMs: 150 }, // typed as AutocompleterOption
-    date: { minDate: 'today' },
+    date: { range: { date: 'today' } },
     longText: { cols: 50, rows: 5 }
   }
 }

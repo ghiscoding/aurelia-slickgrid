@@ -1,6 +1,7 @@
 import { I18N } from '@aurelia/i18n';
 // import { TOptions as I18NOptions } from 'i18next';
 import { addDay, format } from '@formkit/tempo';
+
 import { SlickCustomTooltip } from '@slickgrid-universal/custom-tooltip-plugin';
 import { ExcelExportService } from '@slickgrid-universal/excel-export';
 
@@ -142,7 +143,7 @@ export class Example23 {
       },
       {
         id: 'completed', name: 'Completed', field: 'completed', nameKey: 'COMPLETED', minWidth: 85, maxWidth: 90,
-        formatter: Formatters.checkmark,
+        formatter: Formatters.checkmarkMaterial,
         exportWithFormatter: true, // you can set this property in the column definition OR in the grid options, column def has priority over grid options
         filterable: true,
         filter: {

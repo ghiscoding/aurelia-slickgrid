@@ -14,12 +14,6 @@ export class Example27 {
       <li>If you do not have the Tree Level (indent), you could call "convertParentChildArrayToHierarchicalView()" then call "convertHierarchicalViewToParentChildArray()"</li>
       <li>You could also pass the result of "convertParentChildArrayToHierarchicalView()" to "dataset-hierarchical.bind" as defined in the next Hierarchical Example</li>
     </ul>
-    <li><b>Styling - Material Theme</b></li>
-    <ul>
-      <li>The Material Theme was created with SASS and compiled in CSS (<a href="https://github.com/ghiscoding/slickgrid-universal/blob/master/packages/common/src/styles/slickgrid-theme-material.scss" target="_blank">slickgrid-theme-material.scss</a>), you can override any of its SASS variables</li>
-      <li>We use a small subset of <a href="https://materialdesignicons.com/" target="_blank">Material Design Icons</a></li>
-      <li>you might need to refresh the page to clear the browser cache and see the correct theme</li>
-    </ul>
   </ul>`;
   aureliaGrid!: AureliaGridInstance;
   gridOptions!: GridOption;
@@ -73,7 +67,7 @@ export class Example27 {
       {
         id: 'effortDriven', name: 'Effort Driven', width: 80, minWidth: 20, maxWidth: 80, cssClass: 'cell-effort-driven', field: 'effortDriven',
         exportWithFormatter: false,
-        formatter: Formatters.checkmark, cannotTriggerInsert: true,
+        formatter: Formatters.checkmarkMaterial, cannotTriggerInsert: true,
         filterable: true,
         filter: {
           collection: [{ value: '', label: '' }, { value: true, label: 'True' }, { value: false, label: 'False' }],
