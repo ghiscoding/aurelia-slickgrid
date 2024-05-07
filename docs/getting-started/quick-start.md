@@ -8,10 +8,7 @@ The easiest is to simply clone the [Aurelia-Slickgrid-Demos](https://github.com/
 ### 1. Install NPM Package
 Install the `Aurelia-Slickgrid`, `Bootstrap` and potentially a font library like `Font-Awesome`
 ```bash
-npm install --save aurelia-slickgrid bootstrap # the last deps are optional
-
-# install required @types
-npm install --save-dev @types/sortablejs @types/dompurify
+npm install --save aurelia-slickgrid bootstrap # Bootstrap is optional
 ```
 _Note: `Bootstrap` is optional, you can use any other lib that you want_
 
