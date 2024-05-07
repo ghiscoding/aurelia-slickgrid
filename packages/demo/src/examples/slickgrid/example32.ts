@@ -18,6 +18,7 @@ import {
   type SlickGrid,
   SortComparers,
   SlickGlobalEditorLock,
+  type VanillaCalendarOption,
 } from 'aurelia-slickgrid';
 import './example32.scss'; // provide custom CSS/SASS styling
 
@@ -204,7 +205,7 @@ export class Example32 {
         exportCustomFormatter: Formatters.dateUs,
         editor: {
           model: Editors.date,
-          editorOptions: { range: { date: 'today' } },
+          editorOptions: { range: { min: 'today' } } as VanillaCalendarOption,
           validator: (value, args) => {
             const dataContext = args && args.item;
             if (dataContext && (dataContext.completed && !value)) {

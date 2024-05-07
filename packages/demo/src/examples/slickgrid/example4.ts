@@ -165,9 +165,8 @@ export class Example4 {
         filterable: true,
         filter: {
           model: Filters.compoundDate,
-          // override any of the options through "filterOptions"
-          // please note that there's no TSlint on this property since it's generic for any filter, so make sure you entered the correct filter option(s)
-          filterOptions: { range: { date: 'today' } } as VanillaCalendarOption
+          // override any of the calendar options through "filterOptions"
+          filterOptions: { range: { min: 'today' } } as VanillaCalendarOption
         }
       },
       {

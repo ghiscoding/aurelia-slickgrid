@@ -243,8 +243,8 @@ export class Example30 {
         editor: {
           model: Editors.date,
           editorOptions: {
-            range: { date: 'today' }, // set minimum date as today
-
+            range: { min: 'today' },
+        
             // if we want to preload the date picker with a different date,
             // we could do it by assigning settings.seleted.dates
             // NOTE: vanilla-calendar doesn't automatically focus the picker to the year/month and you need to do it yourself

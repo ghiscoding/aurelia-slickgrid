@@ -10,10 +10,10 @@
 <!-- [![codecov](https://codecov.io/gh/ghiscoding/aurelia-slickgrid/branch/master/graph/badge.svg)](https://codecov.io/gh/ghiscoding/aurelia-slickgrid) -->
 
 ### Brief introduction
-One of the best JavasSript datagrid [SlickGrid](https://github.com/mleibman/SlickGrid), which was originally developed by @mleibman, is now available to the Aurelia world. SlickGrid beats most other datagrids in terms of features, customizability and performance (running smoothly with even a million rows). Aurelia-Slickgrid is a wrapper on top of [Slickgrid-Universal](https://github.com/ghiscoding/slickgrid-universal/) (which is required), in the early beginning we used the `6pac/SlickGrid` fork but that was dropped in >=[v7.0](https://github.com/ghiscoding/aurelia-slickgrid/releases/tag/v7.0.3) since Slickgrid-Universal is now a standalone project. SlickGrid was also recently rewritten to be browser native (no more ~jQuery~ 🎉).
+One of the best JavasSript datagrid [SlickGrid](https://github.com/mleibman/SlickGrid), which was originally developed by @mleibman, is now available to the Aurelia world. SlickGrid beats most other datagrids in terms of features, customizability & performance (running smoothly with even a million rows). Aurelia-Slickgrid is a wrapper on top of [Slickgrid-Universal](https://github.com/ghiscoding/slickgrid-universal/) (which is required), in the early beginning we used the `6pac/SlickGrid` fork but that was dropped in >=[v7.0](https://github.com/ghiscoding/aurelia-slickgrid/releases/tag/v7.0.3) since Slickgrid-Universal is now a standalone project. SlickGrid was also recently rewritten with browser native code (no more ~jQuery~ 🎉).
 
 ## Documentation
-📕 [Documentation](https://ghiscoding.gitbook.io/aurelia-slickgrid/getting-started/quick-start) website powered by GitBook.
+📕 [Documentation](https://ghiscoding.gitbook.io/aurelia-slickgrid/getting-started/quick-start) website powered by GitBook (for version >=7, or use the [Wikis](https://github.com/ghiscoding/aurelia-slickgrid/wiki) for older versions).
 
 ## Installation
 
@@ -43,7 +43,7 @@ For a full compatibility table of Aurelia-Slickgrid with Slickgrid-Universal, yo
 
 ### Demo page
 
-`Aurelia-Slickgrid` works with all `Bootstrap` versions, you can see a demo of each one below. It also with any other framework like Material or Bulma and there are also extra styling themes for not just Bootstrap but also Material & Salesforce which are also available. You can also use different SVG icons, you may want to look at the [Docs - SVG Icons](https://ghiscoding.gitbook.io/aurelia-slickgrid/styling/svg-icons)
+`Aurelia-Slickgrid` works with all `Bootstrap` versions, you can see a demo of each one below. It also works well with any other frameworks like Material or Bulma and there are also couple of extra styling themes based on Material & Salesforce which are also available. You can also use different SVG icons, you may want to look at the [Docs - SVG Icons](https://ghiscoding.gitbook.io/aurelia-slickgrid/styling/svg-icons)
 - [Bootstrap 5 demo](https://ghiscoding.github.io/aurelia-slickgrid) / [examples repo](https://github.com/ghiscoding/aurelia-slickgrid-demos/tree/master/webpack-bs5-demo)
 - [Bootstrap 5 demo with Single Locale](https://ghiscoding.github.io/aurelia-slickgrid-demos) / [examples repo](https://github.com/ghiscoding/aurelia-slickgrid-demos/tree/master/webpack-bs5-demo-with-locales)
 
