@@ -12,7 +12,6 @@ import {
 import { EventPubSubService } from '@slickgrid-universal/event-pub-sub';
 import { SlickRowDetailView as UniversalSlickRowDetailView } from '@slickgrid-universal/row-detail-view-plugin';
 import { Constructable, resolve, transient } from 'aurelia';
-import DOMPurify from 'isomorphic-dompurify';
 
 import { AureliaViewOutput, GridOption, RowDetailView, ViewModelBindableInputData } from '../models/index';
 import { AureliaUtilService } from '../services/aureliaUtil.service';
@@ -109,11 +108,11 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
       // when those are Aurelia View/ViewModel, we need to create View Slot & provide the html containers to the Plugin (preTemplate/postTemplate methods)
       if (!this.gridOptions.rowDetailView.preTemplate) {
         this._preloadViewModel = this.gridOptions?.rowDetailView?.preloadViewModel;
-        this.addonOptions.preTemplate = () => DOMPurify.sanitize(`<div class="${PRELOAD_CONTAINER_PREFIX}"></div>`);
+        this.addonOptions.preTemplate = () => this._grid.sanitizeHtmlString(`<div class="${PRELOAD_CONTAINER_PREFIX}"></div>`) as string;
       }
       if (!this.gridOptions.rowDetailView.postTemplate) {
         this._viewModel = this.gridOptions?.rowDetailView?.viewModel;
-        this.addonOptions.postTemplate = (itemDetail: any) => DOMPurify.sanitize(`<div class="${ROW_DETAIL_CONTAINER_PREFIX}${itemDetail[this.datasetIdPropName]}"></div>`);
+        this.addonOptions.postTemplate = (itemDetail: any) => this._grid.sanitizeHtmlString(`<div class="${ROW_DETAIL_CONTAINER_PREFIX}${itemDetail[this.datasetIdPropName]}"></div>`) as string;
       }
 
       if (this._grid && this.gridOptions) {
