@@ -7,18 +7,27 @@ $side-menu-width: 250px;
 @import '@slickgrid-universal/common/dist/styles/sass/slickgrid-theme-bootstrap.scss';
 
 .btn-group-xs > .btn, .btn-xs {
-  padding  : 6px 2px;
-  font-size  : .875rem;
-  line-height  : .5;
-  border-radius : .2rem;
-  margin: 0 2px;
+  padding  : 1px 5px;
+  font-size  : 12px;
+  line-height  : 1.5;
+  border-radius : 3px;
+  margin: 0;
   font-size: 12px;
+  height: 22px;
+  vertical-align: middle;
 }
 
 .btn-icon {
   display: inline-flex;
   align-items: center;
   gap: 4px;
+}
+
+.mdi-pencil.pointer:hover {
+  color: #00bfff;
+}
+.mdi-trash-can.pointer:hover {
+  color: #ff002b;
 }
 
 body {

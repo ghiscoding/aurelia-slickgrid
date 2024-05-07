@@ -14,13 +14,15 @@
 <div class="row">
   <div class="col-sm-4" style="max-width: 205px;">
     Pagination
-    <button class="btn btn-outline-secondary btn-xs px-2" data-test="goto-first-page"
-            click.trigger="goToGrid1FirstPage()">
-      <i class="mdi mdi-page-first"></i>
-    </button>
-    <button class="btn btn-outline-secondary btn-xs px-2" data-test="goto-last-page" click.trigger="goToGrid1LastPage()">
-      <i class="mdi mdi-page-last icon"></i>
-    </button>
+    <div class="btn-group" role="group">
+      <button class="btn btn-outline-secondary btn-xs btn-icon px-2" data-test="goto-first-page"
+              click.trigger="goToGrid1FirstPage()">
+        <i class="mdi mdi-page-first"></i>
+      </button>
+      <button class="btn btn-outline-secondary btn-xs btn-icon px-2" data-test="goto-last-page" click.trigger="goToGrid1LastPage()">
+        <i class="mdi mdi-page-last icon"></i>
+      </button>
+    </div>
   </div>
   <div class="col-sm-8">
     <div class="alert alert-success">
@@ -53,14 +55,16 @@
               data-test="toggle-pagination-grid2" />
     </label>
     <span style="margin-left: 5px" if.bind="isGrid2WithPagination">
-      <button class="btn btn-outline-secondary btn-xs px-2" data-test="goto-first-page"
-              click.trigger="goToGrid2FirstPage()">
-        <i class="mdi mdi-page-first"></i>
-      </button>
-      <button class="btn btn-outline-secondary btn-xs px-2" data-test="goto-last-page"
-              click.trigger="goToGrid2LastPage()">
-        <i class="mdi mdi-page-last icon"></i>
-      </button>
+      <div class="btn-group" role="group">
+        <button class="btn btn-outline-secondary btn-xs btn-icon px-2" data-test="goto-first-page"
+                click.trigger="goToGrid2FirstPage()">
+          <i class="mdi mdi-page-first"></i>
+        </button>
+        <button class="btn btn-outline-secondary btn-xs btn-icon px-2" data-test="goto-last-page"
+                click.trigger="goToGrid2LastPage()">
+          <i class="mdi mdi-page-last icon"></i>
+        </button>
+      </div>
     </span>
   </div>
   <div class="col-sm-8">

@@ -19,9 +19,9 @@ import { resolve } from 'aurelia';
 
 const actionFormatter: Formatter = (_row, _cell, _value, _columnDef, dataContext) => {
   if (dataContext.priority === 3) { // option 3 is High
-    return `<div class="fake-hyperlink">Action <i class="mdi mdi-chevron-down"></i></div>`;
+    return `<div class="cell-menu-dropdown-outline">Action<i class="mdi mdi-chevron-down"></i></div>`;
   }
-  return `<div class="disabled">Action <i class="mdi mdi-chevron-down"></i></div>`;
+  return `<div class="cell-menu-dropdown-outline disabled">Action <i class="mdi mdi-chevron-down"></i></div>`;
 };
 
 const priorityFormatter: Formatter = (_row, _cell, value) => {
@@ -169,7 +169,7 @@ export class Example24 {
         }
       },
       {
-        id: 'action', name: 'Action', field: 'action', width: 110, maxWidth: 200,
+        id: 'action', name: 'Action', field: 'action', width: 100, maxWidth: 110,
         excludeFromExport: true,
         formatter: actionFormatter,
         cellMenu: {
