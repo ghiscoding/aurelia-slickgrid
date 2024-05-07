@@ -111,26 +111,26 @@ importers:
         specifier: ^2.0.0-beta.15
         version: 2.0.0-beta.15
       '@slickgrid-universal/common':
-        specifier: ~5.0.0-beta.1
-        version: 5.0.0-beta.1
+        specifier: ~4.7.0
+        version: 4.7.0
       '@slickgrid-universal/custom-footer-component':
-        specifier: ~5.0.0-beta.1
-        version: 5.0.0-beta.1
+        specifier: ~4.7.0
+        version: 4.7.0
       '@slickgrid-universal/empty-warning-component':
-        specifier: ~5.0.0-beta.1
-        version: 5.0.0-beta.1
+        specifier: ~4.7.0
+        version: 4.7.0
       '@slickgrid-universal/event-pub-sub':
-        specifier: ~5.0.0-beta.1
-        version: 5.0.0-beta.1
+        specifier: ~4.7.0
+        version: 4.7.0
       '@slickgrid-universal/pagination-component':
-        specifier: ~5.0.0-beta.1
-        version: 5.0.0-beta.1
+        specifier: ~4.7.0
+        version: 4.7.0
       '@slickgrid-universal/row-detail-view-plugin':
-        specifier: ~5.0.0-beta.1
-        version: 5.0.0-beta.1
+        specifier: ~4.7.0
+        version: 4.7.0
       '@slickgrid-universal/utils':
-        specifier: ~5.0.0-beta.1
-        version: 5.0.0-beta.1
+        specifier: ~4.7.0
+        version: 4.7.0
       aurelia:
         specifier: ^2.0.0-beta.15
         version: 2.0.0-beta.15
@@ -199,32 +199,32 @@ importers:
         specifier: ^2.11.8
         version: 2.11.8
       '@slickgrid-universal/common':
-        specifier: ~5.0.0-beta.1
-        version: 5.0.0-beta.1
+        specifier: ^4.7.0
+        version: 4.7.0
       '@slickgrid-universal/composite-editor-component':
-        specifier: ~5.0.0-beta.1
-        version: 5.0.0-beta.1
+        specifier: ^4.7.0
+        version: 4.7.0
       '@slickgrid-universal/custom-tooltip-plugin':
-        specifier: ~5.0.0-beta.1
-        version: 5.0.0-beta.1
+        specifier: ^4.7.0
+        version: 4.7.0
       '@slickgrid-universal/excel-export':
-        specifier: ~5.0.0-beta.1
-        version: 5.0.0-beta.1
+        specifier: ^4.7.0
+        version: 4.7.0
       '@slickgrid-universal/graphql':
-        specifier: ~5.0.0-beta.1
-        version: 5.0.0-beta.1
+        specifier: ^4.7.0
+        version: 4.7.0
       '@slickgrid-universal/odata':
-        specifier: ~5.0.0-beta.1
-        version: 5.0.0-beta.1
+        specifier: ^4.7.0
+        version: 4.7.0
       '@slickgrid-universal/row-detail-view-plugin':
-        specifier: ~5.0.0-beta.1
-        version: 5.0.0-beta.1
+        specifier: ^4.7.0
+        version: 4.7.0
       '@slickgrid-universal/rxjs-observable':
-        specifier: ~5.0.0-beta.1
-        version: 5.0.0-beta.1
+        specifier: ^4.7.0
+        version: 4.7.0
       '@slickgrid-universal/text-export':
-        specifier: ~5.0.0-beta.1
-        version: 5.0.0-beta.1
+        specifier: ^4.7.0
+        version: 4.7.0
       aurelia:
         specifier: ^2.0.0-beta.15
         version: 2.0.0-beta.15
@@ -298,9 +298,6 @@ importers:
       fetch-jsonp:
         specifier: ^1.3.0
         version: 1.3.0
-      font-awesome:
-        specifier: ^4.7.0
-        version: 4.7.0
       html-webpack-plugin:
         specifier: ^5.6.0
         version: 5.6.0(webpack@5.91.0)
@@ -966,10 +963,6 @@ packages:
 
   /@fnando/sparkline@0.3.10:
     resolution: {integrity: sha512-Rwz2swatdSU5F4sCOvYG8EOWdjtLgq5d8nmnqlZ3PXdWJI9Zq9BRUvJ/9ygjajJG8qOyNpMFX3GEVFjZIuB1Jg==}
-    dev: false
-
-  /@formkit/tempo@0.1.1:
-    resolution: {integrity: sha512-nepRwKnCIjukLkblqh339sSXYI6P3cqktF/T7ECj3vURW+Pd+YzTv/I/lwjRqPGmlQJG93LORodIAkvgoExIAg==}
     dev: false
 
   /@humanwhocodes/config-array@0.13.0:
@@ -1793,117 +1786,180 @@ packages:
       '@sinonjs/commons': 3.0.1
     dev: true
 
-  /@slickgrid-universal/binding@5.0.0-beta.1:
-    resolution: {integrity: sha512-SyrvOzi4tMHFkRi9MOXwhyAtZ9wy5kZmfWZ1tmgRwBZxX5sT78eu5PaTeketny5VQczMfSz0AGN7Yg3h0NqvEA==}
+  /@slickgrid-universal/binding@4.7.0:
+    resolution: {integrity: sha512-d2M8DHOzB8NzQr2d7ehiWYUF/BDmOXKzi7wa7MBwFaGD/nXz9Z59rISpQOL/12is0ahu1j3v1KFs/Gx4ktuI2w==}
     dev: false
 
-  /@slickgrid-universal/common@5.0.0-beta.1:
-    resolution: {integrity: sha512-BEpqSDRUQakmUh6sR77rPiAa4juQ5lYY+Oi7oRSOf9kMSEIdLMPQ63CuNGiXl/26rvym2YTB09i84KxmgcgSfw==}
+  /@slickgrid-universal/common@4.7.0:
+    resolution: {integrity: sha512-YB1FhMUWJtK07FIx1gWw+JIYG58BXtWOdaKFzFP6AAy7Il/AeHFM6cpxSqb8rF8IUEraAre4bYz0WbebYjtkXQ==}
     engines: {node: ^18.0.0 || >=20.0.0}
     dependencies:
-      '@formkit/tempo': 0.1.1
-      '@slickgrid-universal/binding': 5.0.0-beta.1
-      '@slickgrid-universal/event-pub-sub': 5.0.0-beta.1
-      '@slickgrid-universal/utils': 5.0.0-beta.1
+      '@slickgrid-universal/binding': 4.7.0
+      '@slickgrid-universal/event-pub-sub': 4.7.0
+      '@slickgrid-universal/utils': 4.7.0
       '@types/dompurify': 3.0.5
       '@types/sortablejs': 1.15.8
       autocompleter: 9.2.1
       dequal: 2.0.3
       excel-builder-vanilla: 3.0.1
-      multiple-select-vanilla: 3.1.3
+      flatpickr: 4.6.13
+      isomorphic-dompurify: 2.8.0
+      moment-mini: 2.29.4
+      multiple-select-vanilla: 3.1.0
       sortablejs: 1.15.2
       un-flatten-tree: 2.0.12
-      vanilla-calendar-picker: 2.11.4
+    transitivePeerDependencies:
+      - bufferutil
+      - canvas
+      - supports-color
+      - utf-8-validate
     dev: false
 
-  /@slickgrid-universal/composite-editor-component@5.0.0-beta.1:
-    resolution: {integrity: sha512-L0AO0I4V/2RCLq8r+Bqh9RDUeO2BDyXnJYouXwruaL+2To/AFvm8oBsPpvd4zl4xrIZeUgD6crjYio/el3Q+fQ==}
+  /@slickgrid-universal/composite-editor-component@4.7.0:
+    resolution: {integrity: sha512-knqWkb05oAW6b8kZrRaLle3Cu9MAsCZm3orsHuuNtrrZ+Ti69VodlwzPw+kIbSsNmfG+YqSnZMJVuzWt9fA07g==}
     dependencies:
-      '@slickgrid-universal/binding': 5.0.0-beta.1
-      '@slickgrid-universal/common': 5.0.0-beta.1
-      '@slickgrid-universal/utils': 5.0.0-beta.1
+      '@slickgrid-universal/binding': 4.7.0
+      '@slickgrid-universal/common': 4.7.0
+      '@slickgrid-universal/utils': 4.7.0
+    transitivePeerDependencies:
+      - bufferutil
+      - canvas
+      - supports-color
+      - utf-8-validate
     dev: false
 
-  /@slickgrid-universal/custom-footer-component@5.0.0-beta.1:
-    resolution: {integrity: sha512-dHt3+ak4wheQsLj9u95eymycC2DpjriGQS9CvZ/8DiZ57B17KKZEg/JmluA+0r49RWKCbtmOgPuEuzM/QATJjQ==}
+  /@slickgrid-universal/custom-footer-component@4.7.0:
+    resolution: {integrity: sha512-/af+tQb+gpkYRenDRequkOEL6uY7swoPtjWLc1WnMUzVvNpr9iOt1L21pnqJXKYZdrQwDkV82h2LOOyKI3NLRg==}
     dependencies:
-      '@formkit/tempo': 0.1.1
-      '@slickgrid-universal/binding': 5.0.0-beta.1
-      '@slickgrid-universal/common': 5.0.0-beta.1
+      '@slickgrid-universal/binding': 4.7.0
+      '@slickgrid-universal/common': 4.7.0
+      moment-mini: 2.29.4
+    transitivePeerDependencies:
+      - bufferutil
+      - canvas
+      - supports-color
+      - utf-8-validate
     dev: false
 
-  /@slickgrid-universal/custom-tooltip-plugin@5.0.0-beta.1:
-    resolution: {integrity: sha512-zKfp6JUttyH9FeKVESzpyuSkWODhD1UqzbU9IkG+pqZzTM/fCyj+1VxNWs7p7XJcAtrp6eQz0aVnsWDAHO8lZQ==}
+  /@slickgrid-universal/custom-tooltip-plugin@4.7.0:
+    resolution: {integrity: sha512-aIGrMd+mavwzd+0LXbg/PNUtFmHnzhFIWup1eV7eLkFNrpxaY2/Me/fsO3CAbda9HKNvJP/b+KErekoykJlwsA==}
     dependencies:
-      '@slickgrid-universal/common': 5.0.0-beta.1
-      '@slickgrid-universal/utils': 5.0.0-beta.1
+      '@slickgrid-universal/common': 4.7.0
+      '@slickgrid-universal/utils': 4.7.0
+      isomorphic-dompurify: 2.8.0
+    transitivePeerDependencies:
+      - bufferutil
+      - canvas
+      - supports-color
+      - utf-8-validate
     dev: false
 
-  /@slickgrid-universal/empty-warning-component@5.0.0-beta.1:
-    resolution: {integrity: sha512-NUAkKNth6TxIY9wT00msxd8rCGPy1Zclrpb/eChyjn1xCKLlZhB5RkmDzFrvBXJ/3v4PnEfH3bxJS2Wh1isn4Q==}
+  /@slickgrid-universal/empty-warning-component@4.7.0:
+    resolution: {integrity: sha512-C4KbYIgRtKqGAq1hNSqXJBVMBn2MMRbvtoLdZQ1lr2bOov98sxHfQBgExPt9/u6l34b/oU0wVy7IUrXAyhUurw==}
     dependencies:
-      '@slickgrid-universal/common': 5.0.0-beta.1
+      '@slickgrid-universal/common': 4.7.0
+    transitivePeerDependencies:
+      - bufferutil
+      - canvas
+      - supports-color
+      - utf-8-validate
     dev: false
 
-  /@slickgrid-universal/event-pub-sub@5.0.0-beta.1:
-    resolution: {integrity: sha512-OB8Z4jFUQ+QCU2qPahzQd51hDsy/fE7laNPbmswzfFA6xg7NdEVknQu3j0S25j0sBkyTPN5xGD/EwjdA6yYZwQ==}
+  /@slickgrid-universal/event-pub-sub@4.7.0:
+    resolution: {integrity: sha512-6o7+6lJykAKG9rEiixWxpa+SvZz/sjr1owDcaIAM3Qa/daYrOuFJ+reC9T8MK/RGx7jLerVaJdHeQsfStI5V9w==}
     dependencies:
-      '@slickgrid-universal/utils': 5.0.0-beta.1
+      '@slickgrid-universal/utils': 4.7.0
     dev: false
 
-  /@slickgrid-universal/excel-export@5.0.0-beta.1:
-    resolution: {integrity: sha512-J31syjmcUamxEZ4Yae9nEcC7m7z5nG7l7U0D0jrM+KhwnIYKIXg0FWntfX0TK6ye499SgHr7l90iitPeADbNwQ==}
+  /@slickgrid-universal/excel-export@4.7.0:
+    resolution: {integrity: sha512-FeSZihooXGZvZRk6FSjgi5lVPvaG2FsectEYoepvJXLvI98kqvuBdG9dvyuSn8oGvybhENVQpiiGnIq2V6bvEQ==}
     dependencies:
-      '@slickgrid-universal/common': 5.0.0-beta.1
-      '@slickgrid-universal/utils': 5.0.0-beta.1
+      '@slickgrid-universal/common': 4.7.0
+      '@slickgrid-universal/utils': 4.7.0
       excel-builder-vanilla: 3.0.1
+      moment-mini: 2.29.4
+    transitivePeerDependencies:
+      - bufferutil
+      - canvas
+      - supports-color
+      - utf-8-validate
     dev: false
 
-  /@slickgrid-universal/graphql@5.0.0-beta.1:
-    resolution: {integrity: sha512-nPdVjqm3wNuLByENw/gsYw3afA3qqrq/lOIAGHdMXCdI/NBBENTv9WBm4eBJtjCJPjr0Ne7Fvzyfc6b6U5gi4Q==}
+  /@slickgrid-universal/graphql@4.7.0:
+    resolution: {integrity: sha512-xkdxHjGmVHB5PYC35oiHupTxHB206SlU16UMd7dqAzBoWnN6GIojBb+cp/OV0fIhAY+TwmROAF8y7slsInXhFA==}
     dependencies:
-      '@slickgrid-universal/common': 5.0.0-beta.1
-      '@slickgrid-universal/utils': 5.0.0-beta.1
+      '@slickgrid-universal/common': 4.7.0
+      '@slickgrid-universal/utils': 4.7.0
+    transitivePeerDependencies:
+      - bufferutil
+      - canvas
+      - supports-color
+      - utf-8-validate
     dev: false
 
-  /@slickgrid-universal/odata@5.0.0-beta.1:
-    resolution: {integrity: sha512-AOWqjMQ2FNlZklrXCmbCnVzRrQoHVb35G9zPwpEK3qIa7mHVA6HrZD/F2qgiZ7uSpcwm9HJ4ARICTTWzQks1bA==}
+  /@slickgrid-universal/odata@4.7.0:
+    resolution: {integrity: sha512-AB+r+q/IHaVLrFznaZry7kJDA2e6mPnTb+q8+8et/YVpaFWgqJWaIOS1PKPEYVUbLILwWHpqPjiHnXLdnls4/A==}
     dependencies:
-      '@slickgrid-universal/common': 5.0.0-beta.1
-      '@slickgrid-universal/utils': 5.0.0-beta.1
+      '@slickgrid-universal/common': 4.7.0
+      '@slickgrid-universal/utils': 4.7.0
+    transitivePeerDependencies:
+      - bufferutil
+      - canvas
+      - supports-color
+      - utf-8-validate
     dev: false
 
-  /@slickgrid-universal/pagination-component@5.0.0-beta.1:
-    resolution: {integrity: sha512-C9EeDob1UfqqcG2xyXXFDhimltjSyoH6wAsM7tjndXWNrTTDxc7HnrB7XpoXQ2ffW/Kmzj4T/LDIuAwEJd/UVw==}
+  /@slickgrid-universal/pagination-component@4.7.0:
+    resolution: {integrity: sha512-yA9POJmBMh0eZuf/c8GpgGFNd2s3QLvahSCL+Rdg03oIkGnMWjvTSv6ptbsqLCC10gECPJtKRbwzvVMTjnUkhA==}
     dependencies:
-      '@slickgrid-universal/binding': 5.0.0-beta.1
-      '@slickgrid-universal/common': 5.0.0-beta.1
+      '@slickgrid-universal/binding': 4.7.0
+      '@slickgrid-universal/common': 4.7.0
+    transitivePeerDependencies:
+      - bufferutil
+      - canvas
+      - supports-color
+      - utf-8-validate
     dev: false
 
-  /@slickgrid-universal/row-detail-view-plugin@5.0.0-beta.1:
-    resolution: {integrity: sha512-O3JV+P/cg1TlVb1pVvOWOjLa/zfxxwtzckWIagdEnaSGE5+8Co9IHfY8/U44sq2/CdJ/sJWin8StqyjAP/DmgA==}
+  /@slickgrid-universal/row-detail-view-plugin@4.7.0:
+    resolution: {integrity: sha512-QhC1GAfL4DySdFiGz6N1Jx+DRU3ezUak8zbi9SUHP4iS0lcZBzb1sX0Itc5/ZLOatKozDJTEt57Ew3VcJ1gsOA==}
     dependencies:
-      '@slickgrid-universal/common': 5.0.0-beta.1
-      '@slickgrid-universal/utils': 5.0.0-beta.1
+      '@slickgrid-universal/common': 4.7.0
+      '@slickgrid-universal/utils': 4.7.0
+    transitivePeerDependencies:
+      - bufferutil
+      - canvas
+      - supports-color
+      - utf-8-validate
     dev: false
 
-  /@slickgrid-universal/rxjs-observable@5.0.0-beta.1:
-    resolution: {integrity: sha512-UBBgqI9BLunzwHLDsh/xnFTeHlym8HQbuzecA2M0WiXQPdj2R+r7WPX7yqmRpgoW9UwihpqjqKW8SVmunVU5HA==}
+  /@slickgrid-universal/rxjs-observable@4.7.0:
+    resolution: {integrity: sha512-qCUd7dp4xq/znd4hcTfoVEhwYVRoiMHN1o0XHI1jFpEm77mYodpAtKSaa+o/4b/gZH6vNUHIYqIOtHm0BZ3Gdg==}
     dependencies:
-      '@slickgrid-universal/common': 5.0.0-beta.1
+      '@slickgrid-universal/common': 4.7.0
       rxjs: 7.8.1
+    transitivePeerDependencies:
+      - bufferutil
+      - canvas
+      - supports-color
+      - utf-8-validate
     dev: false
 
-  /@slickgrid-universal/text-export@5.0.0-beta.1:
-    resolution: {integrity: sha512-z4E3ocRAe8+PxBu2e1Pg+SQLhNuAWuLgFlJ93D9LxOGgzoSEE36jX+tTlUv+iWnpY0L+U5Uzbbuhzmr8n8KKeQ==}
+  /@slickgrid-universal/text-export@4.7.0:
+    resolution: {integrity: sha512-3b+PPl50O+2zaOq8GutnOr2K2NJuIW02At/GKbX6hypFYO8mAPd7yIcfw0uGM6BDYk1MBPvmh6qaPWSLzN/M4w==}
     dependencies:
-      '@slickgrid-universal/common': 5.0.0-beta.1
-      '@slickgrid-universal/utils': 5.0.0-beta.1
+      '@slickgrid-universal/common': 4.7.0
+      '@slickgrid-universal/utils': 4.7.0
       text-encoding-utf-8: 1.0.2
+    transitivePeerDependencies:
+      - bufferutil
+      - canvas
+      - supports-color
+      - utf-8-validate
     dev: false
 
-  /@slickgrid-universal/utils@5.0.0-beta.1:
-    resolution: {integrity: sha512-MlyksV/5Vdj8/LsAWuSJYExxbCjEvIMO7ELs/NKQk/2a1VZ1EJt/yLBq2TpnJm84V1fYs1odolgGg+AX9UgLiQ==}
+  /@slickgrid-universal/utils@4.7.0:
+    resolution: {integrity: sha512-2KBYuA3yI82HXIELbkrxW6Zts0roypqDiRFbiARN2ldhhjT6roWo8d+hI6c6WKauffeQ0aZCCYDkI7SWVai7SQ==}
     dev: false
 
   /@tootallnate/once@2.0.0:
@@ -4982,6 +5038,10 @@ packages:
     hasBin: true
     dev: true
 
+  /flatpickr@4.6.13:
+    resolution: {integrity: sha512-97PMG/aywoYpB4IvbvUJi0RQi8vearvU0oov1WW3k0WZPBMrTQVqekSX5CjSG/M4Q3i6A/0FKXC7RyAoAUUSPw==}
+    dev: false
+
   /flatted@3.3.1:
     resolution: {integrity: sha512-X8cqMLLie7KsNUDSdzeN8FYK9rEt4Dt67OsG/DNGnYTSDBG4uFAJFBnUeiV+zCVAvwFy56IjM9sH51jVaEhNxw==}
     dev: true
@@ -4994,11 +5054,6 @@ packages:
     peerDependenciesMeta:
       debug:
         optional: true
-    dev: true
-
-  /font-awesome@4.7.0:
-    resolution: {integrity: sha512-U6kGnykA/6bFmg1M/oT9EkFeIYv7JlX3bozwQJWiiLz6L0w3F5vBVPxHlwyX/vtNq1ckcpRKOB9f2Qal/VtFpg==}
-    engines: {node: '>=0.10.3'}
     dev: true
 
   /for-each@0.3.3:
@@ -7361,8 +7416,8 @@ packages:
       thunky: 1.1.0
     dev: true
 
-  /multiple-select-vanilla@3.1.3:
-    resolution: {integrity: sha512-EcnBCgI/j5ilM3w+TcB3HhVixsN4yncXKi/Wv9EZnPy9PeLMasD0doyj/wxrlvmH0omaS0y9y1rdIZt2nbJaaw==}
+  /multiple-select-vanilla@3.1.0:
+    resolution: {integrity: sha512-2UtPlinsO+dYH6bLisLLlvcsMAd1A6LnWpbiPNBT+97xSYSPnipEqlAQTwkxg9MoekpvG2jMZrthAHuZwki+vA==}
     dependencies:
       '@types/trusted-types': 2.0.7
 
