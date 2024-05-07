@@ -1,7 +1,7 @@
-import moment from 'moment-mini';
+import { format } from '@formkit/tempo';
 
 export class AsgDateFormatValueConverter {
-  toView(value: any, format: string): string {
-    return moment(value).format(format);
+  toView(value: any, f: string): string {
+    return format(value, f);
   }
 }

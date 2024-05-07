@@ -41,6 +41,7 @@
     "@aurelia/runtime-html": "^2.0.0-beta.15",
     "@faker-js/faker": "^8.4.1",
     "@fnando/sparkline": "^0.3.10",
+    "@formkit/tempo": "^0.1.1",
     "@popperjs/core": "^2.11.8",
     "@slickgrid-universal/common": "~5.0.0-beta.1",
     "@slickgrid-universal/composite-editor-component": "~5.0.0-beta.1",
@@ -57,7 +58,6 @@
     "i18next": "^23.11.2",
     "i18next-fetch-backend": "^5.0.2",
     "isomorphic-dompurify": "^2.8.0",
-    "moment-mini": "^2.29.4",
     "rxjs": "^7.8.1"
   },
   "devDependencies": {

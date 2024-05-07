@@ -1,7 +1,6 @@
 import { I18N } from '@aurelia/i18n';
+import { addDay, format } from '@formkit/tempo';
 import { GraphqlService, type GraphqlPaginatedResult, type GraphqlServiceApi, type GraphqlServiceOption } from '@slickgrid-universal/graphql';
-import moment from 'moment-mini';
-import { type MultipleSelectOption } from 'multiple-select-vanilla';
 import {
   type AureliaGridInstance,
   type Column,
@@ -12,6 +11,7 @@ import {
   type GridOption,
   type GridStateChange,
   type Metrics,
+  type MultipleSelectOption,
   OperatorType,
   SortDirection,
 } from 'aurelia-slickgrid';
@@ -124,8 +124,8 @@ export class Example6 {
       },
     ];
 
-    const presetLowestDay = moment().add(-2, 'days').format('YYYY-MM-DD');
-    const presetHighestDay = moment().add(20, 'days').format('YYYY-MM-DD');
+    const presetLowestDay = format(addDay(new Date(), -2), 'YYYY-MM-DD');
+    const presetHighestDay = format(addDay(new Date(), 20), 'YYYY-MM-DD');
 
     this.gridOptions = {
       enableFiltering: true,
@@ -292,8 +292,8 @@ export class Example6 {
   }
 
   setFiltersDynamically() {
-    const presetLowestDay = moment().add(-2, 'days').format('YYYY-MM-DD');
-    const presetHighestDay = moment().add(20, 'days').format('YYYY-MM-DD');
+    const presetLowestDay = format(addDay(new Date(), -2), 'YYYY-MM-DD');
+    const presetHighestDay = format(addDay(new Date(), 20), 'YYYY-MM-DD');
 
     // we can Set Filters Dynamically (or different filters) afterward through the FilterService
     this.aureliaGrid.filterService.updateFilters([
@@ -314,8 +314,8 @@ export class Example6 {
   }
 
   resetToOriginalPresets() {
-    const presetLowestDay = moment().add(-2, 'days').format('YYYY-MM-DD');
-    const presetHighestDay = moment().add(20, 'days').format('YYYY-MM-DD');
+    const presetLowestDay = format(addDay(new Date(), -2), 'YYYY-MM-DD');
+    const presetHighestDay = format(addDay(new Date(), 20), 'YYYY-MM-DD');
 
     this.aureliaGrid.filterService.updateFilters([
       // you can use OperatorType or type them as string, e.g.: operator: 'EQ'
