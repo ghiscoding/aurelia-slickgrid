@@ -37,12 +37,14 @@
 <div>
   <span>
     <label>Programmatically go to first/last page:</label>
-    <button class="btn btn-outline-secondary btn-xs px-2" data-test="goto-first-page" click.trigger="goToFirstPage()">
-      <i class="mdi mdi-page-first"></i>
-    </button>
-    <button class="btn btn-outline-secondary btn-xs px-2" data-test="goto-last-page" click.trigger="goToLastPage()">
-      <i class="mdi mdi-page-last icon"></i>
-    </button>
+    <div class="btn-group" role="group">
+      <button class="btn btn-outline-secondary btn-xs btn-icon px-2" data-test="goto-first-page" click.trigger="goToFirstPage()">
+        <i class="mdi mdi-page-first"></i>
+      </button>
+      <button class="btn btn-outline-secondary btn-xs btn-icon px-2" data-test="goto-last-page" click.trigger="goToLastPage()">
+        <i class="mdi mdi-page-last icon"></i>
+      </button>
+    </div>
   </span>
 
   <span style="margin-left: 10px">

@@ -23,7 +23,7 @@
       <div class="col-md-12">
         <button class="btn btn-outline-secondary btn-sm btn-icon" data-test="clear-filters-sorting"
                 click.trigger="clearAllFiltersAndSorts()" title="Clear all Filters & Sorts">
-          <i class="mdi mdi-filter text-danger"></i>
+          <i class="mdi mdi-filter-remove-outline"></i>
           Clear all Filter & Sorts
         </button>
         <button class="btn btn-outline-secondary btn-sm btn-icon" data-test="set-dynamic-filter"
@@ -83,12 +83,14 @@
     <div class="row" style="margin-bottom: 5px">
       <div class="col-md-12">
         <label>Programmatically go to first/last page:</label>
-        <button class="btn btn-outline-secondary btn-xs px-2" data-test="goto-first-page" click.trigger="goToFirstPage()">
-          <i class="mdi mdi-page-first"></i>
-        </button>
-        <button class="btn btn-outline-secondary btn-xs px-2" data-test="goto-last-page" click.trigger="goToLastPage()">
-          <i class="mdi mdi-page-last icon"></i>
-        </button>
+        <div class="btn-group" role="group">
+          <button class="btn btn-outline-secondary btn-xs btn-icon px-2" data-test="goto-first-page" click.trigger="goToFirstPage()">
+            <i class="mdi mdi-page-first"></i>
+          </button>
+          <button class="btn btn-outline-secondary btn-xs btn-icon px-2" data-test="goto-last-page" click.trigger="goToLastPage()">
+            <i class="mdi mdi-page-last icon"></i>
+          </button>
+        </div>
       </div>
     </div>
   </div>

@@ -12,31 +12,31 @@
 
 <div class="row">
   <div class="col-md-7">
-    <button click.trigger="addNewFile()" data-test="add-item-btn" class="btn btn-sm btn-primary">
+    <button click.trigger="addNewFile()" data-test="add-item-btn" class="btn btn-xs btn-primary">
       <span class="mdi mdi-plus color-white"></span>
       <span>Add New Pop Song</span>
     </button>
-    <button click.trigger="deleteFile()" data-test="remove-item-btn" class="btn btn-outline-secondary btn-sm btn-icon" disabled.bind="isRemoveLastInsertedPopSongDisabled">
+    <button click.trigger="deleteFile()" data-test="remove-item-btn" class="btn btn-outline-secondary btn-xs btn-icon" disabled.bind="isRemoveLastInsertedPopSongDisabled">
       <span class="mdi mdi-minus"></span>
       <span>Remove Last Inserted Pop Song</span>
     </button>
-    <button click.trigger="collapseAll()" data-test="collapse-all-btn" class="btn btn-outline-secondary btn-sm btn-icon">
+    <button click.trigger="collapseAll()" data-test="collapse-all-btn" class="btn btn-outline-secondary btn-xs btn-icon">
       <span class="mdi mdi-arrow-collapse"></span>
       <span>Collapse All</span>
     </button>
-    <button click.trigger="expandAll()" data-test="expand-all-btn" class="btn btn-outline-secondary btn-sm btn-icon">
+    <button click.trigger="expandAll()" data-test="expand-all-btn" class="btn btn-outline-secondary btn-xs btn-icon">
       <span class="mdi mdi-arrow-expand"></span>
       <span>Expand All</span>
     </button>
-    <button class="btn btn-outline-secondary btn-sm btn-icon" data-test="clear-filters-btn" click.trigger="clearFilters()">
+    <button class="btn btn-outline-secondary btn-xs btn-icon" data-test="clear-filters-btn" click.trigger="clearFilters()">
       <span class="mdi mdi-close"></span>
       <span>Clear Filters</span>
     </button>
-    <button click.trigger="logFlatStructure()" class="btn btn-outline-secondary btn-sm btn-icon"
+    <button click.trigger="logFlatStructure()" class="btn btn-outline-secondary btn-xs btn-icon"
             title="console.log of the Flat dataset">
       <span>Log Flat Structure</span>
     </button>
-    <button click.trigger="logHierarchicalStructure()" class="btn btn-outline-secondary btn-sm btn-icon"
+    <button click.trigger="logHierarchicalStructure()" class="btn btn-outline-secondary btn-xs btn-icon"
             title="console.log of the Hierarchical Tree dataset">
       <span>Log Hierarchical Structure</span>
     </button>
@@ -46,7 +46,7 @@
     <div class="input-group input-group-sm">
       <input type="text" class="form-control search-string" placeholder="search value" autocomplete="off"
               data-test="search-string" value.bind="searchString">
-      <button class="btn btn-sm btn-outline-secondary d-flex align-items-center" data-test="clear-search-string"
+      <button class="btn btn-xs btn-outline-secondary d-flex align-items-center" data-test="clear-search-string"
               click.trigger="clearSearch()">
         <span class="icon mdi mdi-close-thick"></span>
       </button>
