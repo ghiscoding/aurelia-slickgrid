@@ -1,6 +1,6 @@
 import { I18N } from '@aurelia/i18n';
 // import { TOptions as I18NOptions } from 'i18next';
-import moment from 'moment-mini';
+import { addDay, format } from '@formkit/tempo';
 import { SlickCustomTooltip } from '@slickgrid-universal/custom-tooltip-plugin';
 import { ExcelExportService } from '@slickgrid-universal/excel-export';
 
@@ -160,8 +160,8 @@ export class Example23 {
     ];
 
     const today = new Date();
-    const presetLowestDay = moment().add(-2, 'days').format('YYYY-MM-DD');
-    const presetHighestDay = moment().add(today.getDate() < 14 ? 30 : 25, 'days').format('YYYY-MM-DD');
+    const presetLowestDay = format(addDay(new Date(), -2), 'YYYY-MM-DD');
+    const presetHighestDay = format(addDay(new Date(), today.getDate() < 14 ? 30 : 25), 'YYYY-MM-DD');
 
     this.gridOptions = {
       autoResize: {
@@ -201,7 +201,7 @@ export class Example23 {
     const tempDataset: any[] = [];
     for (let i = startingIndex; i < (startingIndex + itemCount); i++) {
       const randomDuration = randomBetween(0, 365);
-      const randomYear = randomBetween(moment().year(), moment().year() + 1);
+      const randomYear = randomBetween(new Date().getFullYear(), new Date().getFullYear() + 1);
       const randomMonth = randomBetween(0, 12);
       const randomDay = randomBetween(10, 28);
       const randomPercent = randomBetween(0, 100);
@@ -250,8 +250,8 @@ export class Example23 {
   }
 
   setFiltersDynamically() {
-    const presetLowestDay = moment().add(-5, 'days').format('YYYY-MM-DD');
-    const presetHighestDay = moment().add(25, 'days').format('YYYY-MM-DD');
+    const presetLowestDay = format(addDay(new Date(), -5), 'YYYY-MM-DD');
+    const presetHighestDay = format(addDay(new Date(), 25), 'YYYY-MM-DD');
 
     // we can Set Filters Dynamically (or different filters) afterward through the FilterService
     this.aureliaGrid.filterService.updateFilters([
@@ -277,7 +277,7 @@ export class Example23 {
 
   predefinedFilterChanged(newPredefinedFilter: string) {
     let filters: CurrentFilter[] = [];
-    const currentYear = moment().year();
+    const currentYear = new Date().getFullYear();
 
     switch (newPredefinedFilter) {
       case 'currentYearTasks':

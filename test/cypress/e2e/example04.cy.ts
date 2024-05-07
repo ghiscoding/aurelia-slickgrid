@@ -1,4 +1,5 @@
-import moment from 'moment-mini';
+import { isAfter, isBefore, isEqual, parse } from '@formkit/tempo';
+
 import { removeExtraSpaces } from '../plugins/utilities';
 
 describe('Example 4 - Client Side Sort/Filter Grid', () => {
@@ -53,7 +54,7 @@ describe('Example 4 - Client Side Sort/Filter Grid', () => {
           cy.wrap($row)
             .children('.slick-cell:nth(5)')
             .each(($cell) => {
-              const isDateValid = moment($cell.text(), 'M/D/YY').isBefore(presetUsDateShort);
+              const isDateValid = isBefore(parse($cell.text(), 'M/D/YY'), presetUsDateShort);
               expect(isDateValid).to.eq(true);
             });
         });
@@ -152,7 +153,7 @@ describe('Example 4 - Client Side Sort/Filter Grid', () => {
           cy.wrap($row)
             .children('.slick-cell:nth(4)')
             .each(($cell) => {
-              const isDateValid = moment($cell.text()).isSameOrAfter(dynamicStartDate);
+              const isDateValid = isEqual($cell.text(), dynamicStartDate) || isAfter($cell.text(), dynamicStartDate);
               expect(isDateValid).to.eq(true);
             });
         });

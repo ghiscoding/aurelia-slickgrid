@@ -20,6 +20,9 @@ importers:
       '@aurelia/platform-browser':
         specifier: 2.0.0-beta.15
         version: 2.0.0-beta.15
+      '@formkit/tempo':
+        specifier: ^0.1.1
+        version: 0.1.1
       '@jest/types':
         specifier: ^29.6.3
         version: 29.6.3
@@ -74,9 +77,6 @@ importers:
       jsdom-global:
         specifier: ^3.0.2
         version: 3.0.2(jsdom@24.0.0)
-      moment-mini:
-        specifier: ^2.29.4
-        version: 2.29.4
       npm-run-all2:
         specifier: ^6.1.2
         version: 6.1.2
@@ -107,6 +107,9 @@ importers:
       '@aurelia/runtime-html':
         specifier: ^2.0.0-beta.15
         version: 2.0.0-beta.15
+      '@formkit/tempo':
+        specifier: ^0.1.1
+        version: 0.1.1
       '@slickgrid-universal/common':
         specifier: ~4.7.0
         version: 4.7.0
@@ -137,9 +140,6 @@ importers:
       isomorphic-dompurify:
         specifier: ^2.8.0
         version: 2.8.0
-      moment-mini:
-        specifier: ^2.29.4
-        version: 2.29.4
       sortablejs:
         specifier: ^1.15.2
         version: 1.15.2
@@ -189,6 +189,9 @@ importers:
       '@fnando/sparkline':
         specifier: ^0.3.10
         version: 0.3.10
+      '@formkit/tempo':
+        specifier: ^0.1.1
+        version: 0.1.1
       '@popperjs/core':
         specifier: ^2.11.8
         version: 2.11.8
@@ -240,9 +243,6 @@ importers:
       isomorphic-dompurify:
         specifier: ^2.8.0
         version: 2.8.0
-      moment-mini:
-        specifier: ^2.29.4
-        version: 2.29.4
       rxjs:
         specifier: ^7.8.1
         version: 7.8.1
@@ -961,6 +961,9 @@ packages:
   /@fnando/sparkline@0.3.10:
     resolution: {integrity: sha512-Rwz2swatdSU5F4sCOvYG8EOWdjtLgq5d8nmnqlZ3PXdWJI9Zq9BRUvJ/9ygjajJG8qOyNpMFX3GEVFjZIuB1Jg==}
     dev: false
+
+  /@formkit/tempo@0.1.1:
+    resolution: {integrity: sha512-nepRwKnCIjukLkblqh339sSXYI6P3cqktF/T7ECj3vURW+Pd+YzTv/I/lwjRqPGmlQJG93LORodIAkvgoExIAg==}
 
   /@humanwhocodes/config-array@0.13.0:
     resolution: {integrity: sha512-DZLEEqFWQFiyK6h5YIeynKx7JlvCYWL0cImfSRXZ9l4Sg2efkFGTuFf6vzXjK1cq6IYkU+Eg/JizXw+TD2vRNw==}
@@ -7381,6 +7384,7 @@ packages:
 
   /moment-mini@2.29.4:
     resolution: {integrity: sha512-uhXpYwHFeiTbY9KSgPPRoo1nt8OxNVdMVoTBYHfSEKeRkIkwGpO+gERmhuhBtzfaeOyTkykSrm2+noJBgqt3Hg==}
+    dev: false
 
   /mrmime@2.0.0:
     resolution: {integrity: sha512-eu38+hdgojoyq63s+yTpN4XMBdt5l8HhMhc4VKLO9KM5caLIBvUm4thi7fFaxyTmCKeNnXZ5pAlBwCUnhA09uw==}
