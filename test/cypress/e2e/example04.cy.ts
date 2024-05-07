@@ -9,7 +9,7 @@ describe('Example 4 - Client Side Sort/Filter Grid', () => {
 
   describe('Load Grid with Presets', () => {
     const presetDurationValues = [98, 10];
-    const presetUsDateShort = '04/20/25';
+    const presetUsDateShort = '4/20/25';
 
     it('should have some metrics shown in the grid footer but make sure the first number is below 1500 items', () => {
       cy.get('#slickGridContainer-grid4')

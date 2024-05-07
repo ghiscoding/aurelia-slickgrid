@@ -9,7 +9,7 @@ export function configure(aurelia) {
   aurelia.use.plugin('aurelia-slickgrid', config => {
     // change any of the default global options
     // for example we can change the Grid Menu (hamburger menu) default icon
-    config.options.gridMenu.iconCssClass = 'fa fa-ellipsis-v';
+    config.options.gridMenu.iconCssClass = 'mdi mdi-dots-vertical';
   });
 
   aurelia.start().then(() => aurelia.setRoot('app'));
@@ -23,7 +23,7 @@ export function configure(aurelia) {
   aurelia.use.plugin(PLATFORM.moduleName('aurelia-slickgrid'), config => {
     // change any of the default global options
     // for example we can change the Grid Menu (hamburger menu) default icon
-    config.options.gridMenu.iconCssClass = 'fa fa-ellipsis-v';
+    config.options.gridMenu.iconCssClass = 'mdi mdi-dots-vertical';
   });
 
   aurelia.start().then(() => aurelia.setRoot(PLATFORM.moduleName('app')));

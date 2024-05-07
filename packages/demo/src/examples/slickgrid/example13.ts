@@ -154,7 +154,7 @@ export class Example13 {
         minWidth: 30, width: 80, maxWidth: 90,
         cssClass: 'cell-effort-driven',
         field: 'effortDriven',
-        formatter: Formatters.checkmark,
+        formatter: Formatters.checkmarkMaterial,
         sortable: true,
         filterable: true,
         filter: {

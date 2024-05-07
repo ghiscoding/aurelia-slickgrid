@@ -222,8 +222,8 @@ describe('Example 1 - Basic Grids', () => {
           .children('li')
           .each(($child, index) => {
             if (index <= 5) {
-              const $input = $child.children('input');
-              const $label = $child.children('label');
+              const $input = $child.find('input');
+              const $label = $child.find('span.checkbox-label');
               expect($input.prop('checked')).to.eq(true);
               expect($label.text()).to.eq(fullTitles[index]);
             }
@@ -270,8 +270,8 @@ describe('Example 1 - Basic Grids', () => {
           .children('li')
           .each(($child, index) => {
             if (index <= 5) {
-              const $input = $child.children('input');
-              const $label = $child.children('label');
+              const $input = $child.find('input');
+              const $label = $child.find('span.checkbox-label');
               expect($input.prop('checked')).to.eq(true);
               expect($label.text()).to.eq(fullTitles[index]);
             }
@@ -309,8 +309,8 @@ describe('Example 1 - Basic Grids', () => {
       .children('li')
       .each(($child, index) => {
         if (index <= 5) {
-          const $input = $child.children('input');
-          const $label = $child.children('label');
+          const $input = $child.find('input');
+          const $label = $child.find('span.checkbox-label');
           if ($label.text() === 'Title') {
             expect($input.attr('checked')).to.eq(undefined);
           } else {
@@ -400,8 +400,8 @@ describe('Example 1 - Basic Grids', () => {
           .children('li')
           .each(($child, index) => {
             if (index <= 5) {
-              const $input = $child.children('input');
-              const $label = $child.children('label');
+              const $input = $child.find('input');
+              const $label = $child.find('span.checkbox-label');
               expect($input.prop('checked')).to.eq(true);
               expect($label.text()).to.eq(fullTitles[index]);
             }
@@ -436,8 +436,8 @@ describe('Example 1 - Basic Grids', () => {
           .children('li')
           .each(($child, index) => {
             if (index <= 5) {
-              const $input = $child.children('input');
-              const $label = $child.children('label');
+              const $input = $child.find('input');
+              const $label = $child.find('span.checkbox-label');
               if ($label.text() === 'Title' || $label.text() === 'Start') {
                 expect($input.attr('checked')).to.eq(undefined);
               } else {

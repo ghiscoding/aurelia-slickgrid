@@ -1,5 +1,7 @@
 $slick-input-focus-box-shadow: 0 0 0 0.25rem #0d6efd40;
 $slick-button-border-color: #ababab !default;
+$navbar-height: 56px;
+$side-menu-width: 250px;
 
 /* make sure to add the @import the SlickGrid Bootstrap Theme AFTER the variables changes */
 @import '@slickgrid-universal/common/dist/styles/sass/slickgrid-theme-bootstrap.scss';
@@ -13,8 +15,11 @@ $slick-button-border-color: #ababab !default;
   font-size: 12px;
 }
 
-$navbar-height: 56px;
-$side-menu-width: 250px;
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
 
 body {
   margin: 0;
@@ -26,10 +31,10 @@ body {
   font-style: italic;
 }
 .faded {
-  opacity: 0.2;
+  opacity: 0.7;
 }
 .faded:hover {
-  opacity: 0.5;
+  opacity: 1;
 }
 .btn {
   padding: 5px;
@@ -57,12 +62,6 @@ body {
   margin-bottom: 10px;
 }
 
-.faded {
-  opacity: 0.2;
-}
-.faded:hover {
-  opacity: 0.5;
-}
 .btn:focus, .btn:active:focus, .btn.active:focus {
 outline: 0 none;
 }

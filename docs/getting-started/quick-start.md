@@ -8,12 +8,12 @@ The easiest is to simply clone the [Aurelia-Slickgrid-Demos](https://github.com/
 ### 1. Install NPM Package
 Install the `Aurelia-Slickgrid`, `Bootstrap` and potentially a font library like `Font-Awesome`
 ```bash
-npm install --save aurelia-slickgrid bootstrap font-awesome # the last deps are optional
+npm install --save aurelia-slickgrid bootstrap # the last deps are optional
 
 # install required @types
 npm install --save-dev @types/sortablejs @types/dompurify
 ```
-_Note: `Bootstrap` and `Font-Awesome` are both optional, you can use any other libs too_
+_Note: `Bootstrap` is optional, you can use any other lib that you want_
 
 ### 2. CSS / SASS Styles
 Load the default Bootstrap theme style or scroll down for SASS customization.
@@ -24,8 +24,6 @@ Default compiled `css` (if you use the plain Bootstrap Theme CSS, you could simp
 ##### WebPack
 ```typescript
 import 'bootstrap/dist/css/bootstrap.css';
-import 'font-awesome/css/font-awesome.css';
-import 'flatpickr/dist/flatpickr.min.css';
 import 'multiple-select-modified/src/multiple-select.css';
 
 // if you use CSS instead of SASS
@@ -61,9 +59,6 @@ export function configure(aurelia) {
 To provide locales other than English (default locale), you have 2 options that you can go with. If you only use English, there is nothing to do (you can still change some of the texts in the grid via option 1.)
 1. Using [Custom Locale](../localization/localization-with-custom-locales.md), that is when you use **only 1** locale (other thank English)... this is a new feature starting from version `2.10.0` and up.
 2. Using [Localization with I18N](../localization/localization.md), that is when you want to use multiple locales dynamically.
-
-#### Date Picker - Flatpickr Localization
-If you use multiple locale, you will also need to import necessary Flatpickr Locale, for more info see this [Flatpickr Localization Wiki](../column-functionalities/filters/compound-filters.md)
 
 ### 5. Create a basic grid
 #### View

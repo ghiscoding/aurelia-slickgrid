@@ -4,7 +4,7 @@
     <a style="font-size: 18px"
         target="_blank"
         href="https://github.com/ghiscoding/aurelia-slickgrid/blob/master/packages/demo/src/examples/slickgrid/example20.ts">
-      <span class="fa fa-link"></span> code
+      <span class="mdi mdi-link-variant"></span> code
     </a>
   </span>
 </h2>
@@ -19,7 +19,7 @@
       <label for="">Pinned Rows: </label>
       <input type="number"
               value.bind="frozenRowCount">
-      <button class="btn btn-outline-secondary btn-xs"
+      <button class="btn btn-outline-secondary btn-xs btn-icon"
               click.trigger="changeFrozenRowCount()">
         Set
       </button>
@@ -28,7 +28,7 @@
       <label for="">Pinned Columns: </label>
       <input type="number"
               value.bind="frozenColumnCount">
-      <button class="btn btn-outline-secondary btn-xs"
+      <button class="btn btn-outline-secondary btn-xs btn-icon"
               click.trigger="changeFrozenColumnCount()">
         Set
       </button>
@@ -38,17 +38,17 @@
 
 <div class="row mt-2">
   <div class="col-sm-12">
-    <button class="btn btn-outline-secondary btn-sm" click.trigger="setFrozenColumns(-1)"
+    <button class="btn btn-outline-secondary btn-sm btn-icon" click.trigger="setFrozenColumns(-1)"
             data-test="remove-frozen-column-button">
-      <i class="fa fa-times fa-lg"></i> Remove Frozen Columns
+      <i class="mdi mdi-close"></i> Remove Frozen Columns
     </button>
-    <button class="btn btn-outline-secondary btn-sm" click.trigger="setFrozenColumns(2)"
+    <button class="btn btn-outline-secondary btn-sm btn-icon" click.trigger="setFrozenColumns(2)"
             data-test="set-3frozen-columns">
-      <i class="fa fa-thumb-tack fa-lg"></i> Set 3 Frozen Columns
+      <i class="mdi mdi-pin-outline"></i> Set 3 Frozen Columns
     </button>
     <span style="margin-left: 15px">
-      <button class="btn btn-outline-secondary btn-sm" click.trigger="toggleFrozenBottomRows()">
-        <i class="fa fa-random fa-lg"></i> Toggle Pinned Rows
+      <button class="btn btn-outline-secondary btn-sm btn-icon" click.trigger="toggleFrozenBottomRows()">
+        <i class="mdi mdi-flip-vertical"></i> Toggle Pinned Rows
       </button>
       <span style="font-weight: bold;">: ${ isFrozenBottom ? 'Bottom' : 'Top' }</span>
     </span>

@@ -117,7 +117,7 @@ For the Select (dropdown) filter, you can fill in the "labelKey" property, if fo
 // define you columns, in this demo Effort Driven will use a Select Filter
 this.columnDefinitions = [
   { id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven',
-    formatter: Formatters.checkmark,
+    formatter: Formatters.checkmarkMaterial,
     type: FieldType.boolean,
     filterable: true,
     filter: {
@@ -133,7 +133,7 @@ You could also use the `enableTranslateLabel` which will translate regardless of
 // define you columns, in this demo Effort Driven will use a Select Filter
 this.columnDefinitions = [
   { id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven',
-    formatter: Formatters.checkmark,
+    formatter: Formatters.checkmarkMaterial,
     type: FieldType.boolean,
     filterable: true,
     filter: {
@@ -150,7 +150,7 @@ What if your select options (collection) have totally different value/label pair
 // define you columns, in this demo Effort Driven will use a Select Filter
 this.columnDefinitions = [
   { id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven',
-    formatter: Formatters.checkmark,
+    formatter: Formatters.checkmarkMaterial,
     type: FieldType.boolean,
     filterable: true,
     filter: {
@@ -175,7 +175,7 @@ What if you want to use `customStructure` and translate the labels? Simply pass 
 // define you columns, in this demo Effort Driven will use a Select Filter
 this.columnDefinitions = [
   { id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven',
-    formatter: Formatters.checkmark,
+    formatter: Formatters.checkmarkMaterial,
     type: FieldType.boolean,
     filterable: true,
     filter: {
@@ -205,7 +205,7 @@ Note: the defaults for single & multiple select filters are different
 // define you columns, in this demo Effort Driven will use a Select Filter
 this.columnDefinitions = [
   { id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven',
-    formatter: Formatters.checkmark,
+    formatter: Formatters.checkmarkMaterial,
     type: FieldType.boolean,
     filterable: true,
     filter: {
@@ -229,7 +229,7 @@ Full example:
 // define you columns, in this demo Effort Driven will use a Select Filter
 this.columnDefinitions = [
   { id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven',
-    formatter: Formatters.checkmark,
+    formatter: Formatters.checkmarkMaterial,
     type: FieldType.boolean,
     filterable: true,
     filter: {
@@ -266,7 +266,7 @@ for (let i = 0; i < 365; i++) {
 
 this.columnDefinitions = [
   { id: 'duration', name: 'Duration', field: 'duration',
-    formatter: Formatters.checkmark,
+    formatter: Formatters.checkmarkMaterial,
     type: FieldType.boolean,
     filterable: true,
     filter: {
@@ -316,7 +316,7 @@ What if you want to use `customStructure` and translate the labels? Simply pass 
 // define you columns, in this demo Effort Driven will use a Select Filter
 this.columnDefinitions = [
   { id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven',
-    formatter: Formatters.checkmark,
+    formatter: Formatters.checkmarkMaterial,
     type: FieldType.boolean,
     filterable: true,
     filter: {
@@ -341,7 +341,7 @@ You can also pre-sort or pre-filter the collection given to the multipleSelect/s
 // define you columns, in this demo Effort Driven will use a Select Filter
 this.columnDefinitions = [
   { id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven',
-    formatter: Formatters.checkmark,
+    formatter: Formatters.checkmarkMaterial,
     type: FieldType.boolean,
     filterable: true,
     filter: {
@@ -413,13 +413,13 @@ By default HTML is not rendered and the `label` will simply show HTML as text. B
 this.columnDefinitions = [
   {
     id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven',
-    formatter: Formatters.checkmark,
+    formatter: Formatters.checkmarkMaterial,
     type: FieldType.boolean,
     filterable: true,
     filter: {
       // display checkmark icon when True
       enableRenderHtml: true,
-      collection: [{ value: '', label: '' }, { value: true, label: 'True', labelPrefix: `<i class="fa fa-check"></i> ` }, { value: false, label: 'False' }],
+      collection: [{ value: '', label: '' }, { value: true, label: 'True', labelPrefix: `<i class="mdi mdi-check"></i> ` }, { value: false, label: 'False' }],
       model: Filters.singleSelect
     }
   }

@@ -52,7 +52,7 @@ Aurelia
   }))
   .register(AureliaSlickGridConfiguration.customize(config => {
     // change any of the default global options
-    config.options.gridMenu!.iconCssClass = 'fa fa-bars';
+    config.options.gridMenu!.iconCssClass = 'mdi mdi-menu';
   }))
   .register(DecimalValueConverter, StringifyValueConverter, DateFormatValueConverter)
   .app(MyApp)

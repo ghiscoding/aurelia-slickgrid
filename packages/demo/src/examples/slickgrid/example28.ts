@@ -20,15 +20,12 @@ import './example28.scss'; // provide custom CSS/SASS styling
 export class Example28 {
   title = 'Example 28: Tree Data with Aggregators <small> <span class="mdi mdi-file-tree mdi-27px"></span> (from a Hierarchical Dataset - <a href="https://ghiscoding.gitbook.io/aurelia-slickgrid/grid-functionalities/tree-data-grid" target="_blank">Wiki</a>)</small>';
   subTitle = `<ul>
-    <li><b>NOTE #1:</b> The grid will automatically sort Ascending with the column that has the Tree Data, you could add a "sortByFieldId" in your column "treeData" option if you wish to sort on a different column</li>
-    <li><b>NOTE #2:</b> Tree Totals are only calculated once and are <b>NOT</b> recalculated while filtering data, if you do want that feature then you will need to enable <code>autoRecalcTotalsOnFilterChange</code> <i>(see checkbox below)</i></li>
-    <li><b>Styling - Salesforce Theme</b></li>
+    <li>It is assumed that your dataset will have Parent/Child references AND also Tree Level (indent) property.</li>
     <ul>
-      <li>The Salesforce Theme was created with SASS and compiled in CSS (<a href="https://github.com/ghiscoding/slickgrid-universal/blob/master/packages/common/src/styles/slickgrid-theme-salesforce.scss" target="_blank">slickgrid-theme-salesforce.scss</a>), you can override any of its SASS variables</li>
-      <li>We use a small subset of <a href="https://materialdesignicons.com/" target="_blank">Material Design Icons</a></li>
-      <li>you might need to refresh the page to clear the browser cache and see the correct theme</li>
+      <li>If you do not have the Tree Level (indent), you could call "convertParentChildArrayToHierarchicalView()" then call "convertHierarchicalViewToParentChildArray()"</li>
+      <li>You could also pass the result of "convertParentChildArrayToHierarchicalView()" to "dataset-hierarchical.bind" as defined in the next Hierarchical Example</li>
     </ul>
-  `;
+  </ul>`;
   aureliaGrid!: AureliaGridInstance;
   gridOptions!: GridOption;
   columnDefinitions: Column[] = [];
@@ -164,34 +161,6 @@ export class Example28 {
       // we can also preset collapsed items via Grid Presets (parentId: 4 => is the "pdf" folder)
       presets: {
         treeData: { toggledItems: [{ itemId: 4, isCollapsed: true }] },
-      },
-      // use Material Design SVG icons
-      contextMenu: {
-        iconCollapseAllGroupsCommand: 'mdi mdi-arrow-collapse',
-        iconExpandAllGroupsCommand: 'mdi mdi-arrow-expand',
-        iconClearGroupingCommand: 'mdi mdi-close',
-        iconCopyCellValueCommand: 'mdi mdi-content-copy',
-        iconExportCsvCommand: 'mdi mdi-download',
-        iconExportExcelCommand: 'mdi mdi-file-excel-outline',
-        iconExportTextDelimitedCommand: 'mdi mdi-download',
-      },
-      gridMenu: {
-        iconCssClass: 'mdi mdi-menu',
-        iconClearAllFiltersCommand: 'mdi mdi-filter-remove-outline',
-        iconClearAllSortingCommand: 'mdi mdi-swap-vertical',
-        iconExportCsvCommand: 'mdi mdi-download',
-        iconExportExcelCommand: 'mdi mdi-file-excel-outline',
-        iconExportTextDelimitedCommand: 'mdi mdi-download',
-        iconRefreshDatasetCommand: 'mdi mdi-sync',
-        iconToggleFilterCommand: 'mdi mdi-flip-vertical',
-        iconTogglePreHeaderCommand: 'mdi mdi-flip-vertical',
-      },
-      headerMenu: {
-        iconClearFilterCommand: 'mdi mdi mdi-filter-remove-outline',
-        iconClearSortCommand: 'mdi mdi-swap-vertical',
-        iconSortAscCommand: 'mdi mdi-sort-ascending',
-        iconSortDescCommand: 'mdi mdi-flip-v mdi-sort-descending',
-        iconColumnHideCommand: 'mdi mdi-close',
       }
     };
   }

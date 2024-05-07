@@ -2,7 +2,6 @@
   "compilerOptions": {
     "target": "es2021",
     "lib": ["es5", "dom"],
-    "types": ["jest", "node"],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -13,6 +12,12 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "baseUrl": ".",
+    "types": [
+      "cypress-real-events",
+      "jest",
+      "jest-extended",
+      "node"
+    ],
     "typeRoots": [
       "../node_modules/@types"
     ]

@@ -4,7 +4,7 @@
     <a style="font-size: 18px"
         target="_blank"
         href="https://github.com/ghiscoding/aurelia-slickgrid/blob/master/packages/demo/src/examples/slickgrid/example31.ts">
-      <span class="fa fa-link"></span> code
+      <span class="mdi mdi-link-variant"></span> code
     </a>
   </span>
 </h2>
@@ -12,20 +12,20 @@
 
 <div class="row">
   <div class="col-md-12" aria-label="Basic Editing Commands">
-    <button class="btn btn-outline-secondary btn-sm" data-test="clear-filters-sorting"
+    <button class="btn btn-outline-secondary btn-sm btn-icon" data-test="clear-filters-sorting"
             click.trigger="clearAllFiltersAndSorts()" title="Clear all Filters & Sorts">
       <span class="mdi mdi-close"></span>
       <span>Clear all Filter & Sorts</span>
     </button>
-    <button class="btn btn-outline-secondary btn-sm" data-test="set-dynamic-filter"
+    <button class="btn btn-outline-secondary btn-sm btn-icon" data-test="set-dynamic-filter"
             click.trigger="setFiltersDynamically()">
       Set Filters Dynamically
     </button>
-    <button class="btn btn-outline-secondary btn-sm" data-test="set-dynamic-sorting"
+    <button class="btn btn-outline-secondary btn-sm btn-icon" data-test="set-dynamic-sorting"
             click.trigger="setSortingDynamically()">
       Set Sorting Dynamically
     </button>
-    <button class="btn btn-outline-secondary btn-sm" style="margin-left: 10px" data-test="add-gender-button"
+    <button class="btn btn-outline-secondary btn-sm btn-icon" style="margin-left: 10px" data-test="add-gender-button"
             click.trigger="addOtherGender()" disabled.bind="isOtherGenderAdded">
       Add Other Gender via RxJS
     </button>
@@ -38,10 +38,10 @@
   <span>
     <label>Programmatically go to first/last page:</label>
     <button class="btn btn-outline-secondary btn-xs px-2" data-test="goto-first-page" click.trigger="goToFirstPage()">
-      <i class="fa fa-caret-left fa-lg"></i>
+      <i class="mdi mdi-page-first"></i>
     </button>
     <button class="btn btn-outline-secondary btn-xs px-2" data-test="goto-last-page" click.trigger="goToLastPage()">
-      <i class="fa fa-caret-right fa-lg"></i>
+      <i class="mdi mdi-page-last icon"></i>
     </button>
   </span>
 
