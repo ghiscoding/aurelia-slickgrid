@@ -48,6 +48,7 @@ const historicSparklineFormatter: Formatter = (_row, _cell, _value, _col, dataCo
 };
 
 export class Example34 {
+  private _darkMode = false;
   title = 'Example 34: Real-Time Trading Platform';
   subTitle = `Simulate a stock trading platform with lot of price changes
   <ul>
@@ -85,6 +86,8 @@ export class Example34 {
 
   detaching() {
     this.stopSimulation();
+    document.querySelector('.panel-wm-content')!.classList.remove('dark-mode');
+    document.querySelector<HTMLDivElement>('#demo-container')!.dataset.bsTheme = 'light';
   }
 
   /* Define grid Options and Columns */
@@ -188,6 +191,7 @@ export class Example34 {
       },
       enableDraggableGrouping: true,
       createPreHeaderPanel: true,
+      darkMode: this._darkMode,
       showPreHeaderPanel: true,
       preHeaderPanelHeight: 40,
       enableCellNavigation: true,
@@ -311,6 +315,22 @@ export class Example34 {
       this.isFullScreen = true;
     }
     this.aureliaGrid.resizerService.resizeGrid();
+  }
+
+  toggleDarkMode() {
+    this._darkMode = !this._darkMode;
+    this.toggleBodyBackground();
+    this.aureliaGrid.slickGrid?.setOptions({ darkMode: this._darkMode });
+  }
+
+  toggleBodyBackground() {
+    if (this._darkMode) {
+      document.querySelector<HTMLDivElement>('.panel-wm-content')!.classList.add('dark-mode');
+      document.querySelector<HTMLDivElement>('#demo-container')!.dataset.bsTheme = 'dark';
+    } else {
+      document.querySelector('.panel-wm-content')!.classList.remove('dark-mode');
+      document.querySelector<HTMLDivElement>('#demo-container')!.dataset.bsTheme = 'light';
+    }
   }
 
   private randomNumber(min: number, max: number, floor = true) {
