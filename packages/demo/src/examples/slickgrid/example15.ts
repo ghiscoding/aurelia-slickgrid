@@ -1,6 +1,5 @@
 import { I18N } from '@aurelia/i18n';
 import { resolve } from 'aurelia';
-import { type MultipleSelectOption } from 'multiple-select-vanilla';
 import {
   type AureliaGridInstance,
   type Column,
@@ -10,6 +9,7 @@ import {
   type GridOption,
   type GridState,
   type GridStateChange,
+  type MultipleSelectOption,
 } from 'aurelia-slickgrid';
 
 function randomBetween(min: number, max: number) {
