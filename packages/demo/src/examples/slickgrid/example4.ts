@@ -12,7 +12,7 @@ import {
   type GridOption,
   type GridStateChange,
   type Metrics,
-  type MultipleSelectOption
+  type MultipleSelectOption,
   OperatorType,
   type VanillaCalendarOption,
 } from 'aurelia-slickgrid';
