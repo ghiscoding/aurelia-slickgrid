@@ -1,7 +1,6 @@
 import { IHttpClient } from '@aurelia/fetch-client';
 import { newInstanceOf, resolve } from '@aurelia/kernel';
 import { ExcelExportService } from '@slickgrid-universal/excel-export';
-import { type MultipleSelectOption } from 'multiple-select-vanilla';
 
 import { CustomInputFilter } from './custom-inputFilter';
 import {
@@ -13,6 +12,7 @@ import {
   type GridOption,
   type GridStateChange,
   type Metrics,
+  type MultipleSelectOption
   OperatorType,
   type VanillaCalendarOption,
 } from 'aurelia-slickgrid';

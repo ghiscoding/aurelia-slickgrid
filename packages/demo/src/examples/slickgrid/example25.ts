@@ -1,7 +1,6 @@
 import { IHttpClient, json } from '@aurelia/fetch-client';
 import { newInstanceOf, resolve } from '@aurelia/kernel';
 import { GraphqlService, type GraphqlResult, type GraphqlServiceApi, } from '@slickgrid-universal/graphql';
-import { type MultipleSelectOption } from 'multiple-select-vanilla';
 import {
   type AureliaGridInstance,
   type Column,
@@ -9,6 +8,7 @@ import {
   Formatters,
   type GridOption,
   type Metrics,
+  type MultipleSelectOption,
   OperatorType,
 } from 'aurelia-slickgrid';
 import './example25.scss'; // provide custom CSS/SASS styling
