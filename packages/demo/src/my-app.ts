@@ -1,7 +1,8 @@
+import { IHydratedController } from '@aurelia/runtime-html';
+import { resolve } from 'aurelia';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import './styles.scss';
-
 export class MyApp {
   static routes = [
     { path: ['', 'example1'], component: () => import('./examples/slickgrid/example1'), title: '1- Basic Grid / 2 Grids' },
@@ -46,6 +47,14 @@ export class MyApp {
 
   attached() {
     this.addGitHubStarsLogo();
+
+    // scroll to active link route, there's probably a better way to do this but couldn't find lifecycle for it
+    setTimeout(() => {
+      const linkElm = document.querySelector('.nav-link.active');
+      if (linkElm) {
+        linkElm.scrollIntoView({ block: 'nearest' });
+      }
+    }, 45)
   }
 
   addGitHubStarsLogo() {
