@@ -1,4 +1,4 @@
-## Version 5 - Better UI and Dark Mode with Pure CSS SVG icons ✨
+## Version 8 - Better UI and Dark Mode with Pure CSS SVG icons ✨
 This new release brings a lot of changes oriented towards better UI/UX, our SVG icons are now pure CSS and can be colorized like any other text via the native CSS `color` property (which helps a lot to improve the Dark Mode Theme).
 
 Another noticeable UI change is the migration from [Flatpickr](https://flatpickr.js.org/) to [Vanilla-Calendar-Picker](https://github.com/ghiscoding/vanilla-calendar-picker) (which is a fork of [Vanilla-Calendar-Pro](https://vanilla-calendar.pro/) and we'll hopefully drop the fork in the near future if possible), there are multiple reasons to migrate our date picker to another library as shown below. Another change that is mostly internal but is also indirectly connected to the date picker is the migration from MomentJS to [Tempo](https://tempo.formkit.com/) which is modern and is packaged as ESM which is great for Tree Shaking.
