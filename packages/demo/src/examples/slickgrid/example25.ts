@@ -53,7 +53,6 @@ export class Example25 {
 
   graphqlQuery = '';
   processing = false;
-  selectedLanguage = '';
   status = { text: '', class: '' };
 
   constructor(readonly http: IHttpClient = resolve(newInstanceOf(IHttpClient))) {

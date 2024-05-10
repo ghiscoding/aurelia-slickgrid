@@ -1,5 +1,3 @@
-import { IHydratedController } from '@aurelia/runtime-html';
-import { resolve } from 'aurelia';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import './styles.scss';

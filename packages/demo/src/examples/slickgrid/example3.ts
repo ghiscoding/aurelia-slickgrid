@@ -85,7 +85,7 @@ export class Example3 {
     this.defineGrid();
   }
 
-  async attached() {
+  attached() {
     // populate the dataset once the grid is ready
     this.dataset = this.mockData(NB_ITEMS);
   }
