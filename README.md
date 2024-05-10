@@ -14,7 +14,7 @@
 One of the best JavasSript datagrid [SlickGrid](https://github.com/mleibman/SlickGrid), which was originally developed by @mleibman, is now available to the Aurelia world. SlickGrid beats most other datagrids in terms of features, customizability & performance (running smoothly with even a million rows). Aurelia-Slickgrid is a wrapper on top of [Slickgrid-Universal](https://github.com/ghiscoding/slickgrid-universal/) (which is required), in the early beginning we used the `6pac/SlickGrid` fork but that was dropped in >=[v7.0](https://github.com/ghiscoding/aurelia-slickgrid/releases/tag/v7.0.3) since Slickgrid-Universal is now a standalone project. SlickGrid was also recently rewritten with browser native code (no more ~jQuery~ 🎉).
 
 ## Documentation
-📕 [Documentation](https://ghiscoding.gitbook.io/aurelia-slickgrid/getting-started/quick-start) website powered by GitBook for version 7+ (_... or use the [Wikis](https://github.com/ghiscoding/Angular-Slickgrid/wiki) for older versions_).
+📕 [Documentation](https://ghiscoding.gitbook.io/aurelia-slickgrid/getting-started/quick-start) website powered by GitBook for version 7+ (_or use the [Wikis](https://github.com/ghiscoding/Angular-Slickgrid/wiki) for older versions_).
 
 ## Installation
 
@@ -36,6 +36,7 @@ npm install @slickgrid-universal/excel-export
 
 | Aurelia-Slickgrid | Aurelia version | Migration Guide | Notes |
 |-------------------|-----------------|-----------------|------|
+| 8.x               | Aurelia 2       | [Migration 8.x](https://ghiscoding.gitbook.io/aurelia-slickgrid/migrations/migration-to-8.x)     | modern UI and Dark Mode, requires Slickgrid-Universal [5.x](https://github.com/ghiscoding/slickgrid-universal/releases/tag/v5.0.0) version |
 | 7.x               | Aurelia 2       | [Migration 7.x](https://ghiscoding.gitbook.io/aurelia-slickgrid/migrations/migration-to-7.x)     | merge SlickGrid into Slickgrid-Universal, requires Slickgrid-Universal [4.x](https://github.com/ghiscoding/slickgrid-universal/releases/tag/v4.0.2) version |
 | 6.x               | 1.x             | [Migration 6.x](https://github.com/ghiscoding/aurelia-slickgrid/wiki/Migration-to-6.x)     | removal of jQuery (now uses browser native code), requires Slickgrid-Universal [3.x](https://github.com/ghiscoding/slickgrid-universal/releases/tag/v3.0.0) version |
 | 5.x               | 1.x             | [Migration 5.x](https://github.com/ghiscoding/aurelia-slickgrid/wiki/Migration-to-5.x)     | removal of jQueryUI, requires Slickgrid-Universal [2.x](https://github.com/ghiscoding/slickgrid-universal/releases/tag/v2.0.0) version |
