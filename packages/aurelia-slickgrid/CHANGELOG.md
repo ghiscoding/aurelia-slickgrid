@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.0.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v7.7.0...v8.0.0) (2024-05-10)
+
+### ⚠ BREAKING CHANGES
+
+* pure SVG icons, Moment to Tempo, Flatpickr to Vanilla-Calendar (#1203)
+* make DOMPurify as optional (#1195)
+* migrate from Moment to Tempo (#1194)
+* remove Font-Awesome and use new SVG icons (#1191)
+* **common:** migrate from Flatpickr to Vanilla-Calendar (#1193)
+
+### Features
+
+* **common:** migrate from Flatpickr to Vanilla-Calendar ([#1193](https://github.com/ghiscoding/aurelia-slickgrid/issues/1193)) ([27ee287](https://github.com/ghiscoding/aurelia-slickgrid/commit/27ee2873ad7f11b802169c599bd338706138c7bd)) - by @ghiscoding
+* make DOMPurify as optional ([#1195](https://github.com/ghiscoding/aurelia-slickgrid/issues/1195)) ([5a84ff8](https://github.com/ghiscoding/aurelia-slickgrid/commit/5a84ff81d8b6d2e2321b4b219391eae38e42cdd0)) - by @ghiscoding
+* migrate from Moment to Tempo ([#1194](https://github.com/ghiscoding/aurelia-slickgrid/issues/1194)) ([58831dd](https://github.com/ghiscoding/aurelia-slickgrid/commit/58831dd3fa8a9a7a70b3bd590ef234aca96bfcce)) - by @ghiscoding
+* pure SVG icons, Moment to Tempo, Flatpickr to Vanilla-Calendar ([#1203](https://github.com/ghiscoding/aurelia-slickgrid/issues/1203)) ([8a11310](https://github.com/ghiscoding/aurelia-slickgrid/commit/8a113105ead1f164e4bc2eb17e8d772b573c1b2f)) - by @ghiscoding
+* remove Font-Awesome and use new SVG icons ([#1191](https://github.com/ghiscoding/aurelia-slickgrid/issues/1191)) ([6f7b6fe](https://github.com/ghiscoding/aurelia-slickgrid/commit/6f7b6fe632ea080cbf81c6f2a63c5de80592a541)) - by @ghiscoding
+
+### Bug Fixes
+
+* we shouldn't always commit on focusout/blur ([#1192](https://github.com/ghiscoding/aurelia-slickgrid/issues/1192)) ([5b9b543](https://github.com/ghiscoding/aurelia-slickgrid/commit/5b9b54382cce9df559289a05b7ea4b49f14062f6)) - by @ghiscoding
+
 # [7.7.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v7.6.1...v7.7.0) (2024-04-20)
 
 ### Features
