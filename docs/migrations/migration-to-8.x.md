@@ -49,8 +49,8 @@ If you use any of the Slickgrid-Universal extra dependencies then make sure to u
   "dependencies": {
 -   "@slickgrid-universal/excel-export": "^4.7.0",
 +   "@slickgrid-universal/excel-export": "^5.0.0",
--   "slickgrid-react": "^7.7.0",
-+   "slickgrid-react": "^8.0.0",
+-   "aurelia-slickgrid": "^7.7.0",
++   "aurelia-slickgrid": "^8.0.0",
 }
 ```
 
