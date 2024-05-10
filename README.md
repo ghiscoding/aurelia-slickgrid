@@ -63,7 +63,7 @@ For a complete working set of demos, you can clone the [Aurelia-Slickgrid Demos]
 You like and use **Aurelia-Slickgrid**? Be sure to upvote ⭐ and feel free to contribute. 👷👷‍♀️
 
 #### Like my work?
-You could ⭐ the lib and maybe support me with cafeine [☕](https://ko-fi.com/ghiscoding). Thanks.
+You could ⭐ the lib and maybe support me with caffeine [☕](https://ko-fi.com/ghiscoding). Thanks.
 
 <a href='https://ko-fi.com/ghiscoding' target='_blank'><img height='32' style='border:0px;height:32px;' src='https://az743702.vo.msecnd.net/cdn/kofi3.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' />
 
