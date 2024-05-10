@@ -96,3 +96,4 @@
 * [Migration Guide to 5.x](migrations/migration-to-5.x.md)
 * [Migration Guide to 6.x](migrations/migration-to-6.x.md)
 * [Migration Guide to 7.x](migrations/migration-to-7.x.md)
+* [Migration Guide to 8.x](migrations/migration-to-8.x.md)
