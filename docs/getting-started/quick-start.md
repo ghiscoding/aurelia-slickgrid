@@ -6,7 +6,7 @@
 The easiest is to simply clone the [Aurelia-Slickgrid-Demos](https://github.com/ghiscoding/aurelia-slickgrid-demos) project and run it from there... or if you really wish to start from scratch then follow the steps below.
 
 ### 1. Install NPM Package
-Install the `Aurelia-Slickgrid`, `Bootstrap` and potentially a font library like `Font-Awesome`
+Install the `Aurelia-Slickgrid` and optionally `Bootstrap`
 ```bash
 npm install --save aurelia-slickgrid bootstrap # Bootstrap is optional
 ```
