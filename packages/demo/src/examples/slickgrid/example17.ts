@@ -22,7 +22,7 @@ const mpnFormatter: Formatter = (_row, _cell, _value, _columnDef, dataContext) =
 };
 
 export class Example17 {
-  @bindable({ mode: BindingMode.twoWay }) search = '';
+  search = '';
   private _eventHandler: any = new SlickEventHandler();
 
   title = 'Example 17: Octopart Catalog Search - Remote Model Plugin';

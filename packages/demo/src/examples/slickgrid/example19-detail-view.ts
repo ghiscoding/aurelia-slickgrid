@@ -3,7 +3,7 @@ import { SlickDataView, SlickGrid } from 'aurelia-slickgrid';
 import { SlickRowDetailView } from '@slickgrid-universal/row-detail-view-plugin';
 
 export class Example19DetailView {
-  @bindable() model!: {
+  model!: {
     duration: Date;
     percentComplete: number;
     reporter: string;
@@ -15,13 +15,13 @@ export class Example19DetailView {
   };
 
   // you also have access to the following objects (it must match the exact property names shown below)
-  @bindable() addon!: SlickRowDetailView; // row detail addon instance
-  @bindable() grid!: SlickGrid;
-  @bindable() dataView!: SlickDataView;
+  addon!: SlickRowDetailView; // row detail addon instance
+  grid!: SlickGrid;
+  dataView!: SlickDataView;
 
   // you can also optionally use the Parent Component reference
   // NOTE that you MUST provide it through the "parent" property in your "rowDetail" grid options
-  @bindable() parent?: any;
+  parent?: any;
 
   alertAssignee(name: string) {
     if (typeof name === 'string') {
