@@ -12,7 +12,7 @@
 
 <div class="row">
   <div class="col-md-7">
-    <button click.trigger="addNewFile()" data-test="add-item-btn" class="btn btn-xs btn-primary">
+    <button click.trigger="addNewFile()" data-test="add-item-btn" class="btn btn-xs btn-icon btn-primary">
       <span class="mdi mdi-plus color-white"></span>
       <span>Add New Pop Song</span>
     </button>
@@ -46,7 +46,7 @@
     <div class="input-group input-group-sm">
       <input type="text" class="form-control search-string" placeholder="search value" autocomplete="off"
               data-test="search-string" value.bind="searchString">
-      <button class="btn btn-xs btn-outline-secondary d-flex align-items-center" data-test="clear-search-string"
+      <button class="btn btn-sm btn-outline-secondary d-flex align-items-center" data-test="clear-search-string"
               click.trigger="clearSearch()">
         <span class="icon mdi mdi-close-thick"></span>
       </button>

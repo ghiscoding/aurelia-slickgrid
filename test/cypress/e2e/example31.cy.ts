@@ -3,9 +3,7 @@ describe('Example 31 - OData Grid using RxJS', () => {
 
   beforeEach(() => {
     // create a console.log spy for later use
-    cy.window().then((win) => {
-      cy.spy(win.console, 'log');
-    });
+    cy.window().then(win => cy.spy(win.console, 'log'));
   });
 
   it('should display Example title', () => {
@@ -198,7 +196,7 @@ describe('Example 31 - OData Grid using RxJS', () => {
     it('should Clear all Filters and expect to go back to first page', () => {
       cy.get('#grid31')
         .find('button.slick-grid-menu-button')
-        .trigger('click', { force: true })
+        .trigger('click')
         .click({ force: true });
 
       cy.get(`.slick-grid-menu:visible`)
@@ -243,7 +241,7 @@ describe('Example 31 - OData Grid using RxJS', () => {
     it('should Clear all Sorting', () => {
       cy.get('#grid31')
         .find('button.slick-grid-menu-button')
-        .trigger('click', { force: true })
+        .trigger('click')
         .click();
 
       cy.get(`.slick-grid-menu:visible`)
@@ -335,7 +333,7 @@ describe('Example 31 - OData Grid using RxJS', () => {
     it('should Clear all Filters, set 20 items per page & uncheck "enableCount"', () => {
       cy.get('#grid31')
         .find('button.slick-grid-menu-button')
-        .trigger('click', { force: true })
+        .trigger('click')
         .click();
 
       cy.get(`.slick-grid-menu:visible`)
@@ -417,7 +415,7 @@ describe('Example 31 - OData Grid using RxJS', () => {
     it('should Clear all Sorting', () => {
       cy.get('#grid31')
         .find('button.slick-grid-menu-button')
-        .trigger('click', { force: true })
+        .trigger('click')
         .click();
 
       cy.get(`.slick-grid-menu:visible`)
@@ -687,6 +685,17 @@ describe('Example 31 - OData Grid using RxJS', () => {
       cy.get('[data-test="add-gender-button"]').should('not.be.disabled');
       cy.get('[data-test="add-gender-button"]').click();
       cy.get('[data-test="add-gender-button"]').should('be.disabled');
+    });
+
+    it('should select 1st row', () => {
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 0}px;"] > .slick-cell:nth(0)`)
+        .click();
+
+      cy.get('#grid31')
+        .find('.slick-row')
+        .children()
+        .filter('.slick-cell-checkboxsel.selected')
+        .should('have.length', 1);
     });
 
     it('should open the "Gender" editor on the first row and expect to find 1 more option the editor list (male, female, other)', () => {

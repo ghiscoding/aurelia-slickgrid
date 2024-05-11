@@ -62,7 +62,10 @@ export class Example14 {
       },
       externalResources: [new ExcelExportService()],
       explicitInitialization: true,
-      colspanCallback: this.renderDifferentColspan
+      colspanCallback: this.renderDifferentColspan,
+      gridMenu: {
+        iconButtonContainer: 'preheader' // we can display the grid menu icon in either the preheader or in the column header (default)
+      },
     };
   }
 
