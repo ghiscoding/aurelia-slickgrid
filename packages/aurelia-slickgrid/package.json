@@ -59,7 +59,7 @@
     "@slickgrid-universal/event-pub-sub": "~5.0.0",
     "@slickgrid-universal/pagination-component": "~5.0.1",
     "@slickgrid-universal/row-detail-view-plugin": "~5.0.1",
-    "@slickgrid-universal/utils": "~5.0.1",
+    "@slickgrid-universal/utils": "~5.0.0",
     "dequal": "^2.0.3",
     "sortablejs": "^1.15.2"
   },
