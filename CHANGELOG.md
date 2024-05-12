@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.0.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.0.0...v8.0.1) (2024-05-12)
+
+### Bug Fixes
+
+* small styling issues & better primary color support w/Dark Mode ([#1204](https://github.com/ghiscoding/aurelia-slickgrid/issues/1204)) ([9636a5b](https://github.com/ghiscoding/aurelia-slickgrid/commit/9636a5bdbb5a5fdbfebc5c1a54e54d412361c344)) - by @ghiscoding
+
 ## [8.0.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v7.7.0...v8.0.0) (2024-05-10)
 
 > [!NOTE]
