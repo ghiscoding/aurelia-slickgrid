@@ -23,6 +23,10 @@ $side-menu-width: 250px;
   gap: 4px;
 }
 
+.gap-4px {
+  gap: 4px;
+}
+
 .mdi-pencil.pointer:hover {
   color: #00bfff;
 }
@@ -149,6 +153,9 @@ outline: 0 none;
 .slick-dark-mode {
   --slick-button-style-bg-color: #212121;
   --slick-button-border-color: #626262;
+  .text-primary {
+    color: #599BFE !important;
+  }
 }
 
 .button-style {
@@ -195,9 +202,3 @@ outline: 0 none;
   }
 }
 
-.ms-dark-mode,
-.ms-drop.ms-dark-mode,
-.slick-dark-mode .ms-dark-mode,
-.slick-dark-mode {
-  --slick-checkbox-selector-unchecked-color: #89d1f5;
-}
