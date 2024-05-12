@@ -16,7 +16,7 @@ const NB_ITEMS = 1000;
 
 export class Example19 {
   private _darkMode = false;
-  detailViewRowCount = 9;
+  @bindable detailViewRowCount = 9;
   title = 'Example 19: Row Detail View';
   subTitle = `
     Add functionality to show extra information with a Row Detail View, (<a href="https://ghiscoding.gitbook.io/aurelia-slickgrid/grid-functionalities/row-detail" target="_blank">Wiki docs</a>)

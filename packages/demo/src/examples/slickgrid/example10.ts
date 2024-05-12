@@ -12,7 +12,7 @@ export class Example10 {
       <li>NOTE: Any Row Selection(s) will be reset when using Pagination and changing Page (you will need to set it back manually if you want it back)</li>
     </ul>
   `;
-  isGrid2WithPagination = true;
+  @bindable() isGrid2WithPagination = true;
 
   aureliaGrid1!: AureliaGridInstance;
   aureliaGrid2!: AureliaGridInstance;

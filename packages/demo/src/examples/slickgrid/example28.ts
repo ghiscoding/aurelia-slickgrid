@@ -35,7 +35,7 @@ export class Example28 {
   isAutoRecalcTotalsOnFilterChange = false;
   isRemoveLastInsertedPopSongDisabled = true;
   lastInsertedPopSongId: number | undefined;
-  searchString = '';
+  @bindable() searchString = '';
 
   constructor() {
     // define the grid options & columns and then create the grid itself
