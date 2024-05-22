@@ -49,9 +49,9 @@
     "aurelia": "^2.0.0-beta.17"
   },
   "dependencies": {
-    "@aurelia/i18n": "2.0.0-beta.17",
-    "@aurelia/runtime": "2.0.0-beta.17",
-    "@aurelia/runtime-html": "2.0.0-beta.17",
+    "@aurelia/i18n": "^2.0.0-beta.17",
+    "@aurelia/runtime": "^2.0.0-beta.17",
+    "@aurelia/runtime-html": "^2.0.0-beta.17",
     "@formkit/tempo": "^0.1.1",
     "@slickgrid-universal/common": "~5.0.1",
     "@slickgrid-universal/custom-footer-component": "~5.0.1",
