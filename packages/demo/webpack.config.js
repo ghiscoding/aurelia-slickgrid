@@ -85,7 +85,6 @@ module.exports = ({ production, node } = {}, { server } = {}, { analyze } = {}) 
         },
         { test: /\.(sass|scss)$/, use: ['style-loader', 'css-loader', 'sass-loader'], issuer: /\.[tj]s$/i },
         { test: /\.(sass|scss)$/, use: ['css-loader', 'sass-loader'], issuer: /\.html?$/i },
-        // { test: /\.js$/, enforce: 'pre', use: ['source-map-loader'], include: [/aurelia-slickgrid/] },
         {
           test: /\.ts$/i, use: [
             {
