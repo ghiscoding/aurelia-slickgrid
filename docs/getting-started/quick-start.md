@@ -1,6 +1,6 @@
 # Quick start
 
-> **NOTE** the Documentations shown on this website are meant to be used with Aurelia-Slickgrid v7.x or higher, refer to the project [Wikis](https://github.com/ghiscoding/aurelia-slickgrid/wiki) for earlier versions of the project.
+> **NOTE** The Documentations shown on this website are meant for Aurelia-Slickgrid v7.x and higher, for older versions please refer to the project [Wikis](https://github.com/ghiscoding/aurelia-slickgrid/wiki) for earlier versions of the project.
 
 ### Easiest Way to Get Started
 The easiest is to simply clone the [Aurelia-Slickgrid-Demos](https://github.com/ghiscoding/aurelia-slickgrid-demos) project and run it from there... or if you really wish to start from scratch then follow the steps below.
