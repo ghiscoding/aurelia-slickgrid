@@ -12,7 +12,8 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 ## [8.0.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v7.7.0...v8.0.0) (2024-05-10)
 
 > [!NOTE]
-> #### Follow the [Migration to 8.0](https://github.com/ghiscoding/aurelia-slickgrid/wiki/Migration-to-8.x) for all the changes
+> #### Follow the [Migration to 8.0](https://github.com/ghiscoding/aurelia-slickgrid/wiki/Migration-to-8.x) for all the changes and take a look at the [v8.0.0](https://github.com/ghiscoding/aurelia-Slickgrid/releases/tag/v8.0.0) release for the announcement and quick info.
+
 
 ### ⚠ BREAKING CHANGES
 
