@@ -125,14 +125,6 @@ export class Example21 {
     this.dataset = mockedDataset;
   }
 
-  generatePhoneNumber() {
-    let phone = '';
-    for (let i = 0; i < 10; i++) {
-      phone += Math.round(Math.random() * 9) + '';
-    }
-    return phone;
-  }
-
   //
   // -- if any of the Search form input changes, we'll call the updateFilter() method
   //
