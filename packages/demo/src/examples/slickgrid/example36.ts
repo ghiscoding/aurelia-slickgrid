@@ -413,6 +413,7 @@ export class Example36 {
   }
 
   clearGrouping() {
+    this.isDataGrouped = false;
     this.aureliaGrid?.dataView?.setGrouping([]);
   }
 
