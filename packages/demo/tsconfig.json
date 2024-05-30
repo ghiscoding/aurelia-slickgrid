@@ -12,7 +12,7 @@
     "noEmit": false,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "noImplicitReturns": true,
+    "noImplicitReturns": false,
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "sourceMap": true,
