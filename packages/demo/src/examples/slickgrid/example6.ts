@@ -158,7 +158,8 @@ export class Example6 {
         filters: [
           // you can use OperatorType or type them as string, e.g.: operator: 'EQ'
           { columnId: 'gender', searchTerms: ['male'], operator: OperatorType.equal },
-          { columnId: 'name', searchTerms: ['John Doe'], operator: OperatorType.contains },
+          // { columnId: 'name', searchTerms: ['John Doe'], operator: OperatorType.contains },
+          { columnId: 'name', searchTerms: ['Joh*oe'], operator: OperatorType.startsWithEndsWith },
           { columnId: 'company', searchTerms: ['xyz'], operator: 'IN' },
 
           // use a date range with 2 searchTerms values
@@ -320,7 +321,8 @@ export class Example6 {
     this.aureliaGrid.filterService.updateFilters([
       // you can use OperatorType or type them as string, e.g.: operator: 'EQ'
       { columnId: 'gender', searchTerms: ['male'], operator: OperatorType.equal },
-      { columnId: 'name', searchTerms: ['John Doe'], operator: OperatorType.contains },
+      // { columnId: 'name', searchTerms: ['John Doe'], operator: OperatorType.contains },
+      { columnId: 'name', searchTerms: ['Joh*oe'], operator: OperatorType.startsWithEndsWith },
       { columnId: 'company', searchTerms: ['xyz'], operator: 'IN' },
 
       // use a date range with 2 searchTerms values

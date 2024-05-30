@@ -31,7 +31,7 @@ describe('Example 6 - GraphQL Grid', () => {
     cy.get('.search-filter.filter-name')
       .find('input')
       .invoke('val')
-      .then(text => expect(text).to.eq('John Doe'));
+      .then(text => expect(text).to.eq('Joh*oe'));
 
     cy.get('.search-filter.filter-gender .ms-choice > span')
       .contains('Male');
@@ -56,7 +56,8 @@ describe('Example 6 - GraphQL Grid', () => {
         expect(text).to.eq(removeWhitespaces(`query{users(first:20,offset:20,
           orderBy:[{field:"name",direction:ASC},{field:"company",direction:DESC}],
           filterBy:[
-            {field:"gender",operator:EQ,value:"male"},{field:"name",operator:Contains,value:"JohnDoe"},
+            {field:"gender",operator:EQ,value:"male"},
+            {field:"name",operator:StartsWith,value:"Joh"},{field:"name",operator:EndsWith,value:"oe"},
             {field:"company",operator:IN,value:"xyz"},{field:"finish",operator:GE,value:"${presetLowestDay}"},{field:"finish",operator:LE,value:"${presetHighestDay}"}
           ],locale:"en",userId:123){
             totalCount,nodes{id,name,gender,company,billing{address{street,zip}},finish}}}`));
@@ -81,7 +82,8 @@ describe('Example 6 - GraphQL Grid', () => {
         expect(text).to.eq(removeWhitespaces(`query{users(first:20,offset:40,
           orderBy:[{field:"name",direction:ASC},{field:"company",direction:DESC}],
           filterBy:[
-            {field:"gender",operator:EQ,value:"male"},{field:"name",operator:Contains,value:"JohnDoe"},
+            {field:"gender",operator:EQ,value:"male"},
+            {field:"name",operator:StartsWith,value:"Joh"},{field:"name",operator:EndsWith,value:"oe"},
             {field:"company",operator:IN,value:"xyz"},{field:"finish",operator:GE,value:"${presetLowestDay}"},{field:"finish",operator:LE,value:"${presetHighestDay}"}
           ],locale:"en",userId:123){totalCount,nodes{id,name,gender,company,billing{address{street,zip}},finish}}}`));
       });
@@ -99,7 +101,8 @@ describe('Example 6 - GraphQL Grid', () => {
         expect(text).to.eq(removeWhitespaces(`query{users(first:20,offset:80,
           orderBy:[{field:"name",direction:ASC},{field:"company",direction:DESC}],
           filterBy:[
-            {field:"gender",operator:EQ,value:"male"},{field:"name",operator:Contains,value:"JohnDoe"},
+            {field:"gender",operator:EQ,value:"male"},
+            {field:"name",operator:StartsWith,value:"Joh"},{field:"name",operator:EndsWith,value:"oe"},
             {field:"company",operator:IN,value:"xyz"},{field:"finish",operator:GE,value:"${presetLowestDay}"},{field:"finish",operator:LE,value:"${presetHighestDay}"}
           ],locale:"en",userId:123){totalCount,nodes{id,name,gender,company,billing{address{street,zip}},finish}}}`));
       });
@@ -119,7 +122,7 @@ describe('Example 6 - GraphQL Grid', () => {
           orderBy:[{field:"name",direction:ASC},{field:"company",direction:DESC}],
           filterBy:[
             {field:"gender",operator:EQ,value:"male"},
-            {field:"name",operator:Contains,value:"John Doe"},
+            {field:"name",operator:StartsWith,value:"Joh"},{field:"name",operator:EndsWith,value:"oe"},
             {field:"company",operator:IN,value:"xyz"},
             {field:"finish",operator:GE,value:"${presetLowestDay}"},
             {field:"finish",operator:LE,value:"${presetHighestDay}"}
@@ -140,7 +143,8 @@ describe('Example 6 - GraphQL Grid', () => {
         expect(text).to.eq(removeWhitespaces(`query{users(first:20,offset:80,
           orderBy:[{field:"name",direction:ASC},{field:"company",direction:DESC}],
           filterBy:[
-            {field:"gender",operator:EQ,value:"male"},{field:"name",operator:Contains,value:"JohnDoe"},
+            {field:"gender",operator:EQ,value:"male"},
+            {field:"name",operator:StartsWith,value:"Joh"},{field:"name",operator:EndsWith,value:"oe"},
             {field:"company",operator:IN,value:"xyz"},{field:"finish",operator:GE,value:"${presetLowestDay}"},{field:"finish",operator:LE,value:"${presetHighestDay}"}
           ],locale:"en",userId:123){totalCount,nodes{id,name,gender,company,billing{address{street,zip}},finish}}}`));
       });
@@ -160,7 +164,8 @@ describe('Example 6 - GraphQL Grid', () => {
         expect(text).to.eq(removeWhitespaces(`query{users(first:30,offset:0,
           orderBy:[{field:"name",direction:ASC},{field:"company",direction:DESC}],
           filterBy:[
-            {field:"gender",operator:EQ,value:"male"},{field:"name",operator:Contains,value:"JohnDoe"},
+            {field:"gender",operator:EQ,value:"male"},
+            {field:"name",operator:StartsWith,value:"Joh"},{field:"name",operator:EndsWith,value:"oe"},
             {field:"company",operator:IN,value:"xyz"},{field:"finish",operator:GE,value:"${presetLowestDay}"},{field:"finish",operator:LE,value:"${presetHighestDay}"}
           ],locale:"en",userId:123){totalCount,nodes{id,name,gender,company,billing{address{street,zip}},finish}}}`));
       });
@@ -171,7 +176,7 @@ describe('Example 6 - GraphQL Grid', () => {
       .find('.slick-header-left .slick-header-column:nth(0)')
       .trigger('mouseover')
       .children('.slick-header-menu-button')
-      // .should('be.hidden')
+      .should('be.hidden')
       .invoke('show')
       .click();
 
@@ -705,7 +710,8 @@ describe('Example 6 - GraphQL Grid', () => {
           expect(text).to.eq(removeWhitespaces(`query{users(last:20,
             orderBy:[{field:"name",direction:ASC},{field:"company",direction:DESC}],
             filterBy:[
-              {field:"gender",operator:EQ,value:"male"},{field:"name",operator:Contains,value:"JohnDoe"},
+              {field:"gender",operator:EQ,value:"male"},
+              {field:"name",operator:StartsWith,value:"Joh"},{field:"name",operator:EndsWith,value:"oe"},
               {field:"company",operator:IN,value:"xyz"},{field:"finish",operator:GE,value:"${presetLowestDay}"},{field:"finish",operator:LE,value:"${presetHighestDay}"}
             ],locale:"en",userId:123){totalCount,nodes{id,name,gender,company,billing{address{street,zip}},finish},pageInfo{hasNextPage,hasPreviousPage,endCursor,startCursor},edges{cursor}}}`));
         });
@@ -725,7 +731,8 @@ describe('Example 6 - GraphQL Grid', () => {
           expect(text).to.eq(removeWhitespaces(`query{users(first:20,
             orderBy:[{field:"name",direction:ASC},{field:"company",direction:DESC}],
             filterBy:[
-              {field:"gender",operator:EQ,value:"male"},{field:"name",operator:Contains,value:"JohnDoe"},
+              {field:"gender",operator:EQ,value:"male"},
+              {field:"name",operator:StartsWith,value:"Joh"},{field:"name",operator:EndsWith,value:"oe"},
               {field:"company",operator:IN,value:"xyz"},{field:"finish",operator:GE,value:"${presetLowestDay}"},{field:"finish",operator:LE,value:"${presetHighestDay}"}
             ],locale:"en",userId:123){totalCount,nodes{id,name,gender,company,billing{address{street,zip}},finish},pageInfo{hasNextPage,hasPreviousPage,endCursor,startCursor},edges{cursor}}}`));
         });
@@ -753,7 +760,8 @@ describe('Example 6 - GraphQL Grid', () => {
               expect(text).to.eq(removeWhitespaces(`query{users(first:20,after:"${afterCursor}",
                 orderBy:[{field:"name",direction:ASC},{field:"company",direction:DESC}],
                 filterBy:[
-                  {field:"gender",operator:EQ,value:"male"},{field:"name",operator:Contains,value:"JohnDoe"},
+                  {field:"gender",operator:EQ,value:"male"},
+                  {field:"name",operator:StartsWith,value:"Joh"},{field:"name",operator:EndsWith,value:"oe"},
                   {field:"company",operator:IN,value:"xyz"},{field:"finish",operator:GE,value:"${presetLowestDay}"},{field:"finish",operator:LE,value:"${presetHighestDay}"}
                 ],locale:"en",userId:123){totalCount,nodes{id,name,gender,company,billing{address{street,zip}},finish},pageInfo{hasNextPage,hasPreviousPage,endCursor,startCursor},edges{cursor}}}`));
             });
@@ -782,7 +790,8 @@ describe('Example 6 - GraphQL Grid', () => {
               expect(text).to.eq(removeWhitespaces(`query{users(last:20,before:"${beforeCursor}",
                 orderBy:[{field:"name",direction:ASC},{field:"company",direction:DESC}],
                 filterBy:[
-                  {field:"gender",operator:EQ,value:"male"},{field:"name",operator:Contains,value:"JohnDoe"},
+                  {field:"gender",operator:EQ,value:"male"},
+                  {field:"name",operator:StartsWith,value:"Joh"},{field:"name",operator:EndsWith,value:"oe"},
                   {field:"company",operator:IN,value:"xyz"},{field:"finish",operator:GE,value:"${presetLowestDay}"},{field:"finish",operator:LE,value:"${presetHighestDay}"}
                 ],locale:"en",userId:123){totalCount,nodes{id,name,gender,company,billing{address{street,zip}},finish},pageInfo{hasNextPage,hasPreviousPage,endCursor,startCursor},edges{cursor}}}`));
             });
