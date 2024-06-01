@@ -1,0 +1,22 @@
+<h2>
+  ${title}
+  <span class="float-end">
+    <a style="font-size: 18px" target="_blank"
+      href="https://github.com/ghiscoding/aurelia-slickgrid/blob/master/packages/demo/src/examples/slickgrid/example2.ts">
+      <span class="mdi mdi-link-variant"></span> code
+    </a>
+  </span>
+</h2>
+<div class="subtitle" innerhtml.bind="subTitle"></div>
+
+<button class="btn btn-outline-secondary btn-sm btn-icon" click.trigger="togglePauseResizer()">
+  Pause auto-resize: <b>${resizerPaused}</b>
+</button>
+
+<aurelia-slickgrid
+  grid-id="grid2"
+  column-definitions.bind="columnDefinitions"
+  grid-options.bind="gridOptions"
+  dataset.bind="dataset"
+  instances.bind="aureliaGrid">
+</aurelia-slickgrid>

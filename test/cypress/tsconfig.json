@@ -3,9 +3,8 @@
     "target": "es5",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "lib": ["es5", "dom"],
-    "types": ["cypress", "node"],
-    "jsx": "preserve"
+    "lib": ["es2021", "dom"],
+    "types": ["@4tw/cypress-drag-drop", "cypress", "node"]
   },
   "include": ["**/*.ts"]
 }

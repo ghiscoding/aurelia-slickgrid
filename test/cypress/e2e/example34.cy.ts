@@ -1,9 +1,9 @@
-describe('Example 34 - Real-Time Trading Platform', { retries: 1 }, () => {
+describe('Example 34 - Real-Time Trading Platform', () => {
   const titles = ['Currency', 'Symbol', 'Market', 'Company', 'Type', 'Change', 'Price', 'Quantity', 'Amount', 'Price History', 'Execution Timestamp'];
   const GRID_ROW_HEIGHT = 35;
 
   it('should display Example title', () => {
-    cy.visit(`${Cypress.config('baseUrl')}/slickgrid/example34`);
+    cy.visit(`${Cypress.config('baseUrl')}/example34`);
     cy.get('h2').should('contain', 'Example 34: Real-Time Trading Platform');
   });
 
@@ -16,12 +16,12 @@ describe('Example 34 - Real-Time Trading Platform', { retries: 1 }, () => {
 
   it('should check first 5 rows and expect certain data', () => {
     for (let i = 0; i < 5; i++) {
-      cy.get(`[style="top:${GRID_ROW_HEIGHT * i}px"] > .slick-cell:nth(0)`).contains(/CAD|USD$/);
-      cy.get(`[style="top:${GRID_ROW_HEIGHT * i}px"] > .slick-cell:nth(4)`).contains(/Buy|Sell$/);
-      cy.get(`[style="top:${GRID_ROW_HEIGHT * i}px"] > .slick-cell:nth(5)`).contains(/\$\(?[0-9\.]*\)?/);
-      cy.get(`[style="top:${GRID_ROW_HEIGHT * i}px"] > .slick-cell:nth(6)`).contains(/\$[0-9\.]*/);
-      cy.get(`[style="top:${GRID_ROW_HEIGHT * i}px"] > .slick-cell:nth(7)`).contains(/\d$/);
-      cy.get(`[style="top:${GRID_ROW_HEIGHT * i}px"] > .slick-cell:nth(8)`).contains(/\$[0-9\.]*/);
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * i}px;"] > .slick-cell:nth(0)`).contains(/CAD|USD$/);
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * i}px;"] > .slick-cell:nth(4)`).contains(/Buy|Sell$/);
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * i}px;"] > .slick-cell:nth(5)`).contains(/\$\(?[0-9\.]*\)?/);
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * i}px;"] > .slick-cell:nth(6)`).contains(/\$[0-9\.]*/);
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * i}px;"] > .slick-cell:nth(7)`).contains(/\d$/);
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * i}px;"] > .slick-cell:nth(8)`).contains(/\$[0-9\.]*/);
     }
   });
 
@@ -52,12 +52,12 @@ describe('Example 34 - Real-Time Trading Platform', { retries: 1 }, () => {
     cy.get('.slick-group-toggle-all')
       .click();
 
-    cy.get(`[style="top:${GRID_ROW_HEIGHT * 0}px"] > .slick-cell:nth(0) .slick-group-toggle.collapsed`).should('have.length', 1);
-    cy.get(`[style="top:${GRID_ROW_HEIGHT * 0}px"] > .slick-cell:nth(0) .slick-group-title`).should('contain', 'Currency: CAD');
-    cy.get(`[style="top:${GRID_ROW_HEIGHT * 1}px"] > .slick-cell:nth(8)`).contains(/\$[0-9\,\.]*/);
+    cy.get(`[style="top: ${GRID_ROW_HEIGHT * 0}px;"] > .slick-cell:nth(0) .slick-group-toggle.collapsed`).should('have.length', 1);
+    cy.get(`[style="top: ${GRID_ROW_HEIGHT * 0}px;"] > .slick-cell:nth(0) .slick-group-title`).should('contain', 'Currency: CAD');
+    cy.get(`[style="top: ${GRID_ROW_HEIGHT * 1}px;"] > .slick-cell:nth(8)`).contains(/\$[0-9\,\.]*/);
 
-    cy.get(`[style="top:${GRID_ROW_HEIGHT * 2}px"] > .slick-cell:nth(0) .slick-group-toggle.collapsed`).should('have.length', 1);
-    cy.get(`[style="top:${GRID_ROW_HEIGHT * 2}px"] > .slick-cell:nth(0) .slick-group-title`).should('contain', 'Currency: USD');
-    cy.get(`[style="top:${GRID_ROW_HEIGHT * 3}px"] > .slick-cell:nth(8)`).contains(/\$[0-9\,\.]*/);
+    cy.get(`[style="top: ${GRID_ROW_HEIGHT * 2}px;"] > .slick-cell:nth(0) .slick-group-toggle.collapsed`).should('have.length', 1);
+    cy.get(`[style="top: ${GRID_ROW_HEIGHT * 2}px;"] > .slick-cell:nth(0) .slick-group-title`).should('contain', 'Currency: USD');
+    cy.get(`[style="top: ${GRID_ROW_HEIGHT * 3}px;"] > .slick-cell:nth(8)`).contains(/\$[0-9\,\.]*/);
   });
 });

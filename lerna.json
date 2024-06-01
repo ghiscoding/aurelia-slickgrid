@@ -1,0 +1,26 @@
+{
+  "$schema": "node_modules/@lerna-lite/cli/schemas/lerna-schema.json",
+  "version": "8.0.1",
+  "npmClient": "pnpm",
+  "loglevel": "info",
+  "command": {
+    "publish": {
+      "cleanupTempFiles": true,
+      "removePackageFields": [
+        "devDependencies",
+        "scripts"
+      ]
+    },
+    "version": {
+      "conventionalCommits": true,
+      "createRelease": "github",
+      "changelogIncludeCommitsClientLogin": " - by @%l",
+      "message": "chore(release): publish new version %v",
+      "syncWorkspaceLock": true
+    }
+  },
+  "changelogPreset": "conventional-changelog-conventionalcommits",
+  "packages": [
+    "packages/aurelia-slickgrid"
+  ]
+}

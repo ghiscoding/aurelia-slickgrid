@@ -1,12 +1,13 @@
-import moment from 'moment-mini';
+import { addDay, format } from '@formkit/tempo';
+
 import { removeWhitespaces } from '../plugins/utilities';
 
-const presetLowestDay = moment().add(-2, 'days').format('YYYY-MM-DD');
-const presetHighestDay = moment().add(20, 'days').format('YYYY-MM-DD');
+const presetLowestDay = format(addDay(new Date(), -2), 'YYYY-MM-DD');
+const presetHighestDay = format(addDay(new Date(), 20), 'YYYY-MM-DD');
 
-describe('Example 6 - GraphQL Grid', { retries: 1 }, () => {
+describe('Example 6 - GraphQL Grid', () => {
   it('should display Example title', () => {
-    cy.visit(`${Cypress.config('baseUrl')}/slickgrid/example6`);
+    cy.visit(`${Cypress.config('baseUrl')}/example6`);
     cy.get('h2').should('contain', 'Example 6: Grid with Backend GraphQL Service');
   });
 
@@ -21,9 +22,6 @@ describe('Example 6 - GraphQL Grid', { retries: 1 }, () => {
   it('should have English Text inside some of the Filters', () => {
     cy.get('.search-filter.filter-gender .ms-choice > span')
       .contains('Male');
-
-    cy.get('.flatpickr-input')
-      .should('contain.value', 'to'); // date range will contains (y to z) or in French (y au z)
   });
 
   it('should have GraphQL query with defined Grid Presets', () => {
@@ -44,7 +42,7 @@ describe('Example 6 - GraphQL Grid', { retries: 1 }, () => {
     cy.get('.search-filter.filter-finish')
       .find('input')
       .invoke('val')
-      .then(text => expect(text).to.eq(`${presetLowestDay} to ${presetHighestDay}`));
+      .then(text => expect(text).to.eq(`${presetLowestDay} — ${presetHighestDay}`));
 
     cy.get('[data-test=alert-graphql-query]').should('exist');
     cy.get('[data-test=alert-graphql-query]').should('contain', 'GraphQL Query');
@@ -63,6 +61,12 @@ describe('Example 6 - GraphQL Grid', { retries: 1 }, () => {
           ],locale:"en",userId:123){
             totalCount,nodes{id,name,gender,company,billing{address{street,zip}},finish}}}`));
       });
+  });
+
+  it('should use fake smaller server wait delay for faster E2E tests', () => {
+    cy.get('[data-test="server-delay"]')
+      .clear()
+      .type('20');
   });
 
   it('should change Pagination to next page', () => {
@@ -171,7 +175,7 @@ describe('Example 6 - GraphQL Grid', { retries: 1 }, () => {
       .invoke('show')
       .click();
 
-    cy.get('.slick-header-menu')
+    cy.get('.slick-header-menu .slick-menu-command-list')
       .should('be.visible')
       .children('.slick-menu-item:nth-of-type(6)')
       .children('.slick-menu-content')
@@ -194,6 +198,10 @@ describe('Example 6 - GraphQL Grid', { retries: 1 }, () => {
   });
 
   it('should try clearing same filter, which is now empty, by the header menu and expect same query without loading spinner', () => {
+    cy.get('[data-test="server-delay"]')
+      .clear()
+      .type('250');
+
     cy.get('#grid6')
       .find('.slick-header-left .slick-header-column:nth(0)')
       .trigger('mouseover')
@@ -201,7 +209,7 @@ describe('Example 6 - GraphQL Grid', { retries: 1 }, () => {
       .invoke('show')
       .click();
 
-    cy.get('.slick-header-menu')
+    cy.get('.slick-header-menu .slick-menu-command-list')
       .should('be.visible')
       .children('.slick-menu-item:nth-of-type(6)')
       .children('.slick-menu-content')
@@ -232,7 +240,7 @@ describe('Example 6 - GraphQL Grid', { retries: 1 }, () => {
       .invoke('show')
       .click();
 
-    cy.get('.slick-header-menu')
+    cy.get('.slick-header-menu .slick-menu-command-list')
       .should('be.visible')
       .children('.slick-menu-item:nth-of-type(6)')
       .children('.slick-menu-content')
@@ -316,7 +324,7 @@ describe('Example 6 - GraphQL Grid', { retries: 1 }, () => {
     cy.get('.search-filter.filter-finish')
       .find('input')
       .invoke('val')
-      .then(text => expect(text).to.eq(`${presetLowestDay} to ${presetHighestDay}`));
+      .then(text => expect(text).to.eq(`${presetLowestDay} — ${presetHighestDay}`));
 
     // wait for the query to finish
     cy.get('[data-test=status]').should('contain', 'finished');
@@ -360,6 +368,12 @@ describe('Example 6 - GraphQL Grid', { retries: 1 }, () => {
   });
 
   describe('Set Dynamic Sorting', () => {
+    it('should use slower server wait delay to test loading widget', () => {
+      cy.get('[data-test="server-delay"]')
+        .clear()
+        .type('250');
+    });
+
     it('should click on "Clear all Filters & Sorting" then "Set Dynamic Sorting" buttons', () => {
       cy.get('[data-test=clear-filters-sorting]')
         .click();
@@ -372,6 +386,12 @@ describe('Example 6 - GraphQL Grid', { retries: 1 }, () => {
 
       cy.get('[data-test=status]').should('contain', 'processing');
       cy.get('[data-test=status]').should('contain', 'finished');
+    });
+
+    it('should use smaller server wait delay for faster E2E tests', () => {
+      cy.get('[data-test="server-delay"]')
+        .clear()
+        .type('20');
     });
 
     it('should expect the grid to be sorted by "Zip" descending then by "Company" ascending', () => {
@@ -433,28 +453,28 @@ describe('Example 6 - GraphQL Grid', { retries: 1 }, () => {
         .invoke('show')
         .click();
 
-      cy.get('.slick-header-menu')
+      cy.get('.slick-header-menu .slick-menu-command-list')
         .should('be.visible')
         .children('.slick-menu-item:nth-of-type(3)')
         .children('.slick-menu-content')
         .should('contain', 'Sort Ascending');
 
-      cy.get('.slick-header-menu')
+      cy.get('.slick-header-menu .slick-menu-command-list')
         .children('.slick-menu-item:nth-of-type(4)')
         .children('.slick-menu-content')
         .should('contain', 'Sort Descending');
 
-      cy.get('.slick-header-menu')
+      cy.get('.slick-header-menu .slick-menu-command-list')
         .children('.slick-menu-item:nth-of-type(6)')
         .children('.slick-menu-content')
         .should('contain', 'Remove Filter');
 
-      cy.get('.slick-header-menu')
+      cy.get('.slick-header-menu .slick-menu-command-list')
         .children('.slick-menu-item:nth-of-type(7)')
         .children('.slick-menu-content')
         .should('contain', 'Remove Sort');
 
-      cy.get('.slick-header-menu')
+      cy.get('.slick-header-menu .slick-menu-command-list')
         .children('.slick-menu-item:nth-of-type(8)')
         .children('.slick-menu-content')
         .should('contain', 'Hide Column');
@@ -541,28 +561,28 @@ describe('Example 6 - GraphQL Grid', { retries: 1 }, () => {
         .invoke('show')
         .click();
 
-      cy.get('.slick-header-menu')
+      cy.get('.slick-header-menu .slick-menu-command-list')
         .should('be.visible')
         .children('.slick-menu-item:nth-of-type(3)')
         .children('.slick-menu-content')
         .should('contain', 'Trier par ordre croissant');
 
-      cy.get('.slick-header-menu')
+      cy.get('.slick-header-menu .slick-menu-command-list')
         .children('.slick-menu-item:nth-of-type(4)')
         .children('.slick-menu-content')
         .should('contain', 'Trier par ordre décroissant');
 
-      cy.get('.slick-header-menu')
+      cy.get('.slick-header-menu .slick-menu-command-list')
         .children('.slick-menu-item:nth-of-type(6)')
         .children('.slick-menu-content')
         .should('contain', 'Supprimer le filtre');
 
-      cy.get('.slick-header-menu')
+      cy.get('.slick-header-menu .slick-menu-command-list')
         .children('.slick-menu-item:nth-of-type(7)')
         .children('.slick-menu-content')
         .should('contain', 'Supprimer le tri');
 
-      cy.get('.slick-header-menu')
+      cy.get('.slick-header-menu .slick-menu-command-list')
         .children('.slick-menu-item:nth-of-type(8)')
         .children('.slick-menu-content')
         .should('contain', 'Cacher la colonne');
@@ -624,7 +644,7 @@ describe('Example 6 - GraphQL Grid', { retries: 1 }, () => {
       cy.get('.search-filter.filter-finish')
         .find('input')
         .invoke('val')
-        .then(text => expect(text).to.eq(`${presetLowestDay} au ${presetHighestDay}`));
+        .then(text => expect(text).to.eq(`${presetLowestDay} — ${presetHighestDay}`));
 
       // wait for the query to finish
       cy.get('[data-test=status]').should('contain', 'finished');
@@ -650,10 +670,124 @@ describe('Example 6 - GraphQL Grid', { retries: 1 }, () => {
 
       cy.get('.search-filter.filter-gender .ms-choice > span')
         .contains('Masculin');
+    });
 
-      cy.get('.flatpickr-input')
-        .should('contain.value', 'au'); // date range will contains (y to z) or in French (y au z)
+    it('should switch locale to English', () => {
+      cy.get('[data-test=language-button]')
+        .click();
+
+      cy.get('[data-test=selected-locale]')
+        .should('contain', 'en.json');
+    });
+  });
+
+  describe('Cursor Pagination', () => {
+    it('should re-initialize grid for cursor pagination', () => {
+      cy.get('[data-test="reset-presets"]').click(); // reset to same original presets
+      cy.get('[data-test=cursor]').click();
+      cy.wait(1);
+
+      // the page number input should be a label now
+      cy.get('[data-test=page-number-label]').should('exist').should('have.text', '1');
+    });
+
+    it('should change Pagination to the last page', () => {
+      // Go to first page (if not already there)
+      cy.get('[data-test=goto-first-page').click();
+
+      cy.get('.icon-seek-end').click();
+
+      // wait for the query to finish
+      cy.get('[data-test=status]').should('contain', 'finished');
+      cy.get('[data-test=graphql-query-result]')
+        .should(($span) => {
+          const text = removeWhitespaces($span.text()); // remove all white spaces
+          expect(text).to.eq(removeWhitespaces(`query{users(last:20,
+            orderBy:[{field:"name",direction:ASC},{field:"company",direction:DESC}],
+            filterBy:[
+              {field:"gender",operator:EQ,value:"male"},{field:"name",operator:Contains,value:"JohnDoe"},
+              {field:"company",operator:IN,value:"xyz"},{field:"finish",operator:GE,value:"${presetLowestDay}"},{field:"finish",operator:LE,value:"${presetHighestDay}"}
+            ],locale:"en",userId:123){totalCount,nodes{id,name,gender,company,billing{address{street,zip}},finish},pageInfo{hasNextPage,hasPreviousPage,endCursor,startCursor},edges{cursor}}}`));
+        });
+    });
+
+    it('should change Pagination to the first page', () => {
+      // Go to first page (if not already there)
+      cy.get('[data-test=goto-last-page').click();
+
+      cy.get('.icon-seek-first').click();
+
+      // wait for the query to finish
+      cy.get('[data-test=status]').should('contain', 'finished');
+      cy.get('[data-test=graphql-query-result]')
+        .should(($span) => {
+          const text = removeWhitespaces($span.text()); // remove all white spaces
+          expect(text).to.eq(removeWhitespaces(`query{users(first:20,
+            orderBy:[{field:"name",direction:ASC},{field:"company",direction:DESC}],
+            filterBy:[
+              {field:"gender",operator:EQ,value:"male"},{field:"name",operator:Contains,value:"JohnDoe"},
+              {field:"company",operator:IN,value:"xyz"},{field:"finish",operator:GE,value:"${presetLowestDay}"},{field:"finish",operator:LE,value:"${presetHighestDay}"}
+            ],locale:"en",userId:123){totalCount,nodes{id,name,gender,company,billing{address{street,zip}},finish},pageInfo{hasNextPage,hasPreviousPage,endCursor,startCursor},edges{cursor}}}`));
+        });
+    });
+
+    it('should change Pagination to next page and all the way to the last', () => {
+      // Go to first page (if not already there)
+      cy.get('[data-test=goto-first-page').click();
+      cy.get('[data-test=status]').should('contain', 'finished');
+
+      // on page 1, click 4 times to get to page 5 (the last page)
+      cy.wrap([0, 1, 2, 3]).each((el, i) => {
+        cy.wait(25); // Avoid clicking too fast and hitting race conditions because of the setTimeout in the example page (this timeout should be greater than in the page)
+        cy.get('.icon-seek-next').click().then(() => {
+          // wait for the query to finish
+          cy.get('[data-test=status]').should('contain', 'finished');
+          cy.get('[data-test=graphql-query-result]')
+            .should(($span) => {
+              // First page is A-B
+              // first click is to get page after A-B
+              // => get first 20 after 'B'
+              const afterCursor = String.fromCharCode('B'.charCodeAt(0) + i);
+
+              const text = removeWhitespaces($span.text()); // remove all white spaces
+              expect(text).to.eq(removeWhitespaces(`query{users(first:20,after:"${afterCursor}",
+                orderBy:[{field:"name",direction:ASC},{field:"company",direction:DESC}],
+                filterBy:[
+                  {field:"gender",operator:EQ,value:"male"},{field:"name",operator:Contains,value:"JohnDoe"},
+                  {field:"company",operator:IN,value:"xyz"},{field:"finish",operator:GE,value:"${presetLowestDay}"},{field:"finish",operator:LE,value:"${presetHighestDay}"}
+                ],locale:"en",userId:123){totalCount,nodes{id,name,gender,company,billing{address{street,zip}},finish},pageInfo{hasNextPage,hasPreviousPage,endCursor,startCursor},edges{cursor}}}`));
+            });
+        });
+      });
+    });
+
+    it('should change Pagination from the last page all the way to the first', () => {
+      // Go to last page (if not already there)
+      cy.get('[data-test=goto-last-page').click();
+
+      // on page 5 (last page), click 4 times to go to page 1
+      cy.wrap([0, 1, 2, 3]).each((el, i) => {
+        cy.wait(25); // Avoid clicking too fast and hitting race conditions because of the setTimeout in the example page (this timeout should be greater than in the page)
+        cy.get('.icon-seek-prev').click().then(() => {
+          // wait for the query to finish
+          cy.get('[data-test=status]').should('contain', 'finished');
+          cy.get('[data-test=graphql-query-result]')
+            .should(($span) => {
+              // Last page is E-F
+              // first click is to get page before E-F
+              // => get last 20 before 'E'
+              const beforeCursor = String.fromCharCode('E'.charCodeAt(0) - i);
+
+              const text = removeWhitespaces($span.text()); // remove all white spaces
+              expect(text).to.eq(removeWhitespaces(`query{users(last:20,before:"${beforeCursor}",
+                orderBy:[{field:"name",direction:ASC},{field:"company",direction:DESC}],
+                filterBy:[
+                  {field:"gender",operator:EQ,value:"male"},{field:"name",operator:Contains,value:"JohnDoe"},
+                  {field:"company",operator:IN,value:"xyz"},{field:"finish",operator:GE,value:"${presetLowestDay}"},{field:"finish",operator:LE,value:"${presetHighestDay}"}
+                ],locale:"en",userId:123){totalCount,nodes{id,name,gender,company,billing{address{street,zip}},finish},pageInfo{hasNextPage,hasPreviousPage,endCursor,startCursor},edges{cursor}}}`));
+            });
+        });
+      });
     });
   });
 });
-

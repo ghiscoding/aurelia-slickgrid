@@ -1,8 +1,8 @@
-describe('Example 19 - Row Detail View', { retries: 1 }, () => {
+describe('Example 19 - Row Detail View', () => {
   const titles = ['', 'Title', 'Duration (days)', '% Complete', 'Start', 'Finish', 'Effort Driven'];
 
   it('should display Example title', () => {
-    cy.visit(`${Cypress.config('baseUrl')}/slickgrid/example19`);
+    cy.visit(`${Cypress.config('baseUrl')}/example19`);
     cy.get('h2').should('contain', 'Example 19: Row Detail View');
   });
 
@@ -34,7 +34,7 @@ describe('Example 19 - Row Detail View', { retries: 1 }, () => {
       .click();
 
     cy.get('#grid19')
-      .find('.innerDetailView_2 .container_2')
+      .find('.slick-cell + .dynamic-cell-detail .innerDetailView_2 .container_2')
       .as('detailContainer');
 
     cy.get('@detailContainer')
@@ -48,7 +48,7 @@ describe('Example 19 - Row Detail View', { retries: 1 }, () => {
     cy.on('window:alert', alertStub);
 
     cy.get('#grid19')
-      .find('.innerDetailView_2 .container_2')
+      .find('.slick-cell + .dynamic-cell-detail .innerDetailView_2 .container_2')
       .as('detailContainer');
 
     cy.get('@detailContainer')
@@ -70,7 +70,7 @@ describe('Example 19 - Row Detail View', { retries: 1 }, () => {
 
   it('should click on the "Call Parent Method" button and expect a Bootstrap Alert to show up with some text containing the Task 2', () => {
     cy.get('#grid19')
-      .find('.innerDetailView_2 .container_2')
+      .find('.slick-cell + .dynamic-cell-detail .innerDetailView_2 .container_2')
       .as('detailContainer');
 
     cy.get('@detailContainer')
@@ -85,7 +85,7 @@ describe('Example 19 - Row Detail View', { retries: 1 }, () => {
     const expectedTasks = ['Task 0', 'Task 1', 'Task 3', 'Task 4', 'Task 5'];
 
     cy.get('#grid19')
-      .find('.innerDetailView_2 .container_2')
+      .find('.slick-cell + .dynamic-cell-detail .innerDetailView_2 .container_2')
       .as('detailContainer');
 
     cy.get('@detailContainer')
@@ -118,7 +118,7 @@ describe('Example 19 - Row Detail View', { retries: 1 }, () => {
       .click();
 
     cy.get('#grid19')
-      .find('.innerDetailView_3 .container_3')
+      .find('.slick-cell + .dynamic-cell-detail .innerDetailView_3 .container_3')
       .as('detailContainer3');
 
     cy.get('@detailContainer3')
@@ -130,25 +130,25 @@ describe('Example 19 - Row Detail View', { retries: 1 }, () => {
       .click();
 
     cy.get('#grid19')
-      .find('.innerDetailView_0 .container_0')
+      .find('.slick-cell + .dynamic-cell-detail .innerDetailView_0 .container_0')
       .as('detailContainer0');
 
     cy.get('@detailContainer0')
       .find('h3')
       .contains('Task 0');
 
-    cy.get('[data-test=close-all-btn]')
+    cy.get('[data-test=collapse-all-btn]')
       .click();
 
     cy.get('.slick-viewport-top.slick-viewport-left')
       .scrollTo('top');
 
     cy.get('#grid19')
-      .find('.innerDetailView_0 .container_0')
+      .find('.slick-cell + .dynamic-cell-detail .innerDetailView_0 .container_0')
       .should('not.exist');
 
     cy.get('#grid19')
-      .find('.innerDetailView_1 .container_1')
+      .find('.slick-cell + .dynamic-cell-detail .innerDetailView_1 .container_1')
       .should('not.exist');
 
     cy.get('#grid19')
@@ -164,14 +164,14 @@ describe('Example 19 - Row Detail View', { retries: 1 }, () => {
   });
 
   it('should open a few Row Details, then sort by Title and expect all Row Details to be closed afterward', () => {
-    const expectedTasks = ['Task 1', 'Task 10', 'Task 100', 'Task 101', 'Task 102', 'Task 103', 'Task 104'];
+    const expectedTasks = ['Task 0', 'Task 1', 'Task 10', 'Task 100', 'Task 101', 'Task 102', 'Task 103', 'Task 104'];
 
     cy.get('#grid19')
       .find('.slick-row:nth(0)')
       .click();
 
     cy.get('#grid19')
-      .find('.innerDetailView_0 .container_0')
+      .find('.slick-cell + .dynamic-cell-detail .innerDetailView_0 .container_0')
       .as('detailContainer0');
 
     cy.get('@detailContainer0')
@@ -183,7 +183,7 @@ describe('Example 19 - Row Detail View', { retries: 1 }, () => {
       .click();
 
     cy.get('#grid19')
-      .find('.innerDetailView_3 .container_3')
+      .find('.slick-cell + .dynamic-cell-detail .innerDetailView_3 .container_3')
       .as('detailContainer3');
 
     cy.get('@detailContainer3')
@@ -198,7 +198,7 @@ describe('Example 19 - Row Detail View', { retries: 1 }, () => {
       .invoke('show')
       .click();
 
-    cy.get('.slick-header-menu')
+    cy.get('.slick-header-menu .slick-menu-command-list')
       .should('be.visible')
       .children('.slick-menu-item:nth-of-type(4)')
       .children('.slick-menu-content')
@@ -212,7 +212,7 @@ describe('Example 19 - Row Detail View', { retries: 1 }, () => {
       .invoke('show')
       .click();
 
-    cy.get('.slick-header-menu')
+    cy.get('.slick-header-menu .slick-menu-command-list')
       .should('be.visible')
       .children('.slick-menu-item:nth-of-type(3)')
       .children('.slick-menu-content')
@@ -228,11 +228,11 @@ describe('Example 19 - Row Detail View', { retries: 1 }, () => {
       .scrollTo('top');
 
     cy.get('#grid19')
-      .find('.innerDetailView_0 .container_0')
+      .find('.slick-cell + .dynamic-cell-detail .innerDetailView_0 .container_0')
       .should('not.exist');
 
     cy.get('#grid19')
-      .find('.innerDetailView_3 .container_3')
+      .find('.slick-cell + .dynamic-cell-detail .innerDetailView_3 .container_3')
       .should('not.exist');
 
     cy.get('#grid19')
@@ -247,24 +247,28 @@ describe('Example 19 - Row Detail View', { retries: 1 }, () => {
       });
   });
 
-  it('should click open Row Detail of Task 102 then type a title filter of "Task 102" and expect Row Detail to be opened and still be rendered', () => {
+  it('should click open Row Detail of Task 1 and Task 101 then type a title filter of "Task 101" and expect Row Detail to be opened and still be rendered', () => {
     cy.get('#grid19')
       .find('.slick-row:nth(4)')
       .click();
 
     cy.get('#grid19')
-      .find('.innerDetailView_102 .container_102')
+      .find('.slick-row:nth(1)')
+      .click();
+
+    cy.get('#grid19')
+      .find('.slick-cell + .dynamic-cell-detail .innerDetailView_101')
       .as('detailContainer');
 
     cy.get('@detailContainer')
       .find('h3')
-      .contains('Task 102');
+      .contains('Task 101');
 
     cy.get('.search-filter.filter-title')
-      .type('Task 102');
+      .type('Task 101');
   });
 
-  it('should call "Clear all Filters" from Grid Menu and expect "Task 102" to still be rendered correctly', () => {
+  it('should call "Clear all Filters" from Grid Menu and expect "Task 101" to still be rendered correctly', () => {
     cy.get('#grid19')
       .find('button.slick-grid-menu-button')
       .trigger('click')
@@ -278,15 +282,15 @@ describe('Example 19 - Row Detail View', { retries: 1 }, () => {
       .click();
 
     cy.get('#grid19')
-      .find('.innerDetailView_102 .container_102')
+      .find('.slick-cell + .dynamic-cell-detail .innerDetailView_101')
       .as('detailContainer');
 
     cy.get('@detailContainer')
       .find('h3')
-      .contains('Task 102');
+      .contains('Task 101');
   });
 
-  it('should call "Clear all Sorting" from Grid Menu and expect "Task 102" to still be rendered correctly', () => {
+  it('should call "Clear all Sorting" from Grid Menu and expect all row details to be collapsed', () => {
     cy.get('#grid19')
       .find('button.slick-grid-menu-button')
       .trigger('click')
@@ -302,45 +306,39 @@ describe('Example 19 - Row Detail View', { retries: 1 }, () => {
       .find('.slick-sort-indicator-asc')
       .should('have.length', 0);
 
-    cy.get('#grid19')
-      .find('.innerDetailView_102 .container_102')
-      .as('detailContainer');
-
-    cy.get('@detailContainer')
-      .find('h3')
-      .contains('Task 102');
+    cy.get('.dynamic-cell-detail').should('have.length', 0);
   });
 
   it('should close all row details & make grid editable', () => {
-    cy.get('[data-test="close-all-btn"]').click();
+    cy.get('[data-test="collapse-all-btn"]').click();
     cy.get('[data-test="editable-grid-btn"]').click();
   });
 
-  it('should click on 3rd row detail open icon and expect it to open', () => {
+  it('should click on 5th row detail open icon and expect it to open', () => {
     cy.get('#grid19')
-      .find('.slick-row:nth(2) .slick-cell:nth(0)')
+      .find('.slick-row:nth(4) .slick-cell:nth(0)')
       .click();
 
     cy.get('#grid19')
-      .find('.innerDetailView_100 .container_100')
+      .find('.slick-cell + .dynamic-cell-detail .innerDetailView_101')
       .as('detailContainer');
 
     cy.get('@detailContainer')
       .find('h3')
-      .contains('Task 100');
+      .contains('Task 101');
   });
 
-  it('should click on 1st row "Title" cell to edit it and expect row detail to get closed', () => {
+  it('should click on 2nd row "Title" cell to edit it and expect Task 5 row detail to get closed', () => {
     cy.get('#grid19')
       .find('.slick-row:nth(1) .slick-cell:nth(1)')
       .click();
 
     cy.get('.editor-title')
       .invoke('val')
-      .then(text => expect(text).to.eq('Task 10'));
+      .then(text => expect(text).to.eq('Task 1'));
 
     cy.get('#grid19')
-      .find('.innerDetailView_100 .container_100')
+      .find('.slick-cell + .dynamic-cell-detail .innerDetailView_101')
       .should('not.exist');
   });
 });

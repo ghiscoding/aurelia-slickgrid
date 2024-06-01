@@ -1,4 +1,4 @@
-describe('Example 7 - Header Button Plugin', { retries: 1 }, () => {
+describe('Example 7 - Header Button Plugin', () => {
   const titles = ['Resize me!', 'Hover me!', 'Column C', 'Column D', 'Column E', 'Column F', 'Column G', 'Column H', 'Column I', 'Column J'];
 
   beforeEach(() => {
@@ -10,7 +10,7 @@ describe('Example 7 - Header Button Plugin', { retries: 1 }, () => {
 
   describe('Grid 1', () => {
     it('should display Example title', () => {
-      cy.visit(`${Cypress.config('baseUrl')}/slickgrid/example7`);
+      cy.visit(`${Cypress.config('baseUrl')}/example7`);
       cy.get('h2').should('contain', 'Example 7: Header Button Plugin');
     });
 
@@ -27,12 +27,12 @@ describe('Example 7 - Header Button Plugin', { retries: 1 }, () => {
 
       cy.get('#grid7-1 .slick-header-columns')
         .children('.slick-header-column:nth(2)')
-        .find('.slick-header-button.fa.fa-circle-o.red.faded')
+        .find('.slick-header-button.mdi-lightbulb-outline.text-warning.faded')
         .click();
 
       cy.get('#grid7-1 .slick-header-columns')
         .children('.slick-header-column:nth(2)')
-        .find('.slick-header-button.fa.fa-circle-o.red.faded')
+        .find('.slick-header-button.mdi-lightbulb-outline.text-warning.faded')
         .should('not.exist'); // shouldn't be faded anymore
 
       cy.window().then((win) => {
@@ -83,13 +83,13 @@ describe('Example 7 - Header Button Plugin', { retries: 1 }, () => {
 
       cy.get('#grid7-1 .slick-header-columns')
         .children('.slick-header-column:nth(9)')
-        .find('.slick-header-button.slick-header-button-disabled.fa.fa-circle-o.red.faded')
+        .find('.slick-header-button.slick-header-button-disabled.mdi-lightbulb-outline.text-warning.faded')
         .should('exist')
         .click();
 
       cy.get('#grid7-1 .slick-header-columns')
         .children('.slick-header-column:nth(9)')
-        .find('.slick-header-button.slick-header-button-disabled.fa.fa-circle-o.red.faded')
+        .find('.slick-header-button.slick-header-button-disabled.mdi-lightbulb-outline.text-warning.faded')
         .should('exist'); // should still be faded after previous click
 
       cy.get('#grid7-1 .slick-row')
@@ -170,7 +170,7 @@ describe('Example 7 - Header Button Plugin', { retries: 1 }, () => {
         .children('.slick-header-column:nth(1)')
         .find('.slick-header-button.slick-header-button-hidden')
         .should('be.hidden')
-        .should('have.css', 'width', '0px');
+        .should('have.css', 'visibility', 'hidden');
     });
   });
 
@@ -188,12 +188,12 @@ describe('Example 7 - Header Button Plugin', { retries: 1 }, () => {
 
       cy.get('#grid7-2 .slick-header-columns')
         .children('.slick-header-column:nth(2)')
-        .find('.slick-header-button.fa.fa-circle-o.red.faded')
+        .find('.slick-header-button.mdi-lightbulb-outline.text-warning.faded')
         .click({ force: true });
 
       cy.get('#grid7-2 .slick-header-columns')
         .children('.slick-header-column:nth(2)')
-        .find('.slick-header-button.fa.fa-circle-o.red.faded')
+        .find('.slick-header-button.mdi-lightbulb-outline.text-warning.faded')
         .should('not.exist'); // shouldn't be faded anymore
 
       cy.window().then((win) => {
@@ -244,13 +244,13 @@ describe('Example 7 - Header Button Plugin', { retries: 1 }, () => {
 
       cy.get('#grid7-2 .slick-header-columns')
         .children('.slick-header-column:nth(9)')
-        .find('.slick-header-button.slick-header-button-disabled.fa.fa-circle-o.red.faded')
+        .find('.slick-header-button.slick-header-button-disabled.mdi-lightbulb-outline.text-warning.faded')
         .should('exist')
         .click({ force: true });
 
       cy.get('#grid7-2 .slick-header-columns')
         .children('.slick-header-column:nth(9)')
-        .find('.slick-header-button.slick-header-button-disabled.fa.fa-circle-o.red.faded')
+        .find('.slick-header-button.slick-header-button-disabled.mdi-lightbulb-outline.text-warning.faded')
         .should('exist'); // should still be faded after previous click
 
       cy.get('#grid7-2 .slick-row')
@@ -330,8 +330,7 @@ describe('Example 7 - Header Button Plugin', { retries: 1 }, () => {
       cy.get('#grid7-2 .slick-header-columns')
         .children('.slick-header-column:nth(1)')
         .find('.slick-header-button.slick-header-button-hidden')
-        .should('be.hidden');
-      // .should('have.css', 'width', '0px');
+        .should('have.css', 'visibility', 'hidden');
     });
 
     it('should filter "Column C" with positive number only and not expect any more red values', () => {
@@ -359,7 +358,7 @@ describe('Example 7 - Header Button Plugin', { retries: 1 }, () => {
         .invoke('show')
         .click();
 
-      cy.get('#grid7-2 .slick-header-menu')
+      cy.get('#grid7-2 .slick-header-menu .slick-menu-command-list')
         .should('be.visible')
         .children('.slick-menu-item:nth-of-type(6)')
         .children('.slick-menu-content')
@@ -389,7 +388,7 @@ describe('Example 7 - Header Button Plugin', { retries: 1 }, () => {
         .children('.slick-header-menu-button')
         .click();
 
-      cy.get('#grid7-2 .slick-header-menu')
+      cy.get('#grid7-2 .slick-header-menu .slick-menu-command-list')
         .should('be.visible')
         .children('.slick-menu-item:nth-of-type(3)')
         .children('.slick-menu-content')

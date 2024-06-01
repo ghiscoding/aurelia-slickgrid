@@ -1,8 +1,8 @@
+import { format } from '@formkit/tempo';
 
-import moment from 'moment-mini';
 import { removeExtraSpaces } from '../plugins/utilities';
 
-describe('Example 12: Localization (i18n)', { retries: 1 }, () => {
+describe('Example 12: Localization (i18n)', () => {
   const fullEnglishTitles = ['', 'Title', 'Description', 'Duration', 'Start', 'Finish', 'Completed', 'Completed'];
   const fullFrenchTitles = ['', 'Titre', 'Description', 'Durée', 'Début', 'Fin', 'Terminé', 'Terminé'];
 
@@ -20,7 +20,7 @@ describe('Example 12: Localization (i18n)', { retries: 1 }, () => {
   });
 
   it('should display Example title', () => {
-    cy.visit(`${Cypress.config('baseUrl')}/slickgrid/example12`);
+    cy.visit(`${Cypress.config('baseUrl')}/example12`);
     cy.get('h2')
       .should('contain', 'Example 12: Localization (i18n)');
   });
@@ -48,9 +48,8 @@ describe('Example 12: Localization (i18n)', { retries: 1 }, () => {
         .find('.slick-custom-footer')
         .find('.right-footer')
         .should($span => {
-          const now = new Date();
           const text = removeExtraSpaces($span.text()); // remove all white spaces
-          const dateFormatted = moment(now).format('YYYY-MM-DD hh:mm a');
+          const dateFormatted = format(new Date(), 'YYYY-MM-DD hh:mm a');
           expect(text).to.eq(`Last Update ${dateFormatted} | 1500 of 1500 items`);
         });
     });
@@ -119,9 +118,8 @@ describe('Example 12: Localization (i18n)', { retries: 1 }, () => {
         .find('.slick-custom-footer')
         .find('.right-footer')
         .should($span => {
-          const now = new Date();
           const text = removeExtraSpaces($span.text()); // remove all white spaces
-          const dateFormatted = moment(now).format('YYYY-MM-DD hh:mm a');
+          const dateFormatted = format(new Date(), 'YYYY-MM-DD hh:mm a');
           expect(text).to.eq(`Dernière mise à jour ${dateFormatted} | 1500 de 1500 éléments`);
         });
     });
@@ -225,7 +223,7 @@ describe('Example 12: Localization (i18n)', { retries: 1 }, () => {
         .invoke('show')
         .click();
 
-      cy.get('.slick-header-menu')
+      cy.get('.slick-header-menu .slick-menu-command-list')
         .should('be.visible')
         .children('.slick-menu-item:nth-of-type(4)')
         .children('.slick-menu-content')

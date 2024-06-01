@@ -1,8 +1,9 @@
-describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', { retries: 1 }, () => {
+describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', () => {
+  const GRID_ROW_HEIGHT = 35;
   const fullTitles = ['', '', 'Title', 'Duration', '% Complete', 'Start', 'Finish', 'Completed'];
 
   it('should display Example title', () => {
-    cy.visit(`${Cypress.config('baseUrl')}/slickgrid/example16`);
+    cy.visit(`${Cypress.config('baseUrl')}/example16`);
     cy.get('h2').should('contain', 'Example 16: Row Move & Checkbox Selector');
   });
 
@@ -22,9 +23,9 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', { retries
   });
 
   it('should drag opened row to another position in the grid', () => {
-    cy.get('[style="top:35px"] > .slick-cell.cell-reorder').as('moveIconTask1');
-    cy.get('[style="top:70px"] > .slick-cell.cell-reorder').as('moveIconTask2');
-    cy.get('[style="top:105px"] > .slick-cell.cell-reorder').as('moveIconTask3');
+    cy.get(`[style="top: ${GRID_ROW_HEIGHT * 1}px;"] > .slick-cell.cell-reorder`).as('moveIconTask1');
+    cy.get(`[style="top: ${GRID_ROW_HEIGHT * 2}px;"] > .slick-cell.cell-reorder`).as('moveIconTask2');
+    cy.get(`[style="top: ${GRID_ROW_HEIGHT * 3}px;"] > .slick-cell.cell-reorder`).as('moveIconTask3');
 
     cy.get('@moveIconTask3').should('have.length', 1);
 
@@ -46,11 +47,11 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', { retries
     cy.get('.slick-viewport-top.slick-viewport-left')
       .scrollTo('top');
 
-    cy.get('[style="top:0px"] > .slick-cell:nth(2)').should('contain', 'Task 0');
-    cy.get('[style="top:35px"] > .slick-cell:nth(2)').should('contain', 'Task 1');
-    cy.get('[style="top:70px"] > .slick-cell:nth(2)').should('contain', 'Task 3');
-    cy.get('[style="top:105px"] > .slick-cell:nth(2)').should('contain', 'Task 2');
-    cy.get('[style="top:140px"] > .slick-cell:nth(2)').should('contain', 'Task 4');
+    cy.get(`[style="top: ${GRID_ROW_HEIGHT * 0}px;"] > .slick-cell:nth(2)`).should('contain', 'Task 0');
+    cy.get(`[style="top: ${GRID_ROW_HEIGHT * 1}px;"] > .slick-cell:nth(2)`).should('contain', 'Task 1');
+    cy.get(`[style="top: ${GRID_ROW_HEIGHT * 2}px;"] > .slick-cell:nth(2)`).should('contain', 'Task 3');
+    cy.get(`[style="top: ${GRID_ROW_HEIGHT * 3}px;"] > .slick-cell:nth(2)`).should('contain', 'Task 2');
+    cy.get(`[style="top: ${GRID_ROW_HEIGHT * 4}px;"] > .slick-cell:nth(2)`).should('contain', 'Task 4');
 
     cy.get('input[type="checkbox"]:checked')
       .should('have.length', 4);
@@ -72,11 +73,11 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', { retries
   });
 
   it('should select 2 rows (Task 3,4), then move the rows and expect both rows to still be selected without any other rows', () => {
-    cy.get('[style="top:70px"] > .slick-cell:nth(1)').click();
-    cy.get('[style="top:140px"] > .slick-cell:nth(1)').click();
+    cy.get(`[style="top: ${GRID_ROW_HEIGHT * 2}px;"] > .slick-cell:nth(1)`).click();
+    cy.get(`[style="top: ${GRID_ROW_HEIGHT * 4}px;"] > .slick-cell:nth(1)`).click();
 
-    cy.get('[style="top:70px"] > .slick-cell.cell-reorder').as('moveIconTask3');
-    cy.get('[style="top:175px"] > .slick-cell.cell-reorder').as('moveIconTask5');
+    cy.get(`[style="top: ${GRID_ROW_HEIGHT * 2}px;"] > .slick-cell.cell-reorder`).as('moveIconTask3');
+    cy.get(`[style="top: ${GRID_ROW_HEIGHT * 5}px;"] > .slick-cell.cell-reorder`).as('moveIconTask5');
 
     cy.get('@moveIconTask3').should('have.length', 1);
 
@@ -91,17 +92,17 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', { retries
     cy.get('.slick-viewport-top.slick-viewport-left')
       .scrollTo('top');
 
-    cy.get('[style="top:0px"] > .slick-cell:nth(2)').should('contain', 'Task 0');
-    cy.get('[style="top:35px"] > .slick-cell:nth(2)').should('contain', 'Task 1');
-    cy.get('[style="top:70px"] > .slick-cell:nth(2)').should('contain', 'Task 2');
-    cy.get('[style="top:105px"] > .slick-cell:nth(2)').should('contain', 'Task 4');
-    cy.get('[style="top:140px"] > .slick-cell:nth(2)').should('contain', 'Task 5');
-    cy.get('[style="top:175px"] > .slick-cell:nth(2)').should('contain', 'Task 3');
+    cy.get(`[style="top: ${GRID_ROW_HEIGHT * 0}px;"] > .slick-cell:nth(2)`).should('contain', 'Task 0');
+    cy.get(`[style="top: ${GRID_ROW_HEIGHT * 1}px;"] > .slick-cell:nth(2)`).should('contain', 'Task 1');
+    cy.get(`[style="top: ${GRID_ROW_HEIGHT * 2}px;"] > .slick-cell:nth(2)`).should('contain', 'Task 2');
+    cy.get(`[style="top: ${GRID_ROW_HEIGHT * 3}px;"] > .slick-cell:nth(2)`).should('contain', 'Task 4');
+    cy.get(`[style="top: ${GRID_ROW_HEIGHT * 4}px;"] > .slick-cell:nth(2)`).should('contain', 'Task 5');
+    cy.get(`[style="top: ${GRID_ROW_HEIGHT * 5}px;"] > .slick-cell:nth(2)`).should('contain', 'Task 3');
 
     // Task 4 and 3 should be selected
     cy.get('input[type="checkbox"]:checked').should('have.length', 2);
-    cy.get('[style="top:105px"] > .slick-cell:nth(1) input[type="checkbox"]:checked').should('have.length', 1);
-    cy.get('[style="top:175px"] > .slick-cell:nth(1) input[type="checkbox"]:checked').should('have.length', 1);
+    cy.get(`[style="top: ${GRID_ROW_HEIGHT * 3}px;"] > .slick-cell:nth(1) input[type="checkbox"]:checked`).should('have.length', 1);
+    cy.get(`[style="top: ${GRID_ROW_HEIGHT * 5}px;"] > .slick-cell:nth(1) input[type="checkbox"]:checked`).should('have.length', 1);
   });
 
   it('should move "Duration" column to a different position in the grid', () => {
@@ -205,7 +206,7 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', { retries
       .invoke('show')
       .click();
 
-    cy.get('.slick-header-menu')
+    cy.get('.slick-header-menu .slick-menu-command-list')
       .children('.slick-menu-item')
       .each(($child, index) => {
         const commandTitle = $child.text();
@@ -254,7 +255,7 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', { retries
       .invoke('show')
       .click();
 
-    cy.get('.slick-header-menu')
+    cy.get('.slick-header-menu .slick-menu-command-list')
       .children('.slick-menu-item')
       .each(($child, index) => {
         const commandTitle = $child.text();
@@ -299,7 +300,7 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', { retries
       .invoke('show')
       .click();
 
-    cy.get('.slick-header-menu')
+    cy.get('.slick-header-menu .slick-menu-command-list')
       .children('.slick-menu-item')
       .each(($child, index) => {
         const commandTitle = $child.text();
@@ -325,7 +326,7 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', { retries
       .invoke('show')
       .click();
 
-    cy.get('.slick-header-menu')
+    cy.get('.slick-header-menu .slick-menu-command-list')
       .children('.slick-menu-item')
       .each(($child, index) => {
         const commandTitle = $child.text();
@@ -418,13 +419,13 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', { retries
     cy.get('.slick-row')
       .first()
       .children('.slick-cell')
-      .children('.edit-icon')
+      .children('.mdi.mdi-pencil')
       .should('have.length', 1);
 
     cy.get('.slick-row')
       .first()
       .children('.slick-cell:nth(1)')
-      .children('.delete-icon')
+      .children('.mdi.mdi-trash-can')
       .should('have.length', 1);
   });
 });

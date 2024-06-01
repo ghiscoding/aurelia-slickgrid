@@ -8,7 +8,11 @@ on:
       - next
   pull_request:
     branches:
-      - '**'
+      - "**"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   run:
@@ -18,7 +22,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node: [18]
+        node: [20]
 
     steps:
       - name: Clone repository
@@ -26,67 +30,81 @@ jobs:
         with:
           fetch-depth: 3
 
-      - name: Set Node.js version
-        uses: actions/setup-node@v3
+      - name: Set NodeJS
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
 
-      - run: node --version
-      - run: npm --version
-
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
-
-      - uses: actions/cache@v3
-        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
         with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
+          version: 8
+          run_install: false
 
-      - name: Run yarn install dependencies
-        run: yarn --frozen-lockfile
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 8
+          run_install: true
+
+      - run: pnpm --version
+
+      - name: Build Plugin
+        run: pnpm build
 
       - name: Run Jest unit tests
-        run: yarn test:ci
+        if: ${{ !contains(github.event.head_commit.message, 'chore(release)') }}
+        run: pnpm test:ci
 
       - name: Upload Jest coverage to Codecov
-        if: "!contains(github.event.head_commit.message, 'chore: release')"
-        uses: codecov/codecov-action@v3
+        if: ${{ !contains(github.event.head_commit.message, format('chore{0} release', ':')) }}
+        uses: codecov/codecov-action@v4
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           directory: test/jest-coverage
           verbose: true
 
-      - name: Prod Build for GitHub demo website (required for Cypress)
-        run: yarn build:demo
-
-      - name: Start HTTP Server
-        run: yarn serve:demo &
+      - name: Website Dev Build (served for Cypress)
+        run: pnpm build:demo
 
       - name: Run Cypress E2E tests
-        uses: cypress-io/github-action@59810ebfa5a5ac6fcfdcfdf036d1cd4d083a88f2 # v6.5.0
+        uses: cypress-io/github-action@v6
         with:
-          working-directory: test/cypress
-          config-file: cypress.config.ts
-          wait-on: 'http://localhost:9000'
+          install: false
+          # working-directory: packages/dnd
+          start: pnpm serve:demo
+          wait-on: "http://localhost:9000"
+          config-file: test/cypress.config.ts
           browser: chrome
-          record: true
+          record: false
         env:
           # pass the Dashboard record key as an environment variable
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           # pass GitHub token to allow accurately detecting a build vs a re-run build
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          Cypress_extended: true
 
       # deploy (re-publish) GitHub demo page with a Prod build but only when merging to "master" branch
       # and the commit message contains the text "chore: release"
       - name: Deploy to gh-pages
         if: |
           github.ref == 'refs/heads/master' &&
-          contains(github.event.head_commit.message, 'chore: release') || contains(github.event.head_commit.message, '[update github demo]')
-        uses: peaceiris/actions-gh-pages@v3
+          (contains(github.event.head_commit.message, format('chore{0} release', ':')) || contains(github.event.head_commit.message, '[refresh gh-pages]'))
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs
+          publish_dir: ./packages/demo/website

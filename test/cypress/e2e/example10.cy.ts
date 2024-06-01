@@ -1,4 +1,4 @@
-describe('Example 10 - Multiple Grids with Row Selection', { retries: 1 }, () => {
+describe('Example 10 - Multiple Grids with Row Selection', () => {
   const titles = ['', 'Title', 'Duration (days)', '% Complete', 'Start', 'Finish', 'Effort Driven'];
 
   beforeEach(() => {
@@ -9,7 +9,7 @@ describe('Example 10 - Multiple Grids with Row Selection', { retries: 1 }, () =>
   });
 
   it('should display Example title', () => {
-    cy.visit(`${Cypress.config('baseUrl')}/slickgrid/example10`);
+    cy.visit(`${Cypress.config('baseUrl')}/example10`);
     cy.get('h2').should('contain', 'Example 10: Multiple Grids with Row Selection');
   });
 

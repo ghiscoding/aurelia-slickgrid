@@ -7,10 +7,6 @@
   rangeStrategy: "bump",
   packageRules: [
     {
-      depTypeList: ["peerDependencies"],
-      enabled: false,
-    },
-    {
       packageNames: ["i18next"],
       allowedVersions: "22.5.0"
     },
@@ -22,8 +18,12 @@
     {
       packageNames: ["npm"],
       allowedVersions: "8.5.0",
-    }
+    },
+    {
+      packageNames: ['pnpm'],
+      allowedVersions: '<9.0.0',
+    },
   ],
-  schedule: ['on friday and tuesday'],
+  schedule: ['every 2 weeks on thursday'],
   ignoreDeps: ["typescript"],
 }

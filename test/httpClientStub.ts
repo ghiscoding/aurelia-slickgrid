@@ -1,14 +1,14 @@
-import { HttpClient } from 'aurelia-fetch-client';
+import { HttpClient } from '@aurelia/fetch-client';
 
 export class HttpStub extends HttpClient {
-  status: number;
-  statusText: string;
+  status = -1;
+  statusText = '';
   object: any = {};
-  returnKey: string;
+  returnKey = '';
   returnValue: any;
   responseHeaders: any;
 
-  fetch(input, init) {
+  fetch(input: any, init: any) {
     let request;
     const responseInit: any = {};
     responseInit.headers = new Headers();
@@ -32,7 +32,7 @@ export class HttpStub extends HttpClient {
 
     const promise = Promise.resolve().then(() => {
       if (request.headers.get('Content-Type') === 'application/json' && request.method !== 'GET') {
-        return request.json().then((object) => {
+        return request.json().then((object: any) => {
           object[this.returnKey] = this.returnValue;
           const data = JSON.stringify(object);
           const response = new Response(data, responseInit);

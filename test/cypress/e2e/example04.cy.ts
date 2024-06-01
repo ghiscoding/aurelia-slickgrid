@@ -1,15 +1,16 @@
-import moment from 'moment-mini';
+import { isAfter, isBefore, isEqual, parse } from '@formkit/tempo';
+
 import { removeExtraSpaces } from '../plugins/utilities';
 
-describe('Example 4 - Client Side Sort/Filter Grid', { retries: 1 }, () => {
+describe('Example 4 - Client Side Sort/Filter Grid', () => {
   it('should display Example title', () => {
-    cy.visit(`${Cypress.config('baseUrl')}/slickgrid/example4`);
+    cy.visit(`${Cypress.config('baseUrl')}/example4`);
     cy.get('h2').should('contain', 'Example 4: Client Side Sort/Filter');
   });
 
   describe('Load Grid with Presets', () => {
     const presetDurationValues = [98, 10];
-    const presetUsDateShort = '04/20/25';
+    const presetUsDateShort = '4/20/25';
 
     it('should have some metrics shown in the grid footer but make sure the first number is below 1500 items', () => {
       cy.get('#slickGridContainer-grid4')
@@ -53,7 +54,7 @@ describe('Example 4 - Client Side Sort/Filter Grid', { retries: 1 }, () => {
           cy.wrap($row)
             .children('.slick-cell:nth(5)')
             .each(($cell) => {
-              const isDateValid = moment($cell.text(), 'M/D/YY').isBefore(presetUsDateShort);
+              const isDateValid = isBefore(parse($cell.text(), 'M/D/YY'), parse(presetUsDateShort, 'M/D/YY'));
               expect(isDateValid).to.eq(true);
             });
         });
@@ -152,7 +153,7 @@ describe('Example 4 - Client Side Sort/Filter Grid', { retries: 1 }, () => {
           cy.wrap($row)
             .children('.slick-cell:nth(4)')
             .each(($cell) => {
-              const isDateValid = moment($cell.text()).isSameOrAfter(dynamicStartDate);
+              const isDateValid = isEqual($cell.text(), dynamicStartDate) || isAfter($cell.text(), dynamicStartDate);
               expect(isDateValid).to.eq(true);
             });
         });

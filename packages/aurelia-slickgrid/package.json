@@ -1,0 +1,74 @@
+{
+  "name": "aurelia-slickgrid",
+  "description": "Slickgrid components made available in Aurelia",
+  "version": "8.0.1",
+  "keywords": [
+    "aurelia",
+    "datagrid",
+    "datatable",
+    "plugin",
+    "slickgrid"
+  ],
+  "homepage": "https://github.com/ghiscoding/aurelia-slickgrid",
+  "bugs": {
+    "url": "https://github.com/ghiscoding/aurelia-slickgrid/issues"
+  },
+  "license": "MIT",
+  "author": "Ghislain B.",
+  "files": [
+    "/dist",
+    "/src"
+  ],
+  "module": "./dist/esm/index.js",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "default": "./dist/esm/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ghiscoding/aurelia-slickgrid.git",
+    "directory": "packages/aurelia-slickgrid"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "prebuild": "rimraf dist",
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "postbuild": "npm run copy-i18n:dist && npm run copy-asset-lib",
+    "copy-asset-lib": "copyfiles --up 2 src/assets/lib/** dist",
+    "copy-i18n:dist": "copyfiles --up 3 src/assets/i18n/**/*.* dist/i18n",
+    "pack": "npm pack"
+  },
+  "peerDependencies": {
+    "aurelia": "^2.0.0-beta.18"
+  },
+  "dependencies": {
+    "@aurelia/i18n": "^2.0.0-beta.18",
+    "@aurelia/runtime": "^2.0.0-beta.18",
+    "@aurelia/runtime-html": "^2.0.0-beta.18",
+    "@formkit/tempo": "^0.1.1",
+    "@slickgrid-universal/common": "~5.0.1",
+    "@slickgrid-universal/custom-footer-component": "~5.0.1",
+    "@slickgrid-universal/empty-warning-component": "~5.0.1",
+    "@slickgrid-universal/event-pub-sub": "~5.0.0",
+    "@slickgrid-universal/pagination-component": "~5.0.1",
+    "@slickgrid-universal/row-detail-view-plugin": "~5.0.1",
+    "@slickgrid-universal/utils": "~5.0.0",
+    "dequal": "^2.0.3",
+    "sortablejs": "^1.15.2"
+  },
+  "devDependencies": {
+    "@types/dompurify": "^3.0.5",
+    "copyfiles": "^2.4.1",
+    "dompurify": "^3.1.4",
+    "rimraf": "^5.0.7",
+    "tslib": "^2.6.2",
+    "typescript": "^5.4.5"
+  }
+}

@@ -5,12 +5,12 @@ bower_components
 .idea
 .DS_STORE
 npm-debug.log
-package-lock.json
 yarn-error.log
 
 # Distribution folder
 **/dist
 **/dist-demo
+**/website
 
 # Tests Report & Coverage
 **/node_modules

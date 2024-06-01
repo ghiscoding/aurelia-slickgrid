@@ -1,15 +1,27 @@
-import moment from 'moment-mini';
+import { addDay, format, isAfter, isBefore, isEqual } from '@formkit/tempo';
 
 const presetMinComplete = 5;
 const presetMaxComplete = 80;
 const presetMinDuration = 4;
 const presetMaxDuration = 88;
-const presetLowestDay = moment().add(-2, 'days').format('YYYY-MM-DD');
-const presetHighestDay = moment().add(28, 'days').format('YYYY-MM-DD');
+const today = new Date();
+const presetLowestDay = format(addDay(new Date(), -2), 'YYYY-MM-DD');
+const presetHighestDay = format(addDay(new Date(), today.getDate() < 14 ? 30 : 25), 'YYYY-MM-DD');
 
-describe('Example 23 - Range Filters', { retries: 0 }, () => {
+function isBetween(inputDate: Date | string, minDate: Date | string, maxDate: Date | string, isInclusive = false) {
+  let valid = false;
+  if (isInclusive) {
+    valid = isEqual(inputDate, minDate) || isEqual(inputDate, maxDate);
+  }
+  if (!valid) {
+    valid = isAfter(inputDate, minDate) && isBefore(inputDate, maxDate);
+  }
+  return valid;
+}
+
+describe('Example 23 - Range Filters', () => {
   it('should display Example title', () => {
-    cy.visit(`${Cypress.config('baseUrl')}/slickgrid/example23`);
+    cy.visit(`${Cypress.config('baseUrl')}/example23`);
     cy.get('h2').should('contain', 'Example 23: Filtering from Range of Search Values');
   });
 
@@ -52,7 +64,7 @@ describe('Example 23 - Range Filters', { retries: 0 }, () => {
         cy.wrap($row)
           .children('.slick-cell:nth(4)')
           .each(($cell) => {
-            const isDateBetween = moment($cell.text()).isBetween(presetLowestDay, presetHighestDay, null, '[]'); // [] is inclusive, () is exclusive
+            const isDateBetween = isBetween($cell.text(), presetLowestDay, presetHighestDay, true);
             expect(isDateBetween).to.eq(true);
           });
       });
@@ -114,14 +126,17 @@ describe('Example 23 - Range Filters', { retries: 0 }, () => {
   });
 
   it('should change the "Finish" date in the picker and expect all rows to be within new dates range', () => {
-    cy.get('.flatpickr.search-filter.filter-finish')
+    cy.get('.date-picker.search-filter.filter-finish')
       .click();
 
-    cy.get('.flatpickr-day.inRange')
+    cy.get('.vanilla-calendar-day_selected-first')
+      .should('exist');
+
+    cy.get('.vanilla-calendar-day_selected-intermediate')
       .should('have.length.gte', 2);
 
-    // cy.get('.flatpickr-day.selected.endRange')
-    //   .should('contain', moment().add(25, 'days').day() - 1);
+    cy.get('.vanilla-calendar-day_selected-last')
+      .should('exist');
   });
 
   it('should change the "Duration" input filter and expect all rows to be within new range', () => {
@@ -158,9 +173,9 @@ describe('Example 23 - Range Filters', { retries: 0 }, () => {
     const dynamicMaxComplete = 85;
     const dynamicMinDuration = 14;
     const dynamicMaxDuration = 78;
-    const currentYear = moment().year();
-    const dynamicLowestDay = moment().add(-5, 'days').format('YYYY-MM-DD');
-    const dynamicHighestDay = moment().add(25, 'days').format('YYYY-MM-DD');
+    const currentYear = new Date().getFullYear();
+    const dynamicLowestDay = format(addDay(new Date(), -5), 'YYYY-MM-DD');
+    const dynamicHighestDay = format(addDay(new Date(), 25), 'YYYY-MM-DD');
 
     it('should click on Set Dynamic Filters', () => {
       cy.get('[data-test=set-dynamic-filter]')
@@ -203,7 +218,7 @@ describe('Example 23 - Range Filters', { retries: 0 }, () => {
       cy.get('.search-filter.filter-finish')
         .find('input')
         .invoke('val')
-        .then(text => expect(text).to.eq(`${dynamicLowestDay} to ${dynamicHighestDay}`));
+        .then(text => expect(text).to.eq(`${dynamicLowestDay} — ${dynamicHighestDay}`));
 
       cy.get('#grid23')
         .find('.slick-row')
@@ -211,7 +226,7 @@ describe('Example 23 - Range Filters', { retries: 0 }, () => {
           cy.wrap($row)
             .children('.slick-cell:nth(4)')
             .each(($cell) => {
-              const isDateBetween = moment($cell.text()).isBetween(dynamicLowestDay, dynamicHighestDay, null, '[]'); // [] is inclusive, () is exclusive
+              const isDateBetween = isBetween($cell.text(), dynamicLowestDay, dynamicHighestDay, true);
               expect(isDateBetween).to.eq(true);
             });
         });
@@ -224,7 +239,7 @@ describe('Example 23 - Range Filters', { retries: 0 }, () => {
       cy.get('.search-filter.filter-finish')
         .find('input')
         .invoke('val')
-        .then(text => expect(text).to.eq(`${currentYear}-01-01 to ${currentYear}-12-31`));
+        .then(text => expect(text).to.eq(`${currentYear}-01-01 — ${currentYear}-12-31`));
 
       cy.get('.ms-parent.search-filter.filter-completed > button > span')
         .should('contain', 'True');

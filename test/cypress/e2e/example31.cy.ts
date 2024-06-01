@@ -1,15 +1,13 @@
-describe('Example 31 - OData Grid using RxJS', { retries: 1 }, () => {
+describe('Example 31 - OData Grid using RxJS', () => {
   const GRID_ROW_HEIGHT = 33;
 
   beforeEach(() => {
     // create a console.log spy for later use
-    cy.window().then((win) => {
-      cy.spy(win.console, 'log');
-    });
+    cy.window().then(win => cy.spy(win.console, 'log'));
   });
 
   it('should display Example title', () => {
-    cy.visit(`${Cypress.config('baseUrl')}/slickgrid/example31`);
+    cy.visit(`${Cypress.config('baseUrl')}/example31`);
     cy.get('h2').should('contain', 'Example 31: Grid with OData Backend Service using RxJS Observables');
   });
 
@@ -198,7 +196,7 @@ describe('Example 31 - OData Grid using RxJS', { retries: 1 }, () => {
     it('should Clear all Filters and expect to go back to first page', () => {
       cy.get('#grid31')
         .find('button.slick-grid-menu-button')
-        .trigger('click', { force: true })
+        .trigger('click')
         .click({ force: true });
 
       cy.get(`.slick-grid-menu:visible`)
@@ -243,7 +241,7 @@ describe('Example 31 - OData Grid using RxJS', { retries: 1 }, () => {
     it('should Clear all Sorting', () => {
       cy.get('#grid31')
         .find('button.slick-grid-menu-button')
-        .trigger('click', { force: true })
+        .trigger('click')
         .click();
 
       cy.get(`.slick-grid-menu:visible`)
@@ -335,7 +333,7 @@ describe('Example 31 - OData Grid using RxJS', { retries: 1 }, () => {
     it('should Clear all Filters, set 20 items per page & uncheck "enableCount"', () => {
       cy.get('#grid31')
         .find('button.slick-grid-menu-button')
-        .trigger('click', { force: true })
+        .trigger('click')
         .click();
 
       cy.get(`.slick-grid-menu:visible`)
@@ -417,7 +415,7 @@ describe('Example 31 - OData Grid using RxJS', { retries: 1 }, () => {
     it('should Clear all Sorting', () => {
       cy.get('#grid31')
         .find('button.slick-grid-menu-button')
-        .trigger('click', { force: true })
+        .trigger('click')
         .click();
 
       cy.get(`.slick-grid-menu:visible`)
@@ -661,12 +659,13 @@ describe('Example 31 - OData Grid using RxJS', { retries: 1 }, () => {
     it('should be able to open "Gender" on the first row and expect to find 2 options the editor list (male, female) and expect male to be selected', () => {
       const expectedOptions = ['male', 'female'];
 
-      cy.get(`[style="top:${GRID_ROW_HEIGHT * 0}px"] > .slick-cell:nth(0)`)
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 0}px;"] > .slick-cell:nth(0)`)
         .click();
 
-      cy.get(`[style="top:${GRID_ROW_HEIGHT * 0}px"] > .slick-cell:nth(2)`)
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 0}px;"] > .slick-cell:nth(2)`)
         .should('contain', 'male')
-        .dblclick(); // use double-click since the 1st click will be catch by the row selection because we changed row
+        .click()
+        .type('{enter}');
 
       cy.get('[data-name="editor-gender"].ms-drop')
         .find('li:visible')
@@ -677,7 +676,7 @@ describe('Example 31 - OData Grid using RxJS', { retries: 1 }, () => {
         .each(($li, index) => expect($li.text()).to.eq(expectedOptions[index]));
 
       cy.get('[data-name="editor-gender"]')
-        .find('li.hide-radio.selected')
+        .find('li.selected')
         .find('input[data-name=selectItemeditor-gender][value=male]')
         .should('exist');
     });
@@ -688,10 +687,21 @@ describe('Example 31 - OData Grid using RxJS', { retries: 1 }, () => {
       cy.get('[data-test="add-gender-button"]').should('be.disabled');
     });
 
+    it('should select 1st row', () => {
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 0}px;"] > .slick-cell:nth(0)`)
+        .click();
+
+      cy.get('#grid31')
+        .find('.slick-row')
+        .children()
+        .filter('.slick-cell-checkboxsel.selected')
+        .should('have.length', 1);
+    });
+
     it('should open the "Gender" editor on the first row and expect to find 1 more option the editor list (male, female, other)', () => {
       const expectedOptions = ['male', 'female', 'other'];
 
-      cy.get(`[style="top:${GRID_ROW_HEIGHT * 0}px"] > .slick-cell:nth(2)`)
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 0}px;"] > .slick-cell:nth(2)`)
         .should('contain', 'male')
         .click();
 
@@ -704,7 +714,7 @@ describe('Example 31 - OData Grid using RxJS', { retries: 1 }, () => {
         .each(($li, index) => expect($li.text()).to.eq(expectedOptions[index]));
 
       cy.get('[data-name="editor-gender"]')
-        .find('li.hide-radio.selected')
+        .find('li.selected')
         .find('input[data-name=selectItemeditor-gender][value=male]')
         .should('exist');
     });

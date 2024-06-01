@@ -1,4 +1,4 @@
-describe('Example 5 - OData Grid', { retries: 1 }, () => {
+describe('Example 5 - OData Grid', () => {
   const GRID_ROW_HEIGHT = 35;
 
   beforeEach(() => {
@@ -9,7 +9,7 @@ describe('Example 5 - OData Grid', { retries: 1 }, () => {
   });
 
   it('should display Example title', () => {
-    cy.visit(`${Cypress.config('baseUrl')}/slickgrid/example5`);
+    cy.visit(`${Cypress.config('baseUrl')}/example5`);
     cy.get('h2').should('contain', 'Example 5: Grid with Backend OData Service');
   });
 
@@ -692,7 +692,7 @@ describe('Example 5 - OData Grid', { retries: 1 }, () => {
         .find('.slick-row')
         .should('have.length', 1);
 
-      cy.get(`[style="top:${GRID_ROW_HEIGHT * 0}px"] > .slick-cell:nth(1)`).should('contain', 'Alisha Myers');
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 0}px;"] > .slick-cell:nth(1)`).should('contain', 'Alisha Myers');
 
       // query should still contain previous sort by + new gender filter
       cy.get('[data-test=odata-query-result]')
@@ -727,7 +727,7 @@ describe('Example 5 - OData Grid', { retries: 1 }, () => {
         .invoke('show')
         .click();
 
-      cy.get('.slick-header-menu')
+      cy.get('.slick-header-menu .slick-menu-command-list')
         .should('be.visible')
         .children('.slick-menu-item:nth-of-type(6)')
         .children('.slick-menu-content')

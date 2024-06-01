@@ -1,4 +1,4 @@
-describe('Example 15: Grid State & Presets using Local Storage', { retries: 1 }, () => {
+describe('Example 15: Grid State & Presets using Local Storage', () => {
   const fullEnglishTitles = ['', 'Title', 'Description', 'Duration', '% Complete', 'Start', 'Completed'];
   // const fullFrenchTitles = ['', 'Titre', 'Description', 'Durée', '% Achevée', 'Début', 'Terminé'];
 
@@ -11,7 +11,7 @@ describe('Example 15: Grid State & Presets using Local Storage', { retries: 1 },
   });
 
   it('should display Example title', () => {
-    cy.visit(`${Cypress.config('baseUrl')}/slickgrid/example15`);
+    cy.visit(`${Cypress.config('baseUrl')}/example15`);
     cy.get('h2').should('contain', 'Example 15: Grid State & Presets using Local Storage');
 
     cy.clearLocalStorage();
@@ -174,7 +174,7 @@ describe('Example 15: Grid State & Presets using Local Storage', { retries: 1 },
       .invoke('show')
       .click();
 
-    cy.get('.slick-header-menu')
+    cy.get('.slick-header-menu .slick-menu-command-list')
       .should('be.visible')
       .children('.slick-menu-item:nth-of-type(5)')
       .children('.slick-menu-content')
@@ -401,7 +401,7 @@ describe('Example 15: Grid State & Presets using Local Storage', { retries: 1 },
       .invoke('show')
       .click();
 
-    cy.get('.slick-header-menu')
+    cy.get('.slick-header-menu .slick-menu-command-list')
       .should('be.visible')
       .children('.slick-menu-item:nth-of-type(9)')
       .children('.slick-menu-content')
@@ -423,7 +423,7 @@ describe('Example 15: Grid State & Presets using Local Storage', { retries: 1 },
       .invoke('show')
       .click();
 
-    cy.get('.slick-header-menu')
+    cy.get('.slick-header-menu .slick-menu-command-list')
       .should('be.visible')
       .children('.slick-menu-item:nth-of-type(1)')
       .children('.slick-menu-content')
@@ -496,9 +496,9 @@ describe('Example 15: Grid State & Presets using Local Storage', { retries: 1 },
   });
 
   it('should have a persisted frozen column after "Description" and a grid with 4 containers on page load with 2 columns on the left and 3 columns on the right', () => {
-    cy.get('[style="top:0px"]').should('have.length', 2);
-    cy.get('.grid-canvas-left > [style="top:0px"]').children().should('have.length', 2);
-    cy.get('.grid-canvas-right > [style="top:0px"]').children().should('have.length', 3);
+    cy.get('[style="top: 0px;"]').should('have.length', 2);
+    cy.get('.grid-canvas-left > [style="top: 0px;"]').children().should('have.length', 2);
+    cy.get('.grid-canvas-right > [style="top: 0px;"]').children().should('have.length', 3);
   });
 
   it('should click on the reset button and have exact Column Titles position as in beginning', () => {
@@ -533,7 +533,7 @@ describe('Example 15: Grid State & Presets using Local Storage', { retries: 1 },
       .invoke('show')
       .click();
 
-    cy.get('.slick-header-menu')
+    cy.get('.slick-header-menu .slick-menu-command-list')
       .should('be.visible')
       .children('.slick-menu-item:nth-of-type(1)')
       .children('.slick-menu-content')
@@ -564,7 +564,7 @@ describe('Example 15: Grid State & Presets using Local Storage', { retries: 1 },
       .invoke('show')
       .click();
 
-    cy.get('.slick-header-menu')
+    cy.get('.slick-header-menu .slick-menu-command-list')
       .should('be.visible')
       .children('.slick-menu-item:nth-of-type(1)')
       .children('.slick-menu-content')
@@ -573,8 +573,8 @@ describe('Example 15: Grid State & Presets using Local Storage', { retries: 1 },
   });
 
   it('should have a persisted frozen column after "Description" and a grid with 4 containers on page load with 2 columns on the left and 3 columns on the right', () => {
-    cy.get('[style="top:0px"]').should('have.length', 2);
-    cy.get('.grid-canvas-left > [style="top:0px"]').children().should('have.length', 4);
-    cy.get('.grid-canvas-right > [style="top:0px"]').children().should('have.length', 3);
+    cy.get('[style="top: 0px;"]').should('have.length', 2);
+    cy.get('.grid-canvas-left > [style="top: 0px;"]').children().should('have.length', 4);
+    cy.get('.grid-canvas-right > [style="top: 0px;"]').children().should('have.length', 3);
   });
 });
