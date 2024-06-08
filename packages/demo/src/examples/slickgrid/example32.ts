@@ -19,6 +19,7 @@ import {
   SortComparers,
   SlickGlobalEditorLock,
   type VanillaCalendarOption,
+  type SearchTerm,
 } from 'aurelia-slickgrid';
 import './example32.scss'; // provide custom CSS/SASS styling
 
@@ -119,7 +120,49 @@ export class Example32 {
         resizeMaxWidthThreshold: 200,
         columnGroup: 'Common Factor',
         cssClass: 'text-uppercase fw-bold',
-        filterable: true, filter: { model: Filters.compoundInputText },
+        filterable: true,
+        filter: {
+          model: Filters.inputText,
+          // you can use your own custom filter predicate when built-in filters aren't working for you
+          // for example the example below will function similarly to an SQL LIKE to answer this SO: https://stackoverflow.com/questions/78471412/angular-slickgrid-filter
+          filterPredicate: (dataContext, searchFilterArgs) => {
+            const searchVals = (searchFilterArgs.parsedSearchTerms || []) as SearchTerm[];
+            if (searchVals?.length) {
+              const columnId = searchFilterArgs.columnId;
+              const searchVal = searchVals[0] as string;
+              const cellValue = dataContext[columnId].toLowerCase();
+              const results = searchVal.matchAll(/^%([^%\r\n]+)[^%\r\n]*$|(.*)%(.+)%(.*)|(.+)%(.+)|([^%\r\n]+)%$/gi);
+              const arrayOfMatches = Array.from(results);
+              const matches = arrayOfMatches.length ? arrayOfMatches[0] : [];
+              const [_, endW, containSW, contain, containEndW, comboSW, comboEW, startW] = matches;
+
+              if (endW) {
+                // example: "%001" ends with A
+                return cellValue.endsWith(endW.toLowerCase());
+              } else if (containSW && contain) {
+                // example: "%Ti%001", contains A + ends with B
+                return cellValue.startsWith(containSW.toLowerCase()) && cellValue.includes(contain.toLowerCase());
+              } else if (contain && containEndW) {
+                // example: "%Ti%001", contains A + ends with B
+                return cellValue.includes(contain) && cellValue.endsWith(containEndW.toLowerCase());
+              } else if (contain && !containEndW) {
+                // example: "%Ti%", contains A anywhere
+                return cellValue.includes(contain.toLowerCase());
+              } else if (comboSW && comboEW) {
+                // example: "Ti%001", combo starts with A + ends with B
+                return cellValue.startsWith(comboSW.toLowerCase()) && cellValue.endsWith(comboEW.toLowerCase());
+              } else if (startW) {
+                // example: "Ti%", starts with A
+                return cellValue.startsWith(startW.toLowerCase());
+              }
+              // anything else
+              return cellValue.includes(searchVal.toLowerCase());
+            }
+
+            // if we fall here then the value is not filtered out
+            return true;
+          },
+        },
         editor: {
           model: Editors.longText, required: true, alwaysSaveOnEnterKey: true,
           maxLength: 12,
