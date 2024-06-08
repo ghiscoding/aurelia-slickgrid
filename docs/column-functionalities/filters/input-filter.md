@@ -7,6 +7,7 @@
 - [Dynamic Query Field](#dynamic-query-field)
 - [Debounce/Throttle Text Search (wait for user to stop typing before filtering)](#debouncethrottle-text-search-wait-for-user-to-stop-typing-before-filtering)
 - [Ignore Locale Accent in Text Filter/Sorting](#ignore-locale-accent-in-text-filtersorting)
+- [Custom Filter Predicate](#custom-filter-predicate)
 
 ### Description
 Input filter is the default filter when enabling filters.
@@ -176,3 +177,45 @@ this.gridOptions = {
    ignoreAccentOnStringFilterAndSort: true,
 };
 ```
+
+### Custom Filter Predicate
+You can provide a custom predicate by using the `filterPredicate` when defining your `filter`, the callback will provide you with 2 arguments (`dataContext` and `searchFilterArgs`). The `searchFilterArgs` has a type of `SearchColumnFilter` interface which will provide you more info about the filter itself (like parsed operator, search terms, column definition, column id and type as well). You can see a live demo at [Example 14](https://ghiscoding.github.io/slickgrid-universal/#/example14) and the associated [lines](https://github.com/ghiscoding/slickgrid-universal/blob/1a2c2ff4b72ac3f51b30b1d3d101e84ed9ec9ece/examples/vite-demo-vanilla-bundle/src/examples/example14.ts#L153-L178) of code.
+
+```ts
+this.columnDefinitions = [
+  {
+    id: 'title', name: 'Title', field: 'title', sortable: true,
+    filterable: true, type: FieldType.string,
+    filter: {
+      model: Filters.inputText,
+      // you can use your own custom filter predicate when built-in filters aren't working for you
+      // for example the example below will function similarly to an SQL LIKE to answer this SO: https://stackoverflow.com/questions/78471412/angular-slickgrid-filter
+      filterPredicate: (dataContext, searchFilterArgs) => {
+        const searchVals = (searchFilterArgs.searchTerms || []) as SearchTerm[];
+        if (searchVals?.length) {
+          const columnId = searchFilterArgs.columnId;
+          const searchVal = searchVals[0] as string;
+          const likeMatches = searchVal.split('%');
+          if (likeMatches.length > 3) {
+            // for matches like "%Ta%10%" will return text that starts with "Ta" and ends with "10" (e.g. "Task 10", "Task 110", "Task 210")
+            const [_, start, end] = likeMatches;
+            return dataContext[columnId].startsWith(start) && dataContext[columnId].endsWith(end);
+          } else if (likeMatches.length > 2) {
+            // for matches like "%Ta%10" will return text that starts with "Ta" and contains "10" (e.g. "Task 10", "Task 100", "Task 101")
+            const [_, start, contain] = likeMatches;
+            return dataContext[columnId].startsWith(start) && dataContext[columnId].includes(contain);
+          }
+          // for anything else we'll simply expect a Contains
+          return dataContext[columnId].includes(searchVal);
+        }
+        // if we fall here then the value is not filtered out
+        return true;
+      },
+    },
+  },
+];
+```
+
+The custom filter predicate above was to answer a Stack Overflow question and will work similarly to an SQL LIKE matcher (it's not perfect and probably requires more work but is enough to demo the usage of a custom filter predicate)
+
+![image](https://github.com/ghiscoding/slickgrid-universal/assets/643976/3e77774e-3a9f-4ca4-bca7-50a033a4b48d)
