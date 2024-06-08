@@ -624,8 +624,8 @@ export class AureliaSlickgridCustomElement {
       this.sortService.processTreeDataInitialSort();
 
       // we also need to reset/refresh the Tree Data filters because if we inserted new item(s) then it might not show up without doing this refresh
-      // however we need 1 cpu cycle before having the DataView refreshed, so we need to wrap this check in a setTimeout
-      setTimeout(() => {
+      // however we need to queue our process until the flat dataset is ready, so we can queue a microtask to execute the DataView refresh only after everything is ready
+      queueMicrotask(() => {
         const flatDatasetLn = this.dataview.getItemCount();
         if (flatDatasetLn > 0 && (flatDatasetLn !== prevFlatDatasetLn || !isDatasetEqual)) {
           this.filterService.refreshTreeDataFilters();
@@ -812,8 +812,8 @@ export class AureliaSlickgridCustomElement {
         const query = (typeof backendApiService.buildQuery === 'function') ? backendApiService.buildQuery() : '';
         const process = isExecuteCommandOnInit ? (backendApi.process?.(query) ?? null) : (backendApi.onInit?.(query) ?? null);
 
-        // wrap this inside a setTimeout to avoid timing issue since the gridOptions needs to be ready before running this onInit
-        setTimeout(() => {
+        // wrap this inside a microtask to be executed at the end of the task and avoid timing issue since the gridOptions needs to be ready before running this onInit
+        queueMicrotask(() => {
           const backendUtilityService = this.backendUtilityService as BackendUtilityService;
 
           // keep start time & end timestamps & return it after process execution
@@ -1146,8 +1146,8 @@ export class AureliaSlickgridCustomElement {
           }
         });
       } else if (this.rxjs?.isObservable(collectionAsync)) {
-        // wrap this inside a setTimeout to avoid timing issue since updateEditorCollection requires to call SlickGrid getColumns() method
-        setTimeout(() => {
+        // wrap this inside a microtask at the end of the task to avoid timing issue since updateEditorCollection requires to call SlickGrid getColumns() method after columns are available
+        queueMicrotask(() => {
           this.subscriptions.push(
             (collectionAsync as Observable<any>).subscribe((resolvedCollection) => this.updateEditorCollection(column, resolvedCollection))
           );
