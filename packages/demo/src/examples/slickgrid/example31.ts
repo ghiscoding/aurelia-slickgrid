@@ -412,6 +412,7 @@ export class Example31 {
   // ---
 
   changeCountEnableFlag() {
+    this.displaySpinner(true);
     this.isCountEnabled = !this.isCountEnabled;
     this.resetOptions({ enableCount: this.isCountEnabled });
     return true;
@@ -430,12 +431,14 @@ export class Example31 {
   }
 
   setOdataVersion(version: number) {
+    this.displaySpinner(true);
     this.odataVersion = version;
     this.resetOptions({ version: this.odataVersion });
     return true;
   }
 
   private resetOptions(options: Partial<OdataOption>) {
+    this.displaySpinner(true);
     const odataService = this.gridOptions.backendServiceApi!.service as GridOdataService;
     odataService.updateOptions(options);
     odataService.clearFilters();
