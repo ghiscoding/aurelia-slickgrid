@@ -41,10 +41,6 @@ export class Example35 {
     this.dataset = this.getData(NB_ITEMS);
   }
 
-  aureliaGridReady(aureliaGrid: AureliaGridInstance) {
-    this.aureliaGrid = aureliaGrid;
-  }
-
   /* Define grid Options and Columns */
   defineGrid() {
     this.columnDefinitions = [
