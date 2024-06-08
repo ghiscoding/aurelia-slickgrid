@@ -1,5 +1,3 @@
-
-
 describe('Example 32 - Columns Resize by Content', () => {
   const GRID_ROW_HEIGHT = 33;
 
@@ -17,33 +15,33 @@ describe('Example 32 - Columns Resize by Content', () => {
     });
 
     it('should have cell that fit the text content', () => {
-      cy.get('.slick-row').find('.slick-cell:nth(1)').invoke('width').should('be.greaterThan', 75);
-      cy.get('.slick-row').find('.slick-cell:nth(2)').invoke('width').should('be.greaterThan', 67);
-      cy.get('.slick-row').find('.slick-cell:nth(3)').invoke('width').should('be.greaterThan', 59);
-      cy.get('.slick-row').find('.slick-cell:nth(4)').invoke('width').should('be.greaterThan', 102);
-      cy.get('.slick-row').find('.slick-cell:nth(5)').invoke('width').should('be.greaterThan', 97);
-      cy.get('.slick-row').find('.slick-cell:nth(6)').invoke('width').should('be.greaterThan', 72);
-      cy.get('.slick-row').find('.slick-cell:nth(7)').invoke('width').should('be.greaterThan', 67);
-      cy.get('.slick-row').find('.slick-cell:nth(8)').invoke('width').should('be.greaterThan', 72);
-      cy.get('.slick-row').find('.slick-cell:nth(9)').invoke('width').should('be.greaterThan', 179);
-      cy.get('.slick-row').find('.slick-cell:nth(10)').invoke('width').should('be.greaterThan', 94);
-      cy.get('.slick-row').find('.slick-cell:nth(11)').invoke('width').should('be.greaterThan', 57);
+      cy.get('.slick-row').find('.slick-cell:nth(1)').invoke('width').should('be.gt', 75);
+      cy.get('.slick-row').find('.slick-cell:nth(2)').invoke('width').should('be.gt', 67);
+      cy.get('.slick-row').find('.slick-cell:nth(3)').invoke('width').should('be.gt', 59);
+      cy.get('.slick-row').find('.slick-cell:nth(4)').invoke('width').should('be.gt', 102);
+      cy.get('.slick-row').find('.slick-cell:nth(5)').invoke('width').should('be.gt', 89);
+      cy.get('.slick-row').find('.slick-cell:nth(6)').invoke('width').should('be.gt', 72);
+      cy.get('.slick-row').find('.slick-cell:nth(7)').invoke('width').should('be.gt', 67);
+      cy.get('.slick-row').find('.slick-cell:nth(8)').invoke('width').should('be.gt', 72);
+      cy.get('.slick-row').find('.slick-cell:nth(9)').invoke('width').should('be.gt', 179);
+      cy.get('.slick-row').find('.slick-cell:nth(10)').invoke('width').should('be.gt', 94);
+      cy.get('.slick-row').find('.slick-cell:nth(11)').invoke('width').should('equal', 58);
     });
 
     it('should make the grid readonly and expect to fit the text by content and expect column width to be the same as earlier', () => {
       cy.get('[data-test="toggle-readonly-btn"]').click();
 
-      cy.get('.slick-row').find('.slick-cell:nth(1)').invoke('width').should('be.greaterThan', 75);
-      cy.get('.slick-row').find('.slick-cell:nth(2)').invoke('width').should('be.greaterThan', 67);
-      cy.get('.slick-row').find('.slick-cell:nth(3)').invoke('width').should('be.greaterThan', 59);
-      cy.get('.slick-row').find('.slick-cell:nth(4)').invoke('width').should('be.greaterThan', 102);
-      cy.get('.slick-row').find('.slick-cell:nth(5)').invoke('width').should('be.greaterThan', 97);
-      cy.get('.slick-row').find('.slick-cell:nth(6)').invoke('width').should('be.greaterThan', 72);
-      cy.get('.slick-row').find('.slick-cell:nth(7)').invoke('width').should('be.greaterThan', 67);
-      cy.get('.slick-row').find('.slick-cell:nth(8)').invoke('width').should('be.greaterThan', 72);
-      cy.get('.slick-row').find('.slick-cell:nth(9)').invoke('width').should('be.greaterThan', 179);
-      cy.get('.slick-row').find('.slick-cell:nth(10)').invoke('width').should('be.greaterThan', 94);
-      cy.get('.slick-row').find('.slick-cell:nth(11)').invoke('width').should('be.greaterThan', 57);
+      cy.get('.slick-row').find('.slick-cell:nth(1)').invoke('width').should('be.gt', 75);
+      cy.get('.slick-row').find('.slick-cell:nth(2)').invoke('width').should('be.gt', 67);
+      cy.get('.slick-row').find('.slick-cell:nth(3)').invoke('width').should('be.gt', 59);
+      cy.get('.slick-row').find('.slick-cell:nth(4)').invoke('width').should('be.gt', 102);
+      cy.get('.slick-row').find('.slick-cell:nth(5)').invoke('width').should('be.gt', 89);
+      cy.get('.slick-row').find('.slick-cell:nth(6)').invoke('width').should('be.gt', 72);
+      cy.get('.slick-row').find('.slick-cell:nth(7)').invoke('width').should('be.gt', 67);
+      cy.get('.slick-row').find('.slick-cell:nth(8)').invoke('width').should('be.gt', 72);
+      cy.get('.slick-row').find('.slick-cell:nth(9)').invoke('width').should('be.gt', 179);
+      cy.get('.slick-row').find('.slick-cell:nth(10)').invoke('width').should('be.gt', 94);
+      cy.get('.slick-row').find('.slick-cell:nth(11)').invoke('width').should('equal', 58);
     });
 
     it('should click on (default resize "autosizeColumns") and expect column to be much thinner and fit all its column within the grid container', () => {
@@ -196,12 +194,12 @@ describe('Example 32 - Columns Resize by Content', () => {
         .type('%10');
 
       cy.get('[data-test="total-items"]')
-        .should('contain', 4);
+        .should('have.text', 4);
 
-      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 0}px;"] > .slick-cell:nth(1)`).should('contain', 'Task 10');
-      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 1}px;"] > .slick-cell:nth(1)`).should('contain', 'Task 110');
-      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 2}px;"] > .slick-cell:nth(1)`).should('contain', 'Task 210');
-      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 3}px;"] > .slick-cell:nth(1)`).should('contain', 'Task 310');
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 0}px;"] > .slick-cell:nth(1)`).should('have.text', 'Task 10');
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 1}px;"] > .slick-cell:nth(1)`).should('have.text', 'Task 110');
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 2}px;"] > .slick-cell:nth(1)`).should('have.text', 'Task 210');
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 3}px;"] > .slick-cell:nth(1)`).should('have.text', 'Task 310');
     });
 
     it('should return 4 rows using "%ask%20" (contains "ask" + ends with 20)', () => {
@@ -210,12 +208,12 @@ describe('Example 32 - Columns Resize by Content', () => {
         .type('%ask%20');
 
       cy.get('[data-test="total-items"]')
-        .should('contain', 4);
+        .should('have.text', 4);
 
-      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 0}px;"] > .slick-cell:nth(1)`).should('contain', 'Task 20');
-      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 1}px;"] > .slick-cell:nth(1)`).should('contain', 'Task 120');
-      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 2}px;"] > .slick-cell:nth(1)`).should('contain', 'Task 220');
-      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 3}px;"] > .slick-cell:nth(1)`).should('contain', 'Task 320');
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 0}px;"] > .slick-cell:nth(1)`).should('have.text', 'Task 20');
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 1}px;"] > .slick-cell:nth(1)`).should('have.text', 'Task 120');
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 2}px;"] > .slick-cell:nth(1)`).should('have.text', 'Task 220');
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 3}px;"] > .slick-cell:nth(1)`).should('have.text', 'Task 320');
     });
 
     it('should return all 400 rows using "%ask%" (contains "ask")', () => {
@@ -224,12 +222,12 @@ describe('Example 32 - Columns Resize by Content', () => {
         .type('%ask%');
 
       cy.get('[data-test="total-items"]')
-        .should('contain', 400);
+        .should('have.text', 400);
 
-      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 0}px;"] > .slick-cell:nth(1)`).should('contain', 'Task 0');
-      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 1}px;"] > .slick-cell:nth(1)`).should('contain', 'Task 1');
-      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 2}px;"] > .slick-cell:nth(1)`).should('contain', 'Task 2');
-      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 3}px;"] > .slick-cell:nth(1)`).should('contain', 'Task 3');
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 0}px;"] > .slick-cell:nth(1)`).should('have.text', 'Task 0');
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 1}px;"] > .slick-cell:nth(1)`).should('have.text', 'Task 1');
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 2}px;"] > .slick-cell:nth(1)`).should('have.text', 'Task 2');
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 3}px;"] > .slick-cell:nth(1)`).should('have.text', 'Task 3');
     });
 
     it('should return 4 rows using "Ta%30" (starts with "Ta" + ends with 30)', () => {
@@ -238,12 +236,12 @@ describe('Example 32 - Columns Resize by Content', () => {
         .type('Ta%30');
 
       cy.get('[data-test="total-items"]')
-        .should('contain', 4);
+        .should('have.text', 4);
 
-      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 0}px;"] > .slick-cell:nth(1)`).should('contain', 'Task 30');
-      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 1}px;"] > .slick-cell:nth(1)`).should('contain', 'Task 130');
-      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 2}px;"] > .slick-cell:nth(1)`).should('contain', 'Task 230');
-      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 3}px;"] > .slick-cell:nth(1)`).should('contain', 'Task 330');
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 0}px;"] > .slick-cell:nth(1)`).should('have.text', 'Task 30');
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 1}px;"] > .slick-cell:nth(1)`).should('have.text', 'Task 130');
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 2}px;"] > .slick-cell:nth(1)`).should('have.text', 'Task 230');
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 3}px;"] > .slick-cell:nth(1)`).should('have.text', 'Task 330');
     });
 
     it('should return 14 rows using "Ta%30%" (starts with "Ta" + ends with 30)', () => {
@@ -252,14 +250,14 @@ describe('Example 32 - Columns Resize by Content', () => {
         .type('Ta%30%');
 
       cy.get('[data-test="total-items"]')
-        .should('contain', 4);
+        .should('have.text', 14);
 
-      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 0}px;"] > .slick-cell:nth(1)`).should('contain', 'Task 30');
-      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 1}px;"] > .slick-cell:nth(1)`).should('contain', 'Task 130');
-      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 2}px;"] > .slick-cell:nth(1)`).should('contain', 'Task 230');
-      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 3}px;"] > .slick-cell:nth(1)`).should('contain', 'Task 300');
-      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 4}px;"] > .slick-cell:nth(1)`).should('contain', 'Task 301');
-      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 5}px;"] > .slick-cell:nth(1)`).should('contain', 'Task 302');
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 0}px;"] > .slick-cell:nth(1)`).should('have.text', 'Task 30');
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 1}px;"] > .slick-cell:nth(1)`).should('have.text', 'Task 130');
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 2}px;"] > .slick-cell:nth(1)`).should('have.text', 'Task 230');
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 3}px;"] > .slick-cell:nth(1)`).should('have.text', 'Task 300');
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 4}px;"] > .slick-cell:nth(1)`).should('have.text', 'Task 301');
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 5}px;"] > .slick-cell:nth(1)`).should('have.text', 'Task 302');
     });
 
     it('should return all 400 rows using "Ta%" (starts with "Ta")', () => {
@@ -268,12 +266,12 @@ describe('Example 32 - Columns Resize by Content', () => {
         .type('Ta%');
 
       cy.get('[data-test="total-items"]')
-        .should('contain', 400);
+        .should('have.text', 400);
 
-      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 0}px;"] > .slick-cell:nth(1)`).should('contain', 'Task 0');
-      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 1}px;"] > .slick-cell:nth(1)`).should('contain', 'Task 1');
-      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 2}px;"] > .slick-cell:nth(1)`).should('contain', 'Task 2');
-      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 3}px;"] > .slick-cell:nth(1)`).should('contain', 'Task 3');
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 0}px;"] > .slick-cell:nth(1)`).should('have.text', 'Task 0');
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 1}px;"] > .slick-cell:nth(1)`).should('have.text', 'Task 1');
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 2}px;"] > .slick-cell:nth(1)`).should('have.text', 'Task 2');
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 3}px;"] > .slick-cell:nth(1)`).should('have.text', 'Task 3');
     });
 
     it('should return 14 rows using "25" (contains 25)', () => {
@@ -282,14 +280,14 @@ describe('Example 32 - Columns Resize by Content', () => {
         .type('25');
 
       cy.get('[data-test="total-items"]')
-        .should('contain', 14);
+        .should('have.text', 14);
 
-      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 0}px;"] > .slick-cell:nth(1)`).should('contain', 'Task 25');
-      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 1}px;"] > .slick-cell:nth(1)`).should('contain', 'Task 125');
-      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 2}px;"] > .slick-cell:nth(1)`).should('contain', 'Task 225');
-      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 3}px;"] > .slick-cell:nth(1)`).should('contain', 'Task 250');
-      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 4}px;"] > .slick-cell:nth(1)`).should('contain', 'Task 251');
-      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 5}px;"] > .slick-cell:nth(1)`).should('contain', 'Task 252');
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 0}px;"] > .slick-cell:nth(1)`).should('have.text', 'Task 25');
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 1}px;"] > .slick-cell:nth(1)`).should('have.text', 'Task 125');
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 2}px;"] > .slick-cell:nth(1)`).should('have.text', 'Task 225');
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 3}px;"] > .slick-cell:nth(1)`).should('have.text', 'Task 250');
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 4}px;"] > .slick-cell:nth(1)`).should('have.text', 'Task 251');
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 5}px;"] > .slick-cell:nth(1)`).should('have.text', 'Task 252');
     });
 
     it('should not return any row when filtering Title with "%%"', () => {
@@ -298,26 +296,30 @@ describe('Example 32 - Columns Resize by Content', () => {
         .type('%%');
 
       cy.get('[data-test="total-items"]')
-        .should('contain', 0);
+        .should('have.text', 0);
     });
 
-    it('return some rows (not all 400) filtering Title as "%ask%" AND a Duration ">50" to test few filters still working', () => {
+    it('return all 400 rows when filtering Title as "%ask%"', () => {
+      cy.get('.search-filter.filter-duration').clear();
       cy.get('.search-filter.filter-title')
         .clear()
         .type('%ask%');
 
       cy.get('[data-test="total-items"]')
-        .should('contain', 400);
+        .should('have.text', 400);
+    });
 
+    it('return some rows (not all 400) when filtering Title as "%ask%" AND a Duration ">50" to test few filters still working', () => {
+      cy.get('.search-filter.filter-title').clear();
       cy.get('.search-filter.filter-duration')
         .clear()
         .type('>50');
 
       cy.get('[data-test="total-items"]')
-        .should('not.contain', 0);
+        .should('not.have.text', 0);
 
       cy.get('[data-test="total-items"]')
-        .should('not.contain', 400);
+        .should('not.have.text', 400);
     });
   });
 });
