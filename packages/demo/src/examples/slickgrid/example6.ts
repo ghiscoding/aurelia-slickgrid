@@ -377,6 +377,7 @@ export class Example6 {
   }
 
   private resetOptions(options: Partial<GraphqlServiceOption>) {
+    this.displaySpinner(true);
     const graphqlService = this.gridOptions.backendServiceApi!.service as GraphqlService;
     this.aureliaGrid.paginationService!.setCursorBased(options.useCursor!);
     graphqlService.updateOptions(options);

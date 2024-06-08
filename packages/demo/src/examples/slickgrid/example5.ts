@@ -479,6 +479,7 @@ export class Example5 {
   }
 
   private resetOptions(options: Partial<OdataOption>) {
+    this.displaySpinner(true);
     const odataService = this.gridOptions.backendServiceApi!.service as GridOdataService;
     odataService.updateOptions(options);
     odataService.clearFilters();
