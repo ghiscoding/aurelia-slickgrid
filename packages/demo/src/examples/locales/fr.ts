@@ -30,6 +30,14 @@ export const localeFrench = {
   TEXT_STARTS_WITH: 'Commence par',
   TEXT_X_OF_Y_SELECTED: '# de % sélectionné',
   TEXT_X_OF_Y_MASS_SELECTED: '{{x}} de {{y}} sélectionnés',
+  TEXT_CLEAR_PINNING: 'Dégeler les colonnes/rangées',
+  TEXT_EQUAL_TO: 'Égal à',
+  TEXT_GREATER_THAN: 'Plus grand que',
+  TEXT_GREATER_THAN_OR_EQUAL_TO: 'Plus grand ou égal à',
+  TEXT_LESS_THAN: 'Plus petit que',
+  TEXT_LESS_THAN_OR_EQUAL_TO: 'Plus petit ou égal à',
+  TEXT_NOT_CONTAINS: 'Ne contient pas',
+  TEXT_NOT_EQUAL_TO: 'Non égal à',
 
   // optional
   TEXT_ALL_X_RECORDS_SELECTED: 'Sur tous les {{x}} éléments',
