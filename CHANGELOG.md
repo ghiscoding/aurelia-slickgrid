@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.1.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.0.1...v8.1.0) (2024-06-08)
+
+### Features
+
+* add `filterQueryOverride` to GraphQL Service ([#1214](https://github.com/ghiscoding/aurelia-slickgrid/issues/1214)) ([507a79a](https://github.com/ghiscoding/aurelia-slickgrid/commit/507a79ac330d93eeb3fbf665b03181847ded137c)) - by @ghiscoding
+* add `filterQueryOverride` to OData Service ([#1215](https://github.com/ghiscoding/aurelia-slickgrid/issues/1215)) ([988118f](https://github.com/ghiscoding/aurelia-slickgrid/commit/988118fe4dc851a2232f54e55560c730cb24c19d)) - by @ghiscoding
+* add a `filterPredicate` option for user customization ([#1213](https://github.com/ghiscoding/aurelia-slickgrid/issues/1213)) ([9caf80e](https://github.com/ghiscoding/aurelia-slickgrid/commit/9caf80ed58e12a904532027662c67490e5b67f5f)) - by @ghiscoding
+* add local data StartsWith/EndsWith (`a*z`) filter combo ([#1216](https://github.com/ghiscoding/aurelia-slickgrid/issues/1216)) ([677fd4c](https://github.com/ghiscoding/aurelia-slickgrid/commit/677fd4c7a8215685ca6775791e8a33c7874e7ad4)) - by @ghiscoding
+* add optional Top-Header for Draggable Grouping & Header Grouping ([#1219](https://github.com/ghiscoding/aurelia-slickgrid/issues/1219)) ([3e555f5](https://github.com/ghiscoding/aurelia-slickgrid/commit/3e555f53c137563eba4a5ddf80aae830f12f7617)) - by @ghiscoding
+* add StartsWith/EndsWith (`a*z`) to OData/GraphQL ([#1217](https://github.com/ghiscoding/aurelia-slickgrid/issues/1217)) ([c8122e7](https://github.com/ghiscoding/aurelia-slickgrid/commit/c8122e722c32c9114f6865f770e3400dee220759)) - by @ghiscoding
+* enhance Excel `valueParserCallback` with dataContext & new demo ([#1211](https://github.com/ghiscoding/aurelia-slickgrid/issues/1211)) ([fdcc1cf](https://github.com/ghiscoding/aurelia-slickgrid/commit/fdcc1cf0fc2d0f2762f2f1e84bf009652a980e43)) - by @ghiscoding
+
+### Bug Fixes
+
+* **demo:** out of boundaries page Grid Preset should be unset ([#1209](https://github.com/ghiscoding/aurelia-slickgrid/issues/1209)) ([e1a4d46](https://github.com/ghiscoding/aurelia-slickgrid/commit/e1a4d46a7e39d4f75702917af6ff74d52431bc20)) - by @ghiscoding
+* **deps:** update all non-major dependencies ([#1207](https://github.com/ghiscoding/aurelia-slickgrid/issues/1207)) ([c3bb68e](https://github.com/ghiscoding/aurelia-slickgrid/commit/c3bb68e797dd5b241737cc2017b49eb1a049c3f0)) - by @renovate-bot
+* **TreeData:** addItem should keep current sorted column ([#1221](https://github.com/ghiscoding/aurelia-slickgrid/issues/1221)) ([87c39fb](https://github.com/ghiscoding/aurelia-slickgrid/commit/87c39fbdb5222b474d6d39770990317f43e17ee7)) - by @ghiscoding
+* using caret `^` to get latest Aurelia 2 Beta 17 version ([#1206](https://github.com/ghiscoding/aurelia-slickgrid/issues/1206)) ([e1d412d](https://github.com/ghiscoding/aurelia-slickgrid/commit/e1d412dfa9f215b3b1161a8c28b1e442d46015fa)) - by @ghiscoding
+
 ## [8.0.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.0.0...v8.0.1) (2024-05-12)
 
 ### Bug Fixes
@@ -13,7 +32,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 > [!NOTE]
 > #### Follow the [Migration to 8.0](https://github.com/ghiscoding/aurelia-slickgrid/wiki/Migration-to-8.x) for all the changes and take a look at the [v8.0.0](https://github.com/ghiscoding/aurelia-Slickgrid/releases/tag/v8.0.0) release for the announcement and quick info.
-
 
 ### ⚠ BREAKING CHANGES
 

@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.1.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.0.1...v8.1.0) (2024-06-08)
+
+### Features
+
+* add a `filterPredicate` option for user customization ([#1213](https://github.com/ghiscoding/aurelia-slickgrid/issues/1213)) ([9caf80e](https://github.com/ghiscoding/aurelia-slickgrid/commit/9caf80ed58e12a904532027662c67490e5b67f5f)) - by @ghiscoding
+* add optional Top-Header for Draggable Grouping & Header Grouping ([#1219](https://github.com/ghiscoding/aurelia-slickgrid/issues/1219)) ([3e555f5](https://github.com/ghiscoding/aurelia-slickgrid/commit/3e555f53c137563eba4a5ddf80aae830f12f7617)) - by @ghiscoding
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies ([#1207](https://github.com/ghiscoding/aurelia-slickgrid/issues/1207)) ([c3bb68e](https://github.com/ghiscoding/aurelia-slickgrid/commit/c3bb68e797dd5b241737cc2017b49eb1a049c3f0)) - by @renovate-bot
+* using caret `^` to get latest Aurelia 2 Beta 17 version ([#1206](https://github.com/ghiscoding/aurelia-slickgrid/issues/1206)) ([e1d412d](https://github.com/ghiscoding/aurelia-slickgrid/commit/e1d412dfa9f215b3b1161a8c28b1e442d46015fa)) - by @ghiscoding
+
 ## [8.0.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.0.0...v8.0.1) (2024-05-12)
 
 ### Bug Fixes
