@@ -22,6 +22,8 @@ With this new major version release, we can now say that the journey to moderniz
 
 > **Note** for the full internal list of code changes applied in this Slickgrid-Universal release, you can take a look at the [Discussion - Roadmap to 4.0](https://github.com/ghiscoding/slickgrid-universal/discussions/1108)
 
+> **Note** after following the migration, if you have some build errors with missing `slickgrid` that is because you did not upgrade all Slickgrid-Universal dependencies that you may have. So in short **do not install SlickGrid** manually, this is wrong and we are no longer depending on 6pac/slickgrid since Slickgrid-Universal now has its own SlickGrid/SlickDataView core files.
+
 ---
 
 **NOTE:** if you come from an earlier version, please make sure to follow each migration in their respected order (see Wiki index)
