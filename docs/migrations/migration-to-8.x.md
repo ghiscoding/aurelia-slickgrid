@@ -5,7 +5,7 @@ Another noticeable UI change is the migration from [Flatpickr](https://flatpickr
 
 ##### Flatpickr cons:
   - barely supported (lots of opened PR but nothing merged for the past 2 years)
-  - not fully ESM ready (it's only partially ESM, for example it is detected as CJS in Angular-Slickgrid and requires an exception in `allowedCommonJsDependencies`)
+  - not fully ESM ready (it's only partially ESM, for example it is detected as CJS in Aurelia-Slickgrid and requires an exception in `allowedCommonJsDependencies`)
   - styling could be a bit more modern (the use of native select/input to change year/month/time is a bit outdated and basic)
   - date range selection is not very user friendly (UX)
 
@@ -43,7 +43,7 @@ For most breaking changes, a quick Search & Replace in your code editor should s
 ## Changes
 
 ### Slickgrid-Universal
-If you use any of the Slickgrid-Universal extra dependencies then make sure to upgrade them as well to the new major `4.0.0` version so that they work with Slickgrid-React `7.0.0`
+If you use any of the Slickgrid-Universal extra dependencies then make sure to upgrade them as well to the new major `4.0.0` version so that they work with Aurelia-Slickgrid `7.0.0`
 
 ```diff
   "dependencies": {
