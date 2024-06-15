@@ -16,6 +16,7 @@ export const localeFrench = {
   TEXT_EXPORT_TO_EXCEL: 'Exporter vers Excel',
   TEXT_EXPORT_TO_TAB_DELIMITED: 'Exporter en format texte (délimité par tabulation)',
   TEXT_EXPORT_TO_TEXT_FORMAT: 'Exporter en format texte',
+  TEXT_FILTER_SHORTCUTS: 'Raccourcis de filtre',
   TEXT_FORCE_FIT_COLUMNS: 'Ajustement forcé des colonnes',
   TEXT_GROUP_BY: 'Grouper par',
   TEXT_HIDE_COLUMN: 'Cacher la colonne',
