@@ -15,7 +15,7 @@
       "conventionalCommits": true,
       "createRelease": "github",
       "changelogIncludeCommitsClientLogin": " - by @%l",
-      "message": "chore(release): publish new version %v",
+      "message": "chore(release): publish new version %s",
       "syncWorkspaceLock": true
     }
   },
