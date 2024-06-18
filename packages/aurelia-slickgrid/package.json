@@ -46,20 +46,20 @@
     "pack": "npm pack"
   },
   "peerDependencies": {
-    "aurelia": "^2.0.0-beta.18"
+    "aurelia": "^2.0.0-beta.19"
   },
   "dependencies": {
-    "@aurelia/i18n": "^2.0.0-beta.18",
-    "@aurelia/runtime": "^2.0.0-beta.18",
-    "@aurelia/runtime-html": "^2.0.0-beta.18",
+    "@aurelia/i18n": "^2.0.0-beta.19",
+    "@aurelia/runtime": "^2.0.0-beta.19",
+    "@aurelia/runtime-html": "^2.0.0-beta.19",
     "@formkit/tempo": "^0.1.1",
-    "@slickgrid-universal/common": "~5.1.0",
-    "@slickgrid-universal/custom-footer-component": "~5.1.0",
-    "@slickgrid-universal/empty-warning-component": "~5.1.0",
-    "@slickgrid-universal/event-pub-sub": "~5.0.0",
-    "@slickgrid-universal/pagination-component": "~5.1.0",
-    "@slickgrid-universal/row-detail-view-plugin": "~5.1.0",
-    "@slickgrid-universal/utils": "~5.0.0",
+    "@slickgrid-universal/common": "~5.2.0",
+    "@slickgrid-universal/custom-footer-component": "~5.2.0",
+    "@slickgrid-universal/empty-warning-component": "~5.2.0",
+    "@slickgrid-universal/event-pub-sub": "~5.2.0",
+    "@slickgrid-universal/pagination-component": "~5.2.0",
+    "@slickgrid-universal/row-detail-view-plugin": "~5.2.0",
+    "@slickgrid-universal/utils": "~5.2.0",
     "dequal": "^2.0.3",
     "sortablejs": "^1.15.2"
   },
