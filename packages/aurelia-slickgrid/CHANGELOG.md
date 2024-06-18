@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.2.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.1.0...v8.2.0) (2024-06-18)
+
+### Features
+
+* add new optional `filterShortcuts` to Column Filter ([#1223](https://github.com/ghiscoding/aurelia-slickgrid/issues/1223)) ([d4b1e28](https://github.com/ghiscoding/aurelia-slickgrid/commit/d4b1e281f64ebde50d939e1410ba9ecc3aa4ebd5)) - by @ghiscoding
+
 ## [8.1.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.0.1...v8.1.0) (2024-06-08)
 
 ### Features
