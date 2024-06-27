@@ -1,5 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { IRoute } from '@aurelia/router';
+import { type IRoute } from '@aurelia/router';
 
 import './styles.scss';
 export class MyApp {
@@ -56,7 +56,7 @@ export class MyApp {
       if (linkElm) {
         linkElm.scrollIntoView({ block: 'nearest' });
       }
-    }, 45)
+    }, 45);
   }
 
   addGitHubStarsLogo() {
