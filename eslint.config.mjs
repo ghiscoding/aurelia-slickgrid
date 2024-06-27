@@ -1,7 +1,8 @@
 import eslint from '@eslint/js';
 import cypress from 'eslint-plugin-cypress';
-import tseslint from 'typescript-eslint';
+import globals from 'globals';
 import n from 'eslint-plugin-n';
+import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
   eslint.configs.recommended,
@@ -37,7 +38,8 @@ export default tseslint.config(
 
     languageOptions: {
       globals: {
-        // ...globals,
+        ...globals.es2021,
+        ...globals.node,
         Sortable: true,
       },
       parser: tseslint.parser,
