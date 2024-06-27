@@ -1,12 +1,11 @@
 import eslint from '@eslint/js';
-import cypress from 'eslint-plugin-cypress';
-import tseslint from 'typescript-eslint';
+import cypress from 'eslint-plugin-cypress/flat';
+import globals from 'globals';
 import n from 'eslint-plugin-n';
-import tsParser from '@typescript-eslint/parser';
+import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
   eslint.configs.recommended,
-  // ...cypress.configs.recommended,
   ...tseslint.configs.recommended,
   {
     ignores: [
@@ -38,10 +37,11 @@ export default tseslint.config(
 
     languageOptions: {
       globals: {
-        // ...globals,
+        ...globals.es2021,
+        ...globals.node,
         Sortable: true,
       },
-      parser: tsParser,
+      parser: tseslint.parser,
       parserOptions: {
         project: ['./tsconfig.json']
       }

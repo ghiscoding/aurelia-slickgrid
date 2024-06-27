@@ -72,7 +72,7 @@ import { SlickRowDetailView } from '../extensions/slickRowDetailView';
 @customElement({
   name: 'aurelia-slickgrid',
   template: `
-<div id="slickGridContainer-$\{gridId\}" class="grid-pane">
+<div id="slickGridContainer-$\{gridId}" class="grid-pane">
   <!-- Header slot if you need to create a complex custom header -->
   <au-slot name="slickgrid-header"></au-slot>
 

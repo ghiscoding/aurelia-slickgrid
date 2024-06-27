@@ -65,6 +65,9 @@ importers:
       eslint-plugin-prefer-arrow:
         specifier: ^1.2.3
         version: 1.2.3(eslint@9.5.0)
+      globals:
+        specifier: ^15.6.0
+        version: 15.6.0
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@20.14.4)(ts-node@10.9.2)
@@ -4542,7 +4545,7 @@ packages:
       eslint: 9.5.0
       eslint-plugin-es-x: 7.6.0(eslint@9.5.0)
       get-tsconfig: 4.7.3
-      globals: 15.0.0
+      globals: 15.6.0
       ignore: 5.3.1
       minimatch: 9.0.4
       semver: 7.6.2
@@ -5342,8 +5345,8 @@ packages:
     engines: {node: '>=18'}
     dev: true
 
-  /globals@15.0.0:
-    resolution: {integrity: sha512-m/C/yR4mjO6pXDTm9/R/SpYTAIyaUB4EOzcaaMEl7mds7Mshct9GfejiJNQGjHHbdMPey13Kpu4TMbYi9ex1pw==}
+  /globals@15.6.0:
+    resolution: {integrity: sha512-UzcJi88Hw//CurUIRa9Jxb0vgOCcuD/MNjwmXp633cyaRKkCWACkoqHCtfZv43b1kqXGg/fpOa8bwgacCeXsVg==}
     engines: {node: '>=18'}
     dev: true
 
