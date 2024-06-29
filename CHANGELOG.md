@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.3.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.2.0...v8.3.0) (2024-06-29)
+
+### Features
+
+* add onPreHeaderContextMenu for Column Picker usage ([#1228](https://github.com/ghiscoding/aurelia-slickgrid/issues/1228)) ([fc43fa8](https://github.com/ghiscoding/aurelia-slickgrid/commit/fc43fa89dd75d3940cb07ad1892585a5c73c8dcf)) - by @ghiscoding
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies ([#1226](https://github.com/ghiscoding/aurelia-slickgrid/issues/1226)) ([c98dd52](https://github.com/ghiscoding/aurelia-slickgrid/commit/c98dd52a8bfb86a2589a521fb0417cb0e0011338)) - by @renovate-bot
+* setting date picker should always work ([#1229](https://github.com/ghiscoding/aurelia-slickgrid/issues/1229)) ([b1b763a](https://github.com/ghiscoding/aurelia-slickgrid/commit/b1b763acd62e93a67687413745576506508bbd9b)) - by @ghiscoding
+
 ## [8.2.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.1.0...v8.2.0) (2024-06-18)
 
 ### Features
