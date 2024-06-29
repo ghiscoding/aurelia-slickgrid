@@ -142,8 +142,9 @@ export class Example6 {
       },
     ];
 
-    const presetLowestDay = tempoFormat(addDay(new Date(), -2), 'YYYY-MM-DD');
-    const presetHighestDay = tempoFormat(addDay(new Date(), 20), 'YYYY-MM-DD');
+    const currentYear = new Date().getFullYear();
+    const presetLowestDay = `${currentYear}-01-01`;
+    const presetHighestDay = `${currentYear}-02-15`;
 
     this.gridOptions = {
       enableFiltering: true,
@@ -325,8 +326,9 @@ export class Example6 {
   }
 
   setFiltersDynamically() {
-    const presetLowestDay = tempoFormat(addDay(new Date(), -2), 'YYYY-MM-DD');
-    const presetHighestDay = tempoFormat(addDay(new Date(), 20), 'YYYY-MM-DD');
+    const currentYear = new Date().getFullYear();
+    const presetLowestDay = `${currentYear}-01-01`;
+    const presetHighestDay = `${currentYear}-02-15`;
 
     // we can Set Filters Dynamically (or different filters) afterward through the FilterService
     this.aureliaGrid.filterService.updateFilters([
@@ -347,8 +349,9 @@ export class Example6 {
   }
 
   resetToOriginalPresets() {
-    const presetLowestDay = tempoFormat(addDay(new Date(), -2), 'YYYY-MM-DD');
-    const presetHighestDay = tempoFormat(addDay(new Date(), 20), 'YYYY-MM-DD');
+    const currentYear = new Date().getFullYear();
+    const presetLowestDay = `${currentYear}-01-01`;
+    const presetHighestDay = `${currentYear}-02-15`;
 
     this.aureliaGrid.filterService.updateFilters([
       // you can use OperatorType or type them as string, e.g.: operator: 'EQ'
