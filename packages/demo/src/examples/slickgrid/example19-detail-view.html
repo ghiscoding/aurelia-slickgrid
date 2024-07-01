@@ -1,16 +1,16 @@
-<div class="container" style="margin-top: 10px">
+<div class="container-fluid" style="margin-top: 10px">
   <h3>${model.title}</h3>
   <div class="row">
-    <div class="col-3"><label>Assignee:</label> <input class="form-control" value.bind="model.assignee" /></div>
-    <div class="col-3"><label>Reporter:</label> <span>${model.reporter}</span></div>
-    <div class="col-2"><label>Duration:</label> <span>${model.duration | decimal: 2}</span></div>
-    <div class="col-2"><label>% Complete:</label> <span>${model.percentComplete}</span></div>
+    <div class="col-3 detail-label"><label>Assignee:</label> <input class="form-control" value.bind="model.assignee" /></div>
+    <div class="col-3 detail-label"><label>Reporter:</label> <span>${model.reporter}</span></div>
+    <div class="col-3 detail-label"><label>Duration:</label> <span>${model.duration | decimal: 2}</span></div>
+    <div class="col-3 detail-label"><label>% Complete:</label> <span>${model.percentComplete}</span></div>
   </div>
 
   <div class="row">
-    <div class="col-3"><label>Start:</label> <span>${model.start | dateFormat: 'YYYY-MM-DD'}</span></div>
-    <div class="col-3"><label>Finish:</label> <span>${model.finish | dateFormat: 'YYYY-MM-DD'}</span></div>
-    <div class="col-2"><label>Effort Driven:</label> <i class.bind="model.effortDriven ? 'mdi mdi-check' : ''"></i>
+    <div class="col-3 detail-label"><label>Start:</label> <span>${model.start | dateFormat: 'YYYY-MM-DD'}</span></div>
+    <div class="col-3 detail-label"><label>Finish:</label> <span>${model.finish | dateFormat: 'YYYY-MM-DD'}</span></div>
+    <div class="col-3 detail-label"><label>Effort Driven:</label> <i class.bind="model.effortDriven ? 'mdi mdi-check' : ''"></i>
     </div>
   </div>
 
