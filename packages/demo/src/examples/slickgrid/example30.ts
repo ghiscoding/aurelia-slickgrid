@@ -244,7 +244,7 @@ export class Example30 {
           model: Editors.date,
           editorOptions: {
             range: { min: 'today' },
-        
+
             // if we want to preload the date picker with a different date,
             // we could do it by assigning settings.seleted.dates
             // NOTE: vanilla-calendar doesn't automatically focus the picker to the year/month and you need to do it yourself
@@ -441,6 +441,9 @@ export class Example30 {
       },
       // when using the cellMenu, you can change some of the default options and all use some of the callback methods
       enableCellMenu: true,
+      cellMenu: {
+        preventEventBubbling: false
+      },
       gridMenu: {
         hideToggleDarkModeCommand: false, // hidden by default
         onCommand: (_, args) => {
