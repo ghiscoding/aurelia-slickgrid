@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.3.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.3.0...v8.3.1) (2024-07-06)
+
+### Bug Fixes
+
+* Composite Editor should work with Cell Menu ([#1230](https://github.com/ghiscoding/aurelia-slickgrid/issues/1230)) ([f799cf9](https://github.com/ghiscoding/aurelia-slickgrid/commit/f799cf911a8c4c3922be5c14b1e61aa1dab0895f)) - by @ghiscoding
+
 ## [8.3.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.2.0...v8.3.0) (2024-06-29)
 
 ### Features
