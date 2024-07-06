@@ -43,7 +43,7 @@ export default tseslint.config(
       },
       parser: tseslint.parser,
       parserOptions: {
-        project: ['./tsconfig.json']
+        project: ['./tsconfig.json', './test/tsconfig.spec.json', './test/cypress/tsconfig.json']
       }
     },
     settings: {
