@@ -421,10 +421,10 @@ describe('Example 30  Composite Editor Modal', () => {
 
     cy.get('.btn-save')
       .click()
-      .then(() => expect(alertStub.getCall(0)).to.be.calledWith('Sorry we could not detect any changes.'))
+      .then(() => expect(alertStub.getCall(0)).to.be.calledWith('Sorry we could not detect any changes.'));
 
     cy.get('.btn-cancel')
-      .click()
+      .click();
   });
 
   it('should have the "Mass Selection" button disabled when no rows are selected', () => {
