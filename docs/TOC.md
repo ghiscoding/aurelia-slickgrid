@@ -40,15 +40,6 @@
 ## Slick Grid/DataView Objects
 * [Slick Grid/DataView Objects](slick-grid-dataview-objects/slickgrid-dataview-objects.md)
 
-## Localization
-
-* [with I18N](localization/localization.md)
-* [with Custom Locales](localization/localization-with-custom-locales.md)
-
-## Testing
-
-* [Testing Patterns](testing/testing-patterns.md)
-
 ## Grid Functionalities
 
 * [Auto-Resize / Resizer Service](grid-functionalities/grid-auto-resize.md)
@@ -74,6 +65,15 @@
 * [Tree Data Grid](grid-functionalities/tree-data-grid.md)
 * [Row Based Editing Plugin](grid-functionalities/Row-based-edit.md)
 
+## Developer Guides
+
+* [CSP Compliance](developer-guides/csp-compliance.md)
+
+## Localization
+
+* [with I18N](localization/localization.md)
+* [with Custom Locales](localization/localization-with-custom-locales.md)
+
 ## Backend Services
 
 * [Custom Backend Service](backend-services/custom-backend-service.md)
@@ -84,9 +84,9 @@
   * [Pagination Schema](backend-services/graphql/GraphQL-Pagination.md)
   * [Sorting Schema](backend-services/graphql/GraphQL-Sorting.md)
 
-## Developer Guides
+## Testing
 
-* [CSP Compliance](developer-guides/csp-compliance.md)
+* [Testing Patterns](testing/testing-patterns.md)
 
 ## Migrations
 
