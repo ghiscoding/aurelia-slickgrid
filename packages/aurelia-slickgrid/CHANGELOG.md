@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.3.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.3.1...v8.3.2) (2024-07-13)
+
+### Bug Fixes
+
+* SASS warnings & other unit test fixes ([#1235](https://github.com/ghiscoding/aurelia-slickgrid/issues/1235)) ([7b9965a](https://github.com/ghiscoding/aurelia-slickgrid/commit/7b9965a07f94a7ce8f0e28d7ffa5efa91b355e09)) - by @ghiscoding
+
 ## [8.3.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.3.0...v8.3.1) (2024-07-06)
 
 ### Bug Fixes
