@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.4.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.3.2...v8.4.0) (2024-07-20)
+
+### Features
+
+* add `columnPickerLabel` for custom label ([#1239](https://github.com/ghiscoding/aurelia-slickgrid/issues/1239)) ([a83e958](https://github.com/ghiscoding/aurelia-slickgrid/commit/a83e958eb86d0d07bde5058ffeff1613d21d4644)) - by @ghiscoding
+
+### Bug Fixes
+
+* `filterQueryOverride` provide all search values ([#1238](https://github.com/ghiscoding/aurelia-slickgrid/issues/1238)) ([0c2aea3](https://github.com/ghiscoding/aurelia-slickgrid/commit/0c2aea374b220bdffea11da81d0005710808d9c1)) - by @ghiscoding
+
 ## [8.3.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.3.1...v8.3.2) (2024-07-13)
 
 ### Bug Fixes
