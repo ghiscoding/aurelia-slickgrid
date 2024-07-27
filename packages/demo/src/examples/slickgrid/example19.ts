@@ -140,6 +140,7 @@ export class Example19 {
         },
       },
       rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
         selectActiveRow: true
       },
 
