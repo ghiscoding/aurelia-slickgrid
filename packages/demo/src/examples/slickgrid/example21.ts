@@ -1,11 +1,11 @@
 import { bindable } from 'aurelia';
 import {
-  AureliaGridInstance,
-  Column,
+  type AureliaGridInstance,
+  type Column,
   FieldType,
   Formatters,
-  GridOption,
-  OperatorString,
+  type GridOption,
+  type OperatorString,
 } from 'aurelia-slickgrid';
 import './example21.scss';
 

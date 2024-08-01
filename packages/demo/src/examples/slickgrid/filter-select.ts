@@ -1,5 +1,5 @@
 import { bindable, resolve } from 'aurelia';
-import { SlickGrid } from 'aurelia-slickgrid';
+import { type SlickGrid } from 'aurelia-slickgrid';
 
 export class FilterSelect {
   @bindable() model!: {

@@ -1,12 +1,12 @@
 import {
-  AureliaGridInstance,
-  Column,
+  type AureliaGridInstance,
+  type Column,
   Editors,
   ExtensionName,
   FieldType,
   Filters,
   Formatters,
-  GridOption,
+  type GridOption,
 } from 'aurelia-slickgrid';
 import { bindable } from 'aurelia';
 import { Example19Preload } from './example19-preload';

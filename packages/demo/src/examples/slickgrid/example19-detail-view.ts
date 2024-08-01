@@ -1,6 +1,6 @@
 import { bindable } from 'aurelia';
-import { SlickDataView, SlickGrid } from 'aurelia-slickgrid';
-import { SlickRowDetailView } from '@slickgrid-universal/row-detail-view-plugin';
+import type { SlickDataView, SlickGrid } from 'aurelia-slickgrid';
+import type { SlickRowDetailView } from '@slickgrid-universal/row-detail-view-plugin';
 
 import './example19-detail-view.scss';
 
