@@ -1,19 +1,19 @@
 import {
   addToArrayWhenNotExists,
-  EventSubscription,
-  OnBeforeRowDetailToggleArgs,
-  OnRowBackToViewportRangeArgs,
+  type EventSubscription,
+  type OnBeforeRowDetailToggleArgs,
+  type OnRowBackToViewportRangeArgs,
   SlickEventData,
-  SlickEventHandler,
-  SlickGrid,
-  SlickRowSelectionModel,
+  type SlickEventHandler,
+  type SlickGrid,
+  type SlickRowSelectionModel,
   unsubscribeAll,
 } from '@slickgrid-universal/common';
 import { EventPubSubService } from '@slickgrid-universal/event-pub-sub';
 import { SlickRowDetailView as UniversalSlickRowDetailView } from '@slickgrid-universal/row-detail-view-plugin';
-import { Constructable, resolve, transient } from 'aurelia';
+import { type Constructable, resolve, transient } from 'aurelia';
 
-import { AureliaViewOutput, GridOption, RowDetailView, ViewModelBindableInputData } from '../models/index';
+import type { AureliaViewOutput, GridOption, RowDetailView, ViewModelBindableInputData } from '../models/index';
 import { AureliaUtilService } from '../services/aureliaUtil.service';
 
 const ROW_DETAIL_CONTAINER_PREFIX = 'container_';

@@ -1,4 +1,4 @@
-import { ContainerService as UniversalContainerService } from '@slickgrid-universal/common';
+import type { ContainerService as UniversalContainerService } from '@slickgrid-universal/common';
 import { IContainer, Registration, resolve, transient } from 'aurelia';
 
 @transient()

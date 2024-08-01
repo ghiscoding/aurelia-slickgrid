@@ -28,10 +28,10 @@ import {
   GridService,
   GridStateService,
   GroupingAndColspanService,
-  Observable,
+  type Observable,
   PaginationService,
   ResizerService,
-  RxJsFacade,
+  type RxJsFacade,
   SharedService,
   SlickDataView,
   SlickEventHandler,
@@ -53,13 +53,13 @@ import { SlickEmptyWarningComponent } from '@slickgrid-universal/empty-warning-c
 import { SlickPaginationComponent } from '@slickgrid-universal/pagination-component';
 import { extend } from '@slickgrid-universal/utils';
 
-import { bindable, BindingMode, customElement, IContainer, IEventAggregator, IDisposable, IObserverLocator, resolve } from 'aurelia';
-import { ICollectionSubscriber, ICollectionObserver } from '@aurelia/runtime';
+import { bindable, BindingMode, customElement, IContainer, IEventAggregator, type IDisposable, IObserverLocator, resolve } from 'aurelia';
+import type { ICollectionSubscriber, ICollectionObserver } from '@aurelia/runtime';
 import { dequal } from 'dequal/lite';
 
 import { Constants } from '../constants';
 import { GlobalGridOptions } from '../global-grid-options';
-import { AureliaGridInstance, GridOption, } from '../models/index';
+import type { AureliaGridInstance, GridOption } from '../models/index';
 import {
   AureliaUtilService,
   ContainerService,
