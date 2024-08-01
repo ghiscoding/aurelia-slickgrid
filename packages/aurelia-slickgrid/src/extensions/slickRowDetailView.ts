@@ -6,7 +6,7 @@ import {
   SlickEventData,
   type SlickEventHandler,
   type SlickGrid,
-  type SlickRowSelectionModel,
+  SlickRowSelectionModel,
   unsubscribeAll,
 } from '@slickgrid-universal/common';
 import { EventPubSubService } from '@slickgrid-universal/event-pub-sub';
