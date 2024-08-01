@@ -73,7 +73,7 @@
     "rxjs": "^7.8.1",
     "ts-jest": "^29.2.3",
     "typescript": "^5.5.3",
-    "typescript-eslint": "^7.16.1"
+    "typescript-eslint": "^8.0.0"
   },
   "packageManager": "pnpm@8.15.9"
 }
