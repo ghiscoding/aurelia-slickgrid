@@ -84,7 +84,7 @@
     "postcss-loader": "^8.1.1",
     "rimraf": "^5.0.9",
     "sass": "^1.77.8",
-    "sass-loader": "^14.2.1",
+    "sass-loader": "^16.0.0",
     "servor": "^4.0.2",
     "style-loader": "^4.0.0",
     "ts-loader": "^9.5.1",
