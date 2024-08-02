@@ -1,5 +1,6 @@
-import { AureliaViewOutput, ViewModelBindableInputData } from '../models/index';
-import { AppTask, Constructable, CustomElement, IAurelia, resolve, singleton } from 'aurelia';
+import { AppTask, type Constructable, CustomElement, IAurelia, resolve, singleton } from 'aurelia';
+
+import type { AureliaViewOutput, ViewModelBindableInputData } from '../models/index';
 
 (IAurelia as any).test = 'import 1';
 
