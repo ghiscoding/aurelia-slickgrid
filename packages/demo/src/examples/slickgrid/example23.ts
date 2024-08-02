@@ -156,7 +156,7 @@ export class Example23 {
 
     const today = new Date();
     const presetLowestDay = format(addDay(new Date(), -2), 'YYYY-MM-DD');
-    const presetHighestDay = format(addDay(new Date(), today.getDate() < 14 ? 30 : 25), 'YYYY-MM-DD');
+    const presetHighestDay = format(addDay(new Date(), today.getDate() < 14 ? 28 : 25), 'YYYY-MM-DD');
 
     this.gridOptions = {
       autoResize: {
