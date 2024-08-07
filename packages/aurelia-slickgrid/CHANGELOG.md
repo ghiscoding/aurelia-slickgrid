@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.5.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.4.0...v8.5.0) (2024-08-07)
+
+### Features
+
+* Infinite Scroll for Backend Services (OData/GraphQL) ([#1244](https://github.com/ghiscoding/aurelia-slickgrid/issues/1244)) ([c19ddbb](https://github.com/ghiscoding/aurelia-slickgrid/commit/c19ddbb37b72ea79430a1bb0a46e9151ec2874c7)) - by @ghiscoding
+
 ## [8.4.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.3.2...v8.4.0) (2024-07-20)
 
 ### Features
