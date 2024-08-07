@@ -42,6 +42,8 @@ export class MyApp {
     { path: 'example35', component: () => import('./examples/slickgrid/example35'), title: '35- Row Based Editing' },
     { path: 'example36', component: () => import('./examples/slickgrid/example36'), title: '36- Excel Export Formulas' },
     { path: 'example37', component: () => import('./examples/slickgrid/example37'), title: '37- Footer Totals Row' },
+    { path: 'example38', component: () => import('./examples/slickgrid/example38'), title: '38- Infinite Scroll with OData' },
+    { path: 'example39', component: () => import('./examples/slickgrid/example39'), title: '39- Infinite Scroll with GraphQL' },
     { path: 'home', component: () => import('./home-page'), title: 'Home' },
   ];
 

@@ -58,6 +58,7 @@
 * [Grid State & Presets](grid-functionalities/grid-state-preset.md)
 * [Grouping & Aggregators](grid-functionalities/grouping-aggregators.md)
 * [Header Menu & Header Buttons](grid-functionalities/header-menu-header-buttons.md)
+* [Infinite Scroll](grid-functionalities/infinite-scroll.md)
 * [Pinning (frozen) of Columns/Rows](grid-functionalities/frozen-columns-rows.md)
 * [Providing data to the grid](grid-functionalities/providing-grid-data.md)
 * [Row Detail](grid-functionalities/row-detail.md)
