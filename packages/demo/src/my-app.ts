@@ -44,6 +44,7 @@ export class MyApp {
     { path: 'example37', component: () => import('./examples/slickgrid/example37'), title: '37- Footer Totals Row' },
     { path: 'example38', component: () => import('./examples/slickgrid/example38'), title: '38- Infinite Scroll with OData' },
     { path: 'example39', component: () => import('./examples/slickgrid/example39'), title: '39- Infinite Scroll with GraphQL' },
+    { path: 'example40', component: () => import('./examples/slickgrid/example40'), title: '40- Infinite Scroll from JSON data' },
     { path: 'home', component: () => import('./home-page'), title: 'Home' },
   ];
 
