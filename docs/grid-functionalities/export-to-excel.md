@@ -207,7 +207,7 @@ export class MyExample {
 You can use the export from the Grid Menu and/or you can simply create your own buttons to export.
 #### View
 ```html
-<button class="btn btn-default btn-sm" (click)="exportToExcel()">
+<button class="btn btn-default btn-sm" click.trigger="exportToExcel()">
    Download to Excel
 </button>
 ```
