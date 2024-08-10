@@ -1,7 +1,7 @@
 import { customElement, Aurelia } from 'aurelia';
-import { IAurelia } from 'aurelia';
+import type { IAurelia } from 'aurelia';
 import { AureliaUtilService } from '../aureliaUtil.service';
-import { ViewModelBindableInputData } from '../../models';
+import type { ViewModelBindableInputData } from '../../models';
 
 const DOM_ELEMENT_ID = 'row-detail123';
 
@@ -48,7 +48,7 @@ describe('aureliaUtilService', () => {
       const output = await service.createAureliaViewModelAddToSlot(ExampleLoader, { model: { firstName: 'John' } } as ViewModelBindableInputData, domElm);
 
       expect(enhanceSpy).toHaveBeenCalled();
-      expect(domElm.innerHTML).toBe('<example-loader model.bind=\"bindableData.model\"></example-loader>');
+      expect(domElm.innerHTML).toBe('<example-loader model.bind="bindableData.model"></example-loader>');
       expect(output).toEqual(controllerMock);
     });
 

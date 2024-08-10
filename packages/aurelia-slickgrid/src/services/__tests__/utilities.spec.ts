@@ -1,4 +1,4 @@
-import { EventAggregator, IDisposable } from 'aurelia';
+import { EventAggregator, type IDisposable } from 'aurelia';
 import { disposeAllSubscriptions } from '../utilities';
 
 describe('Service/Utilies', () => {
