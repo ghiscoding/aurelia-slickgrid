@@ -46,12 +46,12 @@
     "pack": "npm pack"
   },
   "peerDependencies": {
-    "aurelia": "^2.0.0-beta.20"
+    "aurelia": "^2.0.0-beta.21"
   },
   "dependencies": {
-    "@aurelia/i18n": "^2.0.0-beta.20",
-    "@aurelia/runtime": "^2.0.0-beta.20",
-    "@aurelia/runtime-html": "^2.0.0-beta.20",
+    "@aurelia/i18n": "^2.0.0-beta.21",
+    "@aurelia/runtime": "^2.0.0-beta.21",
+    "@aurelia/runtime-html": "^2.0.0-beta.21",
     "@formkit/tempo": "^0.1.2",
     "@slickgrid-universal/common": "~5.5.0",
     "@slickgrid-universal/custom-footer-component": "~5.5.0",
