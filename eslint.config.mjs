@@ -7,11 +7,10 @@ import tseslint from 'typescript-eslint';
 export default tseslint.config(
   {
     ignores: [
-      '**/*.js',
-      '**/*.mjs',
+      '**/*.{js,mjs}',
       '**/*/*.d.ts',
+      '**/dist',
       '**/__tests__/*',
-      '**/dist',      
     ],
   },
   {
@@ -20,17 +19,14 @@ export default tseslint.config(
       ...tseslint.configs.recommended,
     ],
     plugins: {
-      '@typescript-eslint': tseslint.plugin,
       cypress,
       n
     },
     files: ['**/*.ts'],
-
     languageOptions: {
       globals: {
         ...globals.es2021,
-        ...globals.node,
-        Sortable: true,
+        ...globals.browser,
       },
       parser: tseslint.parser,
       parserOptions: {
@@ -58,19 +54,13 @@ export default tseslint.config(
       '@typescript-eslint/no-inferrable-types': 'error',
       '@typescript-eslint/no-unused-expressions': 'off',
       '@typescript-eslint/no-unused-vars': ['error', { 'argsIgnorePattern': '^_', 'destructuredArrayIgnorePattern': '^_', caughtErrors: 'none' }],
-      'curly': 'error',
       'cypress/no-assigning-return-values': 'off',
-      'cypress/no-unnecessary-waiting': 'off',
       'cypress/unsafe-to-chain-command': 'off',
-      'eqeqeq': 'error',
       'object-shorthand': 'error',
       'no-async-promise-executor': 'off',
       'no-case-declarations': 'off',
-      'no-cond-assign': 'off',
-      'no-prototype-builtins': [0],
+      'no-prototype-builtins': 'off',
       'no-extra-boolean-cast': 'off',
       'semi': 'off',
-      'keyword-spacing': 'error',
-      'space-before-blocks': 'error'
     }
   });
