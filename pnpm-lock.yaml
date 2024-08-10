@@ -12,17 +12,17 @@ importers:
         specifier: ^2.2.5
         version: 2.2.5(cypress@13.13.2)
       '@aurelia/fetch-client':
-        specifier: ^2.0.0-beta.20
-        version: 2.0.0-beta.20
+        specifier: ^2.0.0-beta.21
+        version: 2.0.0-beta.21
       '@aurelia/i18n':
-        specifier: ^2.0.0-beta.20
-        version: 2.0.0-beta.20
+        specifier: ^2.0.0-beta.21
+        version: 2.0.0-beta.21
       '@aurelia/platform':
-        specifier: ^2.0.0-beta.20
-        version: 2.0.0-beta.20
+        specifier: ^2.0.0-beta.21
+        version: 2.0.0-beta.21
       '@aurelia/platform-browser':
-        specifier: ^2.0.0-beta.20
-        version: 2.0.0-beta.20
+        specifier: ^2.0.0-beta.21
+        version: 2.0.0-beta.21
       '@formkit/tempo':
         specifier: ^0.1.2
         version: 0.1.2
@@ -114,14 +114,14 @@ importers:
   packages/aurelia-slickgrid:
     dependencies:
       '@aurelia/i18n':
-        specifier: ^2.0.0-beta.20
-        version: 2.0.0-beta.20
+        specifier: ^2.0.0-beta.21
+        version: 2.0.0-beta.21
       '@aurelia/runtime':
-        specifier: ^2.0.0-beta.20
-        version: 2.0.0-beta.20
+        specifier: ^2.0.0-beta.21
+        version: 2.0.0-beta.21
       '@aurelia/runtime-html':
-        specifier: ^2.0.0-beta.20
-        version: 2.0.0-beta.20
+        specifier: ^2.0.0-beta.21
+        version: 2.0.0-beta.21
       '@formkit/tempo':
         specifier: ^0.1.2
         version: 0.1.2
@@ -147,8 +147,8 @@ importers:
         specifier: ~5.5.0
         version: 5.5.0
       aurelia:
-        specifier: ^2.0.0-beta.20
-        version: 2.0.0-beta.20
+        specifier: ^2.0.0-beta.21
+        version: 2.0.0-beta.21
       dequal:
         specifier: ^2.0.3
         version: 2.0.3
@@ -178,26 +178,26 @@ importers:
   packages/demo:
     dependencies:
       '@aurelia/fetch-client':
-        specifier: ^2.0.0-beta.20
-        version: 2.0.0-beta.20
+        specifier: ^2.0.0-beta.21
+        version: 2.0.0-beta.21
       '@aurelia/i18n':
-        specifier: ^2.0.0-beta.20
-        version: 2.0.0-beta.20
+        specifier: ^2.0.0-beta.21
+        version: 2.0.0-beta.21
       '@aurelia/kernel':
-        specifier: ^2.0.0-beta.20
-        version: 2.0.0-beta.20
+        specifier: ^2.0.0-beta.21
+        version: 2.0.0-beta.21
       '@aurelia/metadata':
-        specifier: ^2.0.0-beta.20
-        version: 2.0.0-beta.20
+        specifier: ^2.0.0-beta.21
+        version: 2.0.0-beta.21
       '@aurelia/router':
-        specifier: ^2.0.0-beta.20
-        version: 2.0.0-beta.20
+        specifier: ^2.0.0-beta.21
+        version: 2.0.0-beta.21
       '@aurelia/runtime':
-        specifier: ^2.0.0-beta.20
-        version: 2.0.0-beta.20
+        specifier: ^2.0.0-beta.21
+        version: 2.0.0-beta.21
       '@aurelia/runtime-html':
-        specifier: ^2.0.0-beta.20
-        version: 2.0.0-beta.20
+        specifier: ^2.0.0-beta.21
+        version: 2.0.0-beta.21
       '@faker-js/faker':
         specifier: ^8.4.1
         version: 8.4.1
@@ -238,8 +238,8 @@ importers:
         specifier: ^5.5.0
         version: 5.5.0
       aurelia:
-        specifier: ^2.0.0-beta.20
-        version: 2.0.0-beta.20
+        specifier: ^2.0.0-beta.21
+        version: 2.0.0-beta.21
       aurelia-slickgrid:
         specifier: workspace:*
         version: link:../aurelia-slickgrid
@@ -257,14 +257,14 @@ importers:
         version: 7.8.1
     devDependencies:
       '@aurelia/testing':
-        specifier: ^2.0.0-beta.20
-        version: 2.0.0-beta.20
+        specifier: ^2.0.0-beta.21
+        version: 2.0.0-beta.21
       '@aurelia/ts-jest':
-        specifier: ^2.0.0-beta.20
-        version: 2.0.0-beta.20(@babel/core@7.24.3)(@jest/types@29.6.3)(jest@29.7.0)(typescript@5.5.4)
+        specifier: ^2.0.0-beta.21
+        version: 2.0.0-beta.21(@babel/core@7.24.3)(@jest/types@29.6.3)(jest@29.7.0)(typescript@5.5.4)
       '@aurelia/webpack-loader':
-        specifier: ^2.0.0-beta.20
-        version: 2.0.0-beta.20
+        specifier: ^2.0.0-beta.21
+        version: 2.0.0-beta.21
       '@types/dompurify':
         specifier: ^3.0.5
         version: 3.0.5
@@ -388,137 +388,137 @@ packages:
       '@jridgewell/trace-mapping': 0.3.25
     dev: true
 
-  /@aurelia/expression-parser@2.0.0-beta.20:
-    resolution: {integrity: sha512-r1P9rTZAOflCq/hANTRt9hwtrloGwQkiB7g+XitJQR5OMqPW/XhEfzK20QPS5edrE7xKHywMziCs4DDJ/iAUtg==}
+  /@aurelia/expression-parser@2.0.0-beta.21:
+    resolution: {integrity: sha512-XSjMqRvB+C+qMxMLflQQXhaYJXA+MPTClN9gxGC9Ro8T42wrGWRdBp5VO12L63bs0eJjD+m7GyAgQ7KRoVdd5Q==}
     engines: {node: '>=14.17.0'}
     dependencies:
-      '@aurelia/kernel': 2.0.0-beta.20
+      '@aurelia/kernel': 2.0.0-beta.21
 
-  /@aurelia/fetch-client@2.0.0-beta.20:
-    resolution: {integrity: sha512-sThyRjMGm03Y1RitxGDUG+QgcZophECuBtJzyZO/UoutxseZppBWakpNGulK8bTH5BHLNXEyBlUqV5c/egclVA==}
+  /@aurelia/fetch-client@2.0.0-beta.21:
+    resolution: {integrity: sha512-hUjAiJ/F59oV1aOKoxcWzw9S8EwBmK2HsFVOJm8N53oAbmP+9gwq72b+wGeaA9o99TjZ1cKxW945yufe7JzqDA==}
     engines: {node: '>=14.17.0'}
     dependencies:
-      '@aurelia/kernel': 2.0.0-beta.20
-      '@aurelia/metadata': 2.0.0-beta.20
+      '@aurelia/kernel': 2.0.0-beta.21
+      '@aurelia/metadata': 2.0.0-beta.21
 
-  /@aurelia/i18n@2.0.0-beta.20:
-    resolution: {integrity: sha512-4b6IOGjGUoWR6KQ9tHXIqdxU92VjgOaa3m5ZHvO4h2BLMVa2OQX3orhi9Lc9x5RiL+7/aB/BX1YVpAhcNLNU/g==}
+  /@aurelia/i18n@2.0.0-beta.21:
+    resolution: {integrity: sha512-yodGJnRhKPP8pq14wCbC+0iDt4c2Wvn2Ttw5H35FsR9t4y3YyIlvO0tdzl/L4UMkS74wfb0KEHbUpDpcHixY/Q==}
     engines: {node: '>=14.17.0'}
     dependencies:
-      '@aurelia/expression-parser': 2.0.0-beta.20
-      '@aurelia/kernel': 2.0.0-beta.20
-      '@aurelia/metadata': 2.0.0-beta.20
-      '@aurelia/platform': 2.0.0-beta.20
-      '@aurelia/runtime': 2.0.0-beta.20
-      '@aurelia/runtime-html': 2.0.0-beta.20
-      '@aurelia/template-compiler': 2.0.0-beta.20
-      i18next: 23.11.5
+      '@aurelia/expression-parser': 2.0.0-beta.21
+      '@aurelia/kernel': 2.0.0-beta.21
+      '@aurelia/metadata': 2.0.0-beta.21
+      '@aurelia/platform': 2.0.0-beta.21
+      '@aurelia/runtime': 2.0.0-beta.21
+      '@aurelia/runtime-html': 2.0.0-beta.21
+      '@aurelia/template-compiler': 2.0.0-beta.21
+      i18next: 23.12.2
 
-  /@aurelia/kernel@2.0.0-beta.20:
-    resolution: {integrity: sha512-0ifacB8k6h2GTv702J+uXZ5CPXSZhXIHGWhReL0xZf0wrQE+8Z88cPF7Qjy9i8X1kfs5vPUoJOYqfW1CevJNkA==}
+  /@aurelia/kernel@2.0.0-beta.21:
+    resolution: {integrity: sha512-A5XHdyK6EMtuiwlqbKm8WlX+UVBpPQrHdr9U+raadSi5HxncmtmjFVCLbVtUpp2j0EpppWSs+JuIdDhPbVzlIA==}
     engines: {node: '>=14.17.0'}
     dependencies:
-      '@aurelia/metadata': 2.0.0-beta.20
-      '@aurelia/platform': 2.0.0-beta.20
+      '@aurelia/metadata': 2.0.0-beta.21
+      '@aurelia/platform': 2.0.0-beta.21
 
-  /@aurelia/metadata@2.0.0-beta.20:
-    resolution: {integrity: sha512-Cr3k+UCcJKzw7GyBgLsXzRANF7z8LgJYNh89kpwnE34+/p4yvGbC4aAndwUuc9brObaIE6vcXu0+ALqYPUndeQ==}
+  /@aurelia/metadata@2.0.0-beta.21:
+    resolution: {integrity: sha512-GtZ6NebijItCICbjSM2B3RI96lj5dns9OgmZGprGu/sOhE8qdL/2iWUHv8ksdMEt2KmBiMgo3uIaiYkm79HLvg==}
     engines: {node: '>=14.17.0'}
 
-  /@aurelia/platform-browser@2.0.0-beta.20:
-    resolution: {integrity: sha512-rMpOxi4Gdo2IHESpD8Qt2CaGzDPbgaLZp4RnYWN/p474Ga7bASCOgLYl+JYFSgFtk7d1nqRj+I/l3N9RgXgBCQ==}
-    engines: {node: '>=14.17.0'}
-    dependencies:
-      '@aurelia/platform': 2.0.0-beta.20
-
-  /@aurelia/platform@2.0.0-beta.20:
-    resolution: {integrity: sha512-8oDuYpjUCyrvV2fxGnpUrtS4Su6RUouSnxJtY62346jGxFjHwE+m51dTwyi1QUnoKiZLlbY+MjbtcTjf5+faqA==}
-    engines: {node: '>=14.17.0'}
-
-  /@aurelia/plugin-conventions@2.0.0-beta.20:
-    resolution: {integrity: sha512-CiRbX3NygpPCLp34csFL0LgFqDWtJhFMYEteugnlFfWvZffSDxH4xYHaQwLVwRkrIiksBIzRfytw6qzhxH6iNg==}
+  /@aurelia/platform-browser@2.0.0-beta.21:
+    resolution: {integrity: sha512-zXcTSxMv776+0ar8jom+MdifrSNBSfEK8m6PBTpj59tHH2lg+2ngZtG/EujtdnwX0dH5/TIzOJnej7zLdG5duw==}
     engines: {node: '>=14.17.0'}
     dependencies:
-      '@aurelia/kernel': 2.0.0-beta.20
-      '@aurelia/metadata': 2.0.0-beta.20
-      '@aurelia/platform': 2.0.0-beta.20
-      '@aurelia/runtime': 2.0.0-beta.20
-      '@aurelia/runtime-html': 2.0.0-beta.20
+      '@aurelia/platform': 2.0.0-beta.21
+
+  /@aurelia/platform@2.0.0-beta.21:
+    resolution: {integrity: sha512-Rr8ZaU0k2fs2vnfAkJJpuSsphrrPsX/9XqoQqgbLZAavRGKL1+06mmyk+nlADewLk0rQpsys1nMxqPiR6zDf3g==}
+    engines: {node: '>=14.17.0'}
+
+  /@aurelia/plugin-conventions@2.0.0-beta.21:
+    resolution: {integrity: sha512-Se6X4y1eIL2936Lw46LdjuFcgkywUgEX3P3KYsRqNHOaMODbfZqp2qxVE8XwXcR59o5oTsvTo3GitQc0AvPmYw==}
+    engines: {node: '>=14.17.0'}
+    dependencies:
+      '@aurelia/kernel': 2.0.0-beta.21
+      '@aurelia/metadata': 2.0.0-beta.21
+      '@aurelia/platform': 2.0.0-beta.21
+      '@aurelia/runtime': 2.0.0-beta.21
+      '@aurelia/runtime-html': 2.0.0-beta.21
       modify-code: 2.1.3
       parse5: 7.1.2
       typescript: 5.5.4
     dev: true
 
-  /@aurelia/route-recognizer@2.0.0-beta.20:
-    resolution: {integrity: sha512-QnpngpqSPoCge172Blg3LdIKBOFY19GOMx/54ZVsXlt/PVPfdCGL+/Y6zBJbMv8bpIcOuD9yqEALXP4OV+UpPw==}
+  /@aurelia/route-recognizer@2.0.0-beta.21:
+    resolution: {integrity: sha512-WePXRqbFV1DAW6tSqaSORq8uWg2VkECWIiCwIP7DWj7/pteCQQDSK9mqj8a7bk1Ah7U0/7US8P7L2hCNURCBIg==}
     engines: {node: '>=14.17.0'}
     dev: false
 
-  /@aurelia/router@2.0.0-beta.20:
-    resolution: {integrity: sha512-1gY2xaYdrXy8P0pz0+HtXCowVWd2kh8dKrkmEzFYDLBKFTNe1Eho72TuIg1kSMLBPy+PAc6a83dhY99NWx+krg==}
+  /@aurelia/router@2.0.0-beta.21:
+    resolution: {integrity: sha512-D4i02FIr+HDrGhCItouja1t/kZeBEQ7lNu6SW4paHsU2levfvopgxDm4aMVBfXmTmrbETBIo6ftUEEpM1nqyBg==}
     engines: {node: '>=14.17.0'}
     dependencies:
-      '@aurelia/kernel': 2.0.0-beta.20
-      '@aurelia/metadata': 2.0.0-beta.20
-      '@aurelia/platform': 2.0.0-beta.20
-      '@aurelia/platform-browser': 2.0.0-beta.20
-      '@aurelia/route-recognizer': 2.0.0-beta.20
-      '@aurelia/runtime': 2.0.0-beta.20
-      '@aurelia/runtime-html': 2.0.0-beta.20
-      '@aurelia/template-compiler': 2.0.0-beta.20
+      '@aurelia/kernel': 2.0.0-beta.21
+      '@aurelia/metadata': 2.0.0-beta.21
+      '@aurelia/platform': 2.0.0-beta.21
+      '@aurelia/platform-browser': 2.0.0-beta.21
+      '@aurelia/route-recognizer': 2.0.0-beta.21
+      '@aurelia/runtime': 2.0.0-beta.21
+      '@aurelia/runtime-html': 2.0.0-beta.21
+      '@aurelia/template-compiler': 2.0.0-beta.21
     dev: false
 
-  /@aurelia/runtime-html@2.0.0-beta.20:
-    resolution: {integrity: sha512-nY2UB8mrtvv/iDLJinACVGgv2Y2wCzigiiBuyss6+G8SzoDWjGKxoBGlriV7/NH8egkt0C4WZXhPWcVC16Btkw==}
+  /@aurelia/runtime-html@2.0.0-beta.21:
+    resolution: {integrity: sha512-MrSkSMEGJ9vsDcr87UcCobxNLwQvXOn1QAR4SLo3IYQS3aAy9e5Tv5cPhXi6mPkhK2/P35WPUM/aqKi0EsPF4Q==}
     engines: {node: '>=14.17.0'}
     dependencies:
-      '@aurelia/expression-parser': 2.0.0-beta.20
-      '@aurelia/kernel': 2.0.0-beta.20
-      '@aurelia/metadata': 2.0.0-beta.20
-      '@aurelia/platform': 2.0.0-beta.20
-      '@aurelia/platform-browser': 2.0.0-beta.20
-      '@aurelia/runtime': 2.0.0-beta.20
-      '@aurelia/template-compiler': 2.0.0-beta.20
+      '@aurelia/expression-parser': 2.0.0-beta.21
+      '@aurelia/kernel': 2.0.0-beta.21
+      '@aurelia/metadata': 2.0.0-beta.21
+      '@aurelia/platform': 2.0.0-beta.21
+      '@aurelia/platform-browser': 2.0.0-beta.21
+      '@aurelia/runtime': 2.0.0-beta.21
+      '@aurelia/template-compiler': 2.0.0-beta.21
 
-  /@aurelia/runtime@2.0.0-beta.20:
-    resolution: {integrity: sha512-sTxk4TBwyGGdmqf84Ka5QBXuNwBMDl2U+lEYGoE7w3sj++82eojR+I5O2oj6whYYMldbQuGkNfFGUW8nWXTIwQ==}
+  /@aurelia/runtime@2.0.0-beta.21:
+    resolution: {integrity: sha512-3IwwyFT2IuCQiYhcHybtyqwroYkhGJwQOO7gg3ExifYq4tJyIlW/NMxMH13ZRQmz4d4BQgwzIXphfei070/zjQ==}
     engines: {node: '>=14.17.0'}
     dependencies:
-      '@aurelia/expression-parser': 2.0.0-beta.20
-      '@aurelia/kernel': 2.0.0-beta.20
-      '@aurelia/metadata': 2.0.0-beta.20
-      '@aurelia/platform': 2.0.0-beta.20
+      '@aurelia/expression-parser': 2.0.0-beta.21
+      '@aurelia/kernel': 2.0.0-beta.21
+      '@aurelia/metadata': 2.0.0-beta.21
+      '@aurelia/platform': 2.0.0-beta.21
 
-  /@aurelia/template-compiler@2.0.0-beta.20:
-    resolution: {integrity: sha512-KpDg6Ab1Egq5apt4fL0zO/SaDm6RVV/ZjwHhc51LaqSh191z8NHnKoyUNIROif6Q2ymxZwAM168egN2bvnM5Wg==}
+  /@aurelia/template-compiler@2.0.0-beta.21:
+    resolution: {integrity: sha512-XSYSb2myvSBmjx6XkvO2RATLH4EHbSyuU9IQdD8KnRLaUKPHHkrPVGYnlRN7HujqVAumVZLue1YtK2w0PyHSXw==}
     engines: {node: '>=14.17.0'}
     dependencies:
-      '@aurelia/expression-parser': 2.0.0-beta.20
-      '@aurelia/kernel': 2.0.0-beta.20
-      '@aurelia/metadata': 2.0.0-beta.20
+      '@aurelia/expression-parser': 2.0.0-beta.21
+      '@aurelia/kernel': 2.0.0-beta.21
+      '@aurelia/metadata': 2.0.0-beta.21
 
-  /@aurelia/testing@2.0.0-beta.20:
-    resolution: {integrity: sha512-vTDHc0tdXfGdleyCdxBtN7MNZvBsQveeR2GMXFLOiNeVjIxAOxxdzDi3RsIZTUhbzmnlHTHyrCrRrW8vfWHqlA==}
+  /@aurelia/testing@2.0.0-beta.21:
+    resolution: {integrity: sha512-WUfkuaXJ/bu/naHTCoAPW2678SGOT18O61Chn031IN2PbHOb4UIAtiZYNBdbkNegtosNkQPhYZlZYpKClB5s6A==}
     engines: {node: '>=14.17.0'}
     dependencies:
-      '@aurelia/kernel': 2.0.0-beta.20
-      '@aurelia/metadata': 2.0.0-beta.20
-      '@aurelia/platform': 2.0.0-beta.20
-      '@aurelia/platform-browser': 2.0.0-beta.20
-      '@aurelia/runtime': 2.0.0-beta.20
-      '@aurelia/runtime-html': 2.0.0-beta.20
-      '@aurelia/template-compiler': 2.0.0-beta.20
+      '@aurelia/kernel': 2.0.0-beta.21
+      '@aurelia/metadata': 2.0.0-beta.21
+      '@aurelia/platform': 2.0.0-beta.21
+      '@aurelia/platform-browser': 2.0.0-beta.21
+      '@aurelia/runtime': 2.0.0-beta.21
+      '@aurelia/runtime-html': 2.0.0-beta.21
+      '@aurelia/template-compiler': 2.0.0-beta.21
     dev: true
 
-  /@aurelia/ts-jest@2.0.0-beta.20(@babel/core@7.24.3)(@jest/types@29.6.3)(jest@29.7.0)(typescript@5.5.4):
-    resolution: {integrity: sha512-HGOpwuASfZzGFMlKWKFnGA80l/5nwxndjDDTByoNaGz3F4bgKTNwd5OAjkXQWHk7nKAH3RzukPf4HYsJ2jJZbA==}
+  /@aurelia/ts-jest@2.0.0-beta.21(@babel/core@7.24.3)(@jest/types@29.6.3)(jest@29.7.0)(typescript@5.5.4):
+    resolution: {integrity: sha512-qoaUo4vFDqVIiD8xJV3SoA8Ki79kG8jF+Ig4OyTnJc1lj8eHWoCEsgIyxOQNRQU44GQdfHRXWZT2vkdLGCj+8g==}
     engines: {node: '>=14.17.0'}
     dependencies:
-      '@aurelia/kernel': 2.0.0-beta.20
-      '@aurelia/metadata': 2.0.0-beta.20
-      '@aurelia/platform': 2.0.0-beta.20
-      '@aurelia/plugin-conventions': 2.0.0-beta.20
-      '@aurelia/runtime': 2.0.0-beta.20
+      '@aurelia/kernel': 2.0.0-beta.21
+      '@aurelia/metadata': 2.0.0-beta.21
+      '@aurelia/platform': 2.0.0-beta.21
+      '@aurelia/plugin-conventions': 2.0.0-beta.21
+      '@aurelia/runtime': 2.0.0-beta.21
       ts-jest: 29.2.4(@babel/core@7.24.3)(@jest/types@29.6.3)(jest@29.7.0)(typescript@5.5.4)
     transitivePeerDependencies:
       - '@babel/core'
@@ -530,15 +530,15 @@ packages:
       - typescript
     dev: true
 
-  /@aurelia/webpack-loader@2.0.0-beta.20:
-    resolution: {integrity: sha512-usZ5lR0ClQWSWXHx8mcAUwVxSadzkgdZlJL/93qTCWMn3e1M/nArw1BR0N48ZBqMBkoUDTImWrf0TX98AUN3FQ==}
+  /@aurelia/webpack-loader@2.0.0-beta.21:
+    resolution: {integrity: sha512-aYt/GRvEhKmpoB1OB3oJ052btKc3Gs+zI3rRVJIdv6Bnw4IFkdf2KJ8weCLGCPJoUKt2LHUDuNJTU8/PwZ/N4Q==}
     engines: {node: '>=14.17.0'}
     dependencies:
-      '@aurelia/kernel': 2.0.0-beta.20
-      '@aurelia/metadata': 2.0.0-beta.20
-      '@aurelia/platform': 2.0.0-beta.20
-      '@aurelia/plugin-conventions': 2.0.0-beta.20
-      '@aurelia/runtime': 2.0.0-beta.20
+      '@aurelia/kernel': 2.0.0-beta.21
+      '@aurelia/metadata': 2.0.0-beta.21
+      '@aurelia/platform': 2.0.0-beta.21
+      '@aurelia/plugin-conventions': 2.0.0-beta.21
+      '@aurelia/runtime': 2.0.0-beta.21
       loader-utils: 2.0.4
     dev: true
 
@@ -2948,19 +2948,19 @@ packages:
       aurelia-pal: 1.8.2
     dev: true
 
-  /aurelia@2.0.0-beta.20:
-    resolution: {integrity: sha512-SXQASH94VrI4acy0BxMoTfN+AKCxUtd5n/GD+nWvZ1oHHAq3yfgA9XqW0vNd15EHrTDK+XQmVivf1NC+4G8yMQ==}
+  /aurelia@2.0.0-beta.21:
+    resolution: {integrity: sha512-7E+FzLYwggc7mI6PKFBIEY1lTjheJHLr+Ikuv3kXZaHvMJ3dmlRq01P8jR8trVDZ1B/Uio7aG/LGoIQijsfP3w==}
     engines: {node: '>=14.17.0'}
     dependencies:
-      '@aurelia/expression-parser': 2.0.0-beta.20
-      '@aurelia/fetch-client': 2.0.0-beta.20
-      '@aurelia/kernel': 2.0.0-beta.20
-      '@aurelia/metadata': 2.0.0-beta.20
-      '@aurelia/platform': 2.0.0-beta.20
-      '@aurelia/platform-browser': 2.0.0-beta.20
-      '@aurelia/runtime': 2.0.0-beta.20
-      '@aurelia/runtime-html': 2.0.0-beta.20
-      '@aurelia/template-compiler': 2.0.0-beta.20
+      '@aurelia/expression-parser': 2.0.0-beta.21
+      '@aurelia/fetch-client': 2.0.0-beta.21
+      '@aurelia/kernel': 2.0.0-beta.21
+      '@aurelia/metadata': 2.0.0-beta.21
+      '@aurelia/platform': 2.0.0-beta.21
+      '@aurelia/platform-browser': 2.0.0-beta.21
+      '@aurelia/runtime': 2.0.0-beta.21
+      '@aurelia/runtime-html': 2.0.0-beta.21
+      '@aurelia/template-compiler': 2.0.0-beta.21
     dev: false
 
   /autocompleter@9.3.0:
@@ -5528,16 +5528,10 @@ packages:
     engines: {node: '>=18'}
     dev: false
 
-  /i18next@23.11.5:
-    resolution: {integrity: sha512-41pvpVbW9rhZPk5xjCX2TPJi2861LEig/YRhUkY+1FQ2IQPS0bKUDYnEqY8XPPbB48h1uIwLnP9iiEfuSl20CA==}
-    dependencies:
-      '@babel/runtime': 7.24.1
-
   /i18next@23.12.2:
     resolution: {integrity: sha512-XIeh5V+bi8SJSWGL3jqbTEBW5oD6rbP5L+E7dVQh1MNTxxYef0x15rhJVcRb7oiuq4jLtgy2SD8eFlf6P2cmqg==}
     dependencies:
       '@babel/runtime': 7.24.1
-    dev: false
 
   /iconv-lite@0.4.24:
     resolution: {integrity: sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA==}
@@ -6822,7 +6816,7 @@ packages:
     resolution: {integrity: sha512-hXdUTZYIVOt1Ex//jAQi+wTZZpUpwBj/0QsOzqegb3rGMMeJiSEu5xLHnYfBrRV4RH2+OCSOO95Is/7x1WJ4bw==}
     engines: {node: '>=10'}
     dependencies:
-      semver: 7.6.2
+      semver: 7.6.3
     dev: true
 
   /make-dir@5.0.0:
