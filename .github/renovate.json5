@@ -23,6 +23,12 @@
       packageNames: ['pnpm'],
       allowedVersions: '<9.0.0',
     },
+
+    // node-glob and rimraf new major releases dropped support for Node 18, we'll have to wait our next major to upgrade them
+    {
+      packageNames: ['rimraf'],
+      allowedVersions: '<6.0.0',
+    },
   ],
   schedule: ['every 2 weeks on thursday'],
   ignoreDeps: ["typescript"],

@@ -20,7 +20,7 @@
   * [new Date Picker (vanilla-calendar)](column-functionalities/editors/date-editor-vanilla-calendar.md)
   * [LongText (textarea)](column-functionalities/editors/longtext-editor-textarea.md)
   * [Select Dropdown Editor (single/multiple)](column-functionalities/editors/select-dropdown-editor.md)
-* [Filters](column-functionalities/filters/README.md)
+* [Filters](column-functionalities/filters/filter-intro.md)
   * [Autocomplete](column-functionalities/filters/autocomplete-filter-kraaden.md)
   * [Input Filter (default)](column-functionalities/filters/input-filter.md)
   * [Select Filter (dropdown)](column-functionalities/filters/select-filter.md)
@@ -40,15 +40,6 @@
 ## Slick Grid/DataView Objects
 * [Slick Grid/DataView Objects](slick-grid-dataview-objects/slickgrid-dataview-objects.md)
 
-## Localization
-
-* [with I18N](localization/localization.md)
-* [with Custom Locales](localization/localization-with-custom-locales.md)
-
-## Testing
-
-* [Testing Patterns](testing/testing-patterns.md)
-
 ## Grid Functionalities
 
 * [Auto-Resize / Resizer Service](grid-functionalities/grid-auto-resize.md)
@@ -67,12 +58,22 @@
 * [Grid State & Presets](grid-functionalities/grid-state-preset.md)
 * [Grouping & Aggregators](grid-functionalities/grouping-aggregators.md)
 * [Header Menu & Header Buttons](grid-functionalities/header-menu-header-buttons.md)
+* [Infinite Scroll](grid-functionalities/infinite-scroll.md)
 * [Pinning (frozen) of Columns/Rows](grid-functionalities/frozen-columns-rows.md)
 * [Providing data to the grid](grid-functionalities/providing-grid-data.md)
 * [Row Detail](grid-functionalities/row-detail.md)
 * [Row Selection](grid-functionalities/row-selection.md)
 * [Tree Data Grid](grid-functionalities/tree-data-grid.md)
 * [Row Based Editing Plugin](grid-functionalities/Row-based-edit.md)
+
+## Developer Guides
+
+* [CSP Compliance](developer-guides/csp-compliance.md)
+
+## Localization
+
+* [with I18N](localization/localization.md)
+* [with Custom Locales](localization/localization-with-custom-locales.md)
 
 ## Backend Services
 
@@ -84,9 +85,9 @@
   * [Pagination Schema](backend-services/graphql/GraphQL-Pagination.md)
   * [Sorting Schema](backend-services/graphql/GraphQL-Sorting.md)
 
-## Developer Guides
+## Testing
 
-* [CSP Compliance](developer-guides/csp-compliance.md)
+* [Testing Patterns](testing/testing-patterns.md)
 
 ## Migrations
 

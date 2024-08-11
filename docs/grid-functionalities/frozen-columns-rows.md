@@ -72,20 +72,20 @@ You can change the number of pinned columns/rows and even the pinning of columns
 <div class="row col-sm-12">
     <span>
         <label for="">Pinned Rows: </label>
-        <input type="number" [(ngModel)]="frozenRowCount">
-        <button class="btn btn-default btn-xs" (click)="changeFrozenRowCount()">
+        <input type="number" value.bind="frozenRowCount">
+        <button class="btn btn-default btn-xs" click.trigger="changeFrozenRowCount()">
             Set
         </button>
     </span>
     <span style="margin-left: 10px">
         <label for="">Pinned Columns: </label>
-        <input type="number" [(ngModel)]="frozenColumnCount">
-        <button class="btn btn-default btn-xs" (click)="changeFrozenColumnCount()">
+        <input type="number" value.bind="frozenColumnCount">
+        <button class="btn btn-default btn-xs" click.trigger="changeFrozenColumnCount()">
             Set
         </button>
     </span>
     <span style="margin-left: 15px">
-        <button class="btn btn-default btn-sm" (click)="toggleFrozenBottomRows()">
+        <button class="btn btn-default btn-sm" click.trigger="toggleFrozenBottomRows()">
             <i class="mdi mdi-flip-vertical"></i> Toggle Pinned Rows
         </button>
         <span style="font-weight: bold;">: {{ isFrozenBottom ? 'Bottom' : 'Top' }}</span>

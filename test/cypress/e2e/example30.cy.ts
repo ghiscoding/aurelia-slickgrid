@@ -421,10 +421,10 @@ describe('Example 30  Composite Editor Modal', () => {
 
     cy.get('.btn-save')
       .click()
-      .then(() => expect(alertStub.getCall(0)).to.be.calledWith('Sorry we could not detect any changes.'))
+      .then(() => expect(alertStub.getCall(0)).to.be.calledWith('Sorry we could not detect any changes.'));
 
     cy.get('.btn-cancel')
-      .click()
+      .click();
   });
 
   it('should have the "Mass Selection" button disabled when no rows are selected', () => {
@@ -611,5 +611,34 @@ describe('Example 30  Composite Editor Modal', () => {
     cy.get('.autocomplete-container button.btn-clear').click();
 
     cy.get(`[style="top: ${GRID_ROW_HEIGHT * 1}px;"] > .slick-cell:nth(10)`).should('contain', '');
+  });
+
+  it('should open Edit Composite Editor from Cell Menu and expect Task 4 on 6th row', () => {
+    cy.get(`[style="top: ${GRID_ROW_HEIGHT * 6}px;"] > .slick-cell:nth(11)`).click();
+
+    cy.get('.slick-menu-item .slick-menu-content')
+      .first()
+      .should('contain', 'Edit Row')
+      .click();
+
+    cy.get('.slick-editor-modal-title')
+      .should('contain', 'Editing - Task 4');
+
+    cy.get('.slick-editor-modal-footer .btn-cancel')
+      .click();
+  });
+
+  it('should open Clone Composite Editor from Cell Menu and expect Task 4 on 6th row', () => {
+    cy.get(`[style="top: ${GRID_ROW_HEIGHT * 6}px;"] > .slick-cell:nth(11)`).click();
+
+    cy.get('.slick-menu-item .slick-menu-content:nth(1)')
+      .should('contain', 'Clone Row')
+      .click();
+
+    cy.get('.slick-editor-modal-title')
+      .should('contain', 'Clone - Task 4');
+
+    cy.get('.slick-editor-modal-footer .btn-cancel')
+      .click();
   });
 });

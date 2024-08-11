@@ -1,9 +1,11 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { type IRoute } from '@aurelia/router';
 
 import './styles.scss';
 export class MyApp {
-  static routes = [
-    { path: ['', 'example1'], component: () => import('./examples/slickgrid/example1'), title: '1- Basic Grid / 2 Grids' },
+  static routes: IRoute[] = [
+    { path: '', redirectTo: 'example1' },
+    { path: 'example1', component: import('./examples/slickgrid/example1'), title: '1- Basic Grid / 2 Grids' },
     { path: 'example2', component: () => import('./examples/slickgrid/example2'), title: '2- Formatters' },
     { path: 'example3', component: () => import('./examples/slickgrid/example3'), title: '3- Editors / Delete' },
     { path: 'example4', component: () => import('./examples/slickgrid/example4'), title: '4- Client Side Sort/Filter' },
@@ -38,6 +40,11 @@ export class MyApp {
     { path: 'example33', component: () => import('./examples/slickgrid/example33'), title: '33- Regular & Custom Tooltip' },
     { path: 'example34', component: () => import('./examples/slickgrid/example34'), title: '34- Real-Time Trading Platform' },
     { path: 'example35', component: () => import('./examples/slickgrid/example35'), title: '35- Row Based Editing' },
+    { path: 'example36', component: () => import('./examples/slickgrid/example36'), title: '36- Excel Export Formulas' },
+    { path: 'example37', component: () => import('./examples/slickgrid/example37'), title: '37- Footer Totals Row' },
+    { path: 'example38', component: () => import('./examples/slickgrid/example38'), title: '38- Infinite Scroll with OData' },
+    { path: 'example39', component: () => import('./examples/slickgrid/example39'), title: '39- Infinite Scroll with GraphQL' },
+    { path: 'example40', component: () => import('./examples/slickgrid/example40'), title: '40- Infinite Scroll from JSON data' },
     { path: 'home', component: () => import('./home-page'), title: 'Home' },
   ];
 
@@ -52,7 +59,7 @@ export class MyApp {
       if (linkElm) {
         linkElm.scrollIntoView({ block: 'nearest' });
       }
-    }, 45)
+    }, 45);
   }
 
   addGitHubStarsLogo() {

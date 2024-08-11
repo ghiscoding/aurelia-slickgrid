@@ -2,10 +2,10 @@
 import { bindable, BindingMode } from 'aurelia';
 
 import {
-  AureliaGridInstance,
-  Column,
-  Formatter,
-  GridOption,
+  type AureliaGridInstance,
+  type Column,
+  type Formatter,
+  type GridOption,
   SlickEventHandler,
 } from 'aurelia-slickgrid';
 

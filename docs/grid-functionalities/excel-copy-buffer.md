@@ -95,3 +95,51 @@ this.gridOptions = {
   },
 };
 ```
+
+### Disable pasting on specific columns
+If you want to disable pasting values for specific columns you can deactivate it using the denyPaste property on the Column config.
+
+```typescript
+this.columnDefinitions = [
+  { 
+    id: 'colA', name: 'Col A', field: 'col_a', 
+    formatter: Formatters.bold,
+    exportWithFormatter: true, 
+    sanitizeDataExport: true,
+    denyPaste: true // <------------
+  }
+];
+```
+
+This will even work in situations where your table copy buffer stretches over disabled cells, by simply skipping them. So for the following config (x = paste disabled; o = paste enabled), pasting a 3 cell stretching table buffer will result in Col A and C being updated but ColB ignoring the paste and keeping its original value
+
+Col A | Col B | Col C \
+\---------------------\
+&nbsp;&nbsp; o &nbsp;&nbsp;  | &nbsp;&nbsp;&nbsp; x &nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; o \
+NEW | &nbsp;&nbsp;&nbsp; x &nbsp;&nbsp; | &nbsp;NEW
+
+### Disable pasting on specific cells
+If you need even more fine grained control, you can make use of the gridOption `onBeforePasteCell`:
+
+```typescript
+this.gridOptions = {
+  enableExcelCopyBuffer: true,
+  excelCopyBufferOptions: {
+    onBeforePasteCell: (e, args) => {
+      // e.g deny paste on first cell
+      return args.cell > 0;
+    }
+  }
+};
+```
+
+This way you have full control, via the args parameters, to get a ref to the current row and cell being updated. Also keep in mind that while performing a buffered table paste (e.g three cols at once) and only one of them has a denying condition, the other cells paste will pass successfully.
+
+### Handling quoted multiline pastes
+When copying Excel cells, where the value is a multiline text, the copy buffer will result in a quoted text buffer. Slickgrid will properly handle the case when this content itself contains `\n` characters, to not break onto multiple rows as well as not split on the next column if `\t` characters are contained.
+
+You can control if the newlines should be replaced with a specific value by defining it in `replaceNewlinesWith`. As an example you could set it to `' '`.
+
+Additionally, you can define that the quoted string is pasted without the quotes by setting `removeDoubleQuotesOnPaste` to true.
+
+> Note: requires v8.2.0 and higher

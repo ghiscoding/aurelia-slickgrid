@@ -151,7 +151,10 @@ The best way to get started is to clone the [Aurelia-Slickgrid-demos](https://gi
 ##### All Live Demo Examples have links to the actual code
 Like to see the code to a particular Example? Just click on the "see code" that is available in every live examples.
 
-### 10. Add Optional Feature like Excel Export
+### 10. CSP Compliance
+The project supports Content Security Policy (CSP) as long as you provide an optional `sanitizer` in your grid options (we recommend DOMPurify). Review the [CSP Compliance](../developer-guides/csp-compliance.md) documentation for more info.
+
+### 11. Add Optional Feature like Excel Export
 Starting with version 3.0.0, the Excel Export is now an optional package and if you want to use it then you'll need to install it via npm from the monorepo library with `npm install @slickgrid-universal/excel-export`. Refer to the [Excel Export - Wiki](../grid-functionalities/export-to-excel.md) for more info.
 
 Here's a quick list of some of these optional packages
@@ -160,10 +163,10 @@ Here's a quick list of some of these optional packages
 - [@slickgrid-universal/graphql](https://github.com/ghiscoding/slickgrid-universal/tree/master/packages/graphql)
 - [@slickgrid-universal/odata](https://github.com/ghiscoding/slickgrid-universal/tree/master/packages/odata)
 
-### 11. Missing Features? (fear not)
+### 12. Missing Features? (fear not)
 What if `Aurelia-Slickgrid` is missing feature(s) versus the original `SlickGrid`? Fear not and directly use the `SlickGrid` and `DataView` objects that are expose from the start through Event Emitters. For more info continue reading on [Wiki - SlickGrid & DataView objects](../slick-grid-dataview-objects/slickgrid-dataview-objects.md) and [Docs - Grid & DataView Events](../events/grid-dataview-events.md)
 
-### 12. Having some issues?
+### 13. Having some issues?
 After reading all this HOW TO, what if you have an issue with the grid?
 Please start by searching any related [issues](/ghiscoding/aurelia-slickgrid/issues). If you can't find anything in the issues log and you made sure to also look through the multiple [wiki](/ghiscoding/aurelia-slickgrid/wiki) pages as well, then go ahead and fill in a [new issue](/ghiscoding/aurelia-slickgrid/issues/new) and we'll try to help.
 

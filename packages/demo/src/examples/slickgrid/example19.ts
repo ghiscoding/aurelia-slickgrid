@@ -1,12 +1,12 @@
 import {
-  AureliaGridInstance,
-  Column,
+  type AureliaGridInstance,
+  type Column,
   Editors,
   ExtensionName,
   FieldType,
   Filters,
   Formatters,
-  GridOption,
+  type GridOption,
 } from 'aurelia-slickgrid';
 import { bindable } from 'aurelia';
 import { Example19Preload } from './example19-preload';
@@ -90,9 +90,6 @@ export class Example19 {
       },
       enableFiltering: true,
       enableRowDetailView: true,
-      rowSelectionOptions: {
-        selectActiveRow: true
-      },
       darkMode: this._darkMode,
       datasetIdPropertyName: 'rowId', // optionally use a different "id"
       rowDetailView: {
@@ -141,7 +138,19 @@ export class Example19 {
           console.log('before toggling row detail', args.item);
           return true;
         },
-      }
+      },
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: true
+      },
+
+      // You could also enable Row Selection as well, but just make sure to disable `useRowClick: false`
+      // enableCheckboxSelector: true,
+      // enableRowSelection: true,
+      // checkboxSelector: {
+      //   hideInFilterHeaderRow: false,
+      //   hideSelectAllCheckbox: true,
+      // },
     };
   }
 

@@ -1,6 +1,7 @@
 .chrome
 .circleci
 .env
+.eslintcache
 .github
 .idea
 .vscode

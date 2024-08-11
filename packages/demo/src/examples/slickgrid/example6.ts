@@ -1,5 +1,5 @@
 import { I18N } from '@aurelia/i18n';
-import { addDay, format } from '@formkit/tempo';
+import { addDay, format as tempoFormat } from '@formkit/tempo';
 import { GraphqlService, type GraphqlPaginatedResult, type GraphqlServiceApi, type GraphqlServiceOption } from '@slickgrid-universal/graphql';
 import {
   type AureliaGridInstance,
@@ -34,7 +34,10 @@ export class Example6 {
         <li>The (*) can be used as startsWith (ex.: "abc*" => startsWith "abc") / endsWith (ex.: "*xyz" => endsWith "xyz")</li>
         <li>The other operators can be used on column type number for example: ">=100" (greater or equal than 100)</li>
       </ul>
-      <li>You can also preload a grid with certain "presets" like Filters / Sorters / Pagination <a href="https://ghiscoding.gitbook.io/aurelia-slickgrid/grid-functionalities/grid-state-preset" target="_blank">Wiki - Grid Preset</a>
+      <li>You can also preload a grid with certain "presets" like Filters / Sorters / Pagination <a href="https://ghiscoding.gitbook.io/aurelia-slickgrid/grid-functionalities/grid-state-preset" target="_blank">Wiki - Grid Preset</a></li>
+      <li>Also note that the column Name has a filter with a custom %% operator that behaves like an SQL LIKE operator supporting % wildcards.</li>
+      <li>Depending on your configuration, your GraphQL Server might already support regex querying (e.g. Hasura <a href="https://hasura.io/docs/latest/queries/postgres/filters/text-search-operators/#_regex" target="_blank">_regex</a>)
+      or you could add your own implementation (e.g. see this SO <a href="https://stackoverflow.com/a/37981802/1212166">Question</a>).</li>
     </ul>
   `;
   isWithCursor = false;
@@ -77,7 +80,15 @@ export class Example6 {
         sortable: true,
         filterable: true,
         filter: {
-          model: Filters.compoundInput
+          model: Filters.compoundInput,
+          compoundOperatorList: [
+            { operator: '', desc: 'Contains' },
+            { operator: '<>', desc: 'Not Contains' },
+            { operator: '=', desc: 'Equals' },
+            { operator: '!=', desc: 'Not equal to' },
+            { operator: 'a*', desc: 'Starts With' },
+            { operator: 'Custom', desc: 'SQL Like' },
+          ],
         }
       },
       {
@@ -120,12 +131,20 @@ export class Example6 {
         filterable: true,
         filter: {
           model: Filters.dateRange,
+          filterShortcuts: [
+            {
+              titleKey: 'NEXT_20_DAYS',
+              iconCssClass: 'mdi mdi-calendar',
+              searchTerms: [tempoFormat(new Date(), 'YYYY-MM-DD'), tempoFormat(addDay(new Date(), 20), 'YYYY-MM-DD')],
+            },
+          ]
         }
       },
     ];
 
-    const presetLowestDay = format(addDay(new Date(), -2), 'YYYY-MM-DD');
-    const presetHighestDay = format(addDay(new Date(), 20), 'YYYY-MM-DD');
+    const currentYear = new Date().getFullYear();
+    const presetLowestDay = `${currentYear}-01-01`;
+    const presetHighestDay = `${currentYear}-02-15`;
 
     this.gridOptions = {
       enableFiltering: true,
@@ -137,6 +156,10 @@ export class Example6 {
       i18n: this.i18n,
       gridHeight: 200,
       gridWidth: 900,
+      compoundOperatorAltTexts: {
+        // where '=' is any of the `OperatorString` type shown above
+        text: { 'Custom': { operatorAlt: '%%', descAlt: 'SQL Like' } },
+      },
       gridMenu: {
         resizeOnShowHeaderRow: true,
       },
@@ -158,7 +181,8 @@ export class Example6 {
         filters: [
           // you can use OperatorType or type them as string, e.g.: operator: 'EQ'
           { columnId: 'gender', searchTerms: ['male'], operator: OperatorType.equal },
-          { columnId: 'name', searchTerms: ['John Doe'], operator: OperatorType.contains },
+          // { columnId: 'name', searchTerms: ['John Doe'], operator: OperatorType.contains },
+          { columnId: 'name', searchTerms: ['Joh*oe'], operator: OperatorType.startsWithEndsWith },
           { columnId: 'company', searchTerms: ['xyz'], operator: 'IN' },
 
           // use a date range with 2 searchTerms values
@@ -180,6 +204,16 @@ export class Example6 {
             field: 'userId',
             value: 123
           }],
+          filterQueryOverride: ({ fieldName, columnDef, columnFilterOperator, searchValues }) => {
+            if (columnFilterOperator === OperatorType.custom && columnDef?.id === 'name') {
+              // technically speaking GraphQL isn't a database query language like SQL, it's an application query language.
+              // What that means is that GraphQL won't let you write arbitrary queries out of the box.
+              // It will only support the types of queries defined in your GraphQL schema.
+              // see this SO: https://stackoverflow.com/a/37981802/1212166
+              return { field: fieldName, operator: 'Like', value: searchValues[0] };
+            }
+            return;
+          },
           useCursor: this.isWithCursor, // sets pagination strategy, if true requires a call to setPageInfo() when graphql call returns
           // when dealing with complex objects, we want to keep our field name with double quotes
           // example with gender: query { users (orderBy:[{field:"gender",direction:ASC}]) {}
@@ -292,8 +326,9 @@ export class Example6 {
   }
 
   setFiltersDynamically() {
-    const presetLowestDay = format(addDay(new Date(), -2), 'YYYY-MM-DD');
-    const presetHighestDay = format(addDay(new Date(), 20), 'YYYY-MM-DD');
+    const currentYear = new Date().getFullYear();
+    const presetLowestDay = `${currentYear}-01-01`;
+    const presetHighestDay = `${currentYear}-02-15`;
 
     // we can Set Filters Dynamically (or different filters) afterward through the FilterService
     this.aureliaGrid.filterService.updateFilters([
@@ -314,13 +349,15 @@ export class Example6 {
   }
 
   resetToOriginalPresets() {
-    const presetLowestDay = format(addDay(new Date(), -2), 'YYYY-MM-DD');
-    const presetHighestDay = format(addDay(new Date(), 20), 'YYYY-MM-DD');
+    const currentYear = new Date().getFullYear();
+    const presetLowestDay = `${currentYear}-01-01`;
+    const presetHighestDay = `${currentYear}-02-15`;
 
     this.aureliaGrid.filterService.updateFilters([
       // you can use OperatorType or type them as string, e.g.: operator: 'EQ'
       { columnId: 'gender', searchTerms: ['male'], operator: OperatorType.equal },
-      { columnId: 'name', searchTerms: ['John Doe'], operator: OperatorType.contains },
+      // { columnId: 'name', searchTerms: ['John Doe'], operator: OperatorType.contains },
+      { columnId: 'name', searchTerms: ['Joh*oe'], operator: OperatorType.startsWithEndsWith },
       { columnId: 'company', searchTerms: ['xyz'], operator: 'IN' },
 
       // use a date range with 2 searchTerms values
@@ -350,6 +387,7 @@ export class Example6 {
   }
 
   private resetOptions(options: Partial<GraphqlServiceOption>) {
+    this.displaySpinner(true);
     const graphqlService = this.gridOptions.backendServiceApi!.service as GraphqlService;
     this.aureliaGrid.paginationService!.setCursorBased(options.useCursor!);
     graphqlService.updateOptions(options);

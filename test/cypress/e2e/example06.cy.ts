@@ -2,8 +2,13 @@ import { addDay, format } from '@formkit/tempo';
 
 import { removeWhitespaces } from '../plugins/utilities';
 
-const presetLowestDay = format(addDay(new Date(), -2), 'YYYY-MM-DD');
-const presetHighestDay = format(addDay(new Date(), 20), 'YYYY-MM-DD');
+const currentYear = new Date().getFullYear();
+const presetLowestDay = `${currentYear}-01-01`;
+const presetHighestDay = `${currentYear}-02-15`;
+
+function removeSpaces(textS) {
+  return `${textS}`.replace(/\s+/g, '');
+}
 
 describe('Example 6 - GraphQL Grid', () => {
   it('should display Example title', () => {
@@ -31,7 +36,7 @@ describe('Example 6 - GraphQL Grid', () => {
     cy.get('.search-filter.filter-name')
       .find('input')
       .invoke('val')
-      .then(text => expect(text).to.eq('John Doe'));
+      .then(text => expect(text).to.eq('Joh*oe'));
 
     cy.get('.search-filter.filter-gender .ms-choice > span')
       .contains('Male');
@@ -56,7 +61,8 @@ describe('Example 6 - GraphQL Grid', () => {
         expect(text).to.eq(removeWhitespaces(`query{users(first:20,offset:20,
           orderBy:[{field:"name",direction:ASC},{field:"company",direction:DESC}],
           filterBy:[
-            {field:"gender",operator:EQ,value:"male"},{field:"name",operator:Contains,value:"JohnDoe"},
+            {field:"gender",operator:EQ,value:"male"},
+            {field:"name",operator:StartsWith,value:"Joh"},{field:"name",operator:EndsWith,value:"oe"},
             {field:"company",operator:IN,value:"xyz"},{field:"finish",operator:GE,value:"${presetLowestDay}"},{field:"finish",operator:LE,value:"${presetHighestDay}"}
           ],locale:"en",userId:123){
             totalCount,nodes{id,name,gender,company,billing{address{street,zip}},finish}}}`));
@@ -81,7 +87,8 @@ describe('Example 6 - GraphQL Grid', () => {
         expect(text).to.eq(removeWhitespaces(`query{users(first:20,offset:40,
           orderBy:[{field:"name",direction:ASC},{field:"company",direction:DESC}],
           filterBy:[
-            {field:"gender",operator:EQ,value:"male"},{field:"name",operator:Contains,value:"JohnDoe"},
+            {field:"gender",operator:EQ,value:"male"},
+            {field:"name",operator:StartsWith,value:"Joh"},{field:"name",operator:EndsWith,value:"oe"},
             {field:"company",operator:IN,value:"xyz"},{field:"finish",operator:GE,value:"${presetLowestDay}"},{field:"finish",operator:LE,value:"${presetHighestDay}"}
           ],locale:"en",userId:123){totalCount,nodes{id,name,gender,company,billing{address{street,zip}},finish}}}`));
       });
@@ -99,7 +106,8 @@ describe('Example 6 - GraphQL Grid', () => {
         expect(text).to.eq(removeWhitespaces(`query{users(first:20,offset:80,
           orderBy:[{field:"name",direction:ASC},{field:"company",direction:DESC}],
           filterBy:[
-            {field:"gender",operator:EQ,value:"male"},{field:"name",operator:Contains,value:"JohnDoe"},
+            {field:"gender",operator:EQ,value:"male"},
+            {field:"name",operator:StartsWith,value:"Joh"},{field:"name",operator:EndsWith,value:"oe"},
             {field:"company",operator:IN,value:"xyz"},{field:"finish",operator:GE,value:"${presetLowestDay}"},{field:"finish",operator:LE,value:"${presetHighestDay}"}
           ],locale:"en",userId:123){totalCount,nodes{id,name,gender,company,billing{address{street,zip}},finish}}}`));
       });
@@ -119,7 +127,7 @@ describe('Example 6 - GraphQL Grid', () => {
           orderBy:[{field:"name",direction:ASC},{field:"company",direction:DESC}],
           filterBy:[
             {field:"gender",operator:EQ,value:"male"},
-            {field:"name",operator:Contains,value:"John Doe"},
+            {field:"name",operator:StartsWith,value:"Joh"},{field:"name",operator:EndsWith,value:"oe"},
             {field:"company",operator:IN,value:"xyz"},
             {field:"finish",operator:GE,value:"${presetLowestDay}"},
             {field:"finish",operator:LE,value:"${presetHighestDay}"}
@@ -140,7 +148,8 @@ describe('Example 6 - GraphQL Grid', () => {
         expect(text).to.eq(removeWhitespaces(`query{users(first:20,offset:80,
           orderBy:[{field:"name",direction:ASC},{field:"company",direction:DESC}],
           filterBy:[
-            {field:"gender",operator:EQ,value:"male"},{field:"name",operator:Contains,value:"JohnDoe"},
+            {field:"gender",operator:EQ,value:"male"},
+            {field:"name",operator:StartsWith,value:"Joh"},{field:"name",operator:EndsWith,value:"oe"},
             {field:"company",operator:IN,value:"xyz"},{field:"finish",operator:GE,value:"${presetLowestDay}"},{field:"finish",operator:LE,value:"${presetHighestDay}"}
           ],locale:"en",userId:123){totalCount,nodes{id,name,gender,company,billing{address{street,zip}},finish}}}`));
       });
@@ -160,7 +169,8 @@ describe('Example 6 - GraphQL Grid', () => {
         expect(text).to.eq(removeWhitespaces(`query{users(first:30,offset:0,
           orderBy:[{field:"name",direction:ASC},{field:"company",direction:DESC}],
           filterBy:[
-            {field:"gender",operator:EQ,value:"male"},{field:"name",operator:Contains,value:"JohnDoe"},
+            {field:"gender",operator:EQ,value:"male"},
+            {field:"name",operator:StartsWith,value:"Joh"},{field:"name",operator:EndsWith,value:"oe"},
             {field:"company",operator:IN,value:"xyz"},{field:"finish",operator:GE,value:"${presetLowestDay}"},{field:"finish",operator:LE,value:"${presetHighestDay}"}
           ],locale:"en",userId:123){totalCount,nodes{id,name,gender,company,billing{address{street,zip}},finish}}}`));
       });
@@ -171,7 +181,7 @@ describe('Example 6 - GraphQL Grid', () => {
       .find('.slick-header-left .slick-header-column:nth(0)')
       .trigger('mouseover')
       .children('.slick-header-menu-button')
-      // .should('be.hidden')
+      .should('be.hidden')
       .invoke('show')
       .click();
 
@@ -242,7 +252,7 @@ describe('Example 6 - GraphQL Grid', () => {
 
     cy.get('.slick-header-menu .slick-menu-command-list')
       .should('be.visible')
-      .children('.slick-menu-item:nth-of-type(6)')
+      .children('.slick-menu-item[data-command=clear-filter]')
       .children('.slick-menu-content')
       .should('contain', 'Remove Filter')
       .click();
@@ -292,6 +302,29 @@ describe('Example 6 - GraphQL Grid', () => {
         expect(text).to.eq(removeWhitespaces(`query{users(first:30,offset:0,
           orderBy:[{field:"name",direction:ASC}],
           locale:"en",userId:123){totalCount,nodes{id,name,gender,company,billing{address{street,zip}},finish}}}`));
+      });
+  });
+
+  it('should perform filterQueryOverride when operator "%%" is selected', () => {
+    cy.get('.search-filter.filter-name select').find('option').last().then((element) => {
+      cy.get('.search-filter.filter-name select').select(element.val());
+    });
+
+    cy.get('.search-filter.filter-name')
+      .find('input')
+      .clear()
+      .type('Jo%yn%er');
+
+    // wait for the query to finish
+    cy.get('[data-test=status]').should('contain', 'finished');
+
+    cy.get('[data-test=graphql-query-result]')
+      .should(($span) => {
+        const text = removeSpaces($span.text()); // remove all white spaces
+        expect(text).to.eq(removeSpaces(`query { users (first:30,offset:0,
+          orderBy:[{field:"name",direction:ASC}],
+          filterBy:[{field:"name",operator:Like,value:"Jo%yn%er"}],
+          locale:"en",userId:123) { totalCount, nodes { id,name,gender,company,billing{address{street,zip}},finish } } }`));
       });
   });
 
@@ -367,6 +400,34 @@ describe('Example 6 - GraphQL Grid', () => {
       });
   });
 
+  it('should open Date picker and expect date range between 01-Jan to 15-Feb', () => {
+    cy.get('.search-filter.filter-finish.filled')
+      .click();
+
+    cy.get('.vanilla-calendar-column:nth(0) .vanilla-calendar-month')
+      .should('have.text', 'January');
+
+    cy.get('.vanilla-calendar-column:nth(1) .vanilla-calendar-month')
+      .should('have.text', 'February');
+
+    cy.get('.vanilla-calendar-year:nth(0)')
+      .should('have.text', currentYear);
+
+    cy.get('.vanilla-calendar:visible')
+      .find('.vanilla-calendar-day__btn_selected')
+      .should('have.length', 46);
+
+    cy.get('.vanilla-calendar:visible')
+      .find('.vanilla-calendar-day__btn_selected')
+      .first()
+      .should('have.text', '1');
+
+    cy.get('.vanilla-calendar:visible')
+      .find('.vanilla-calendar-day__btn_selected')
+      .last()
+      .should('have.text', '15');
+  });
+
   describe('Set Dynamic Sorting', () => {
     it('should use slower server wait delay to test loading widget', () => {
       cy.get('[data-test="server-delay"]')
@@ -416,6 +477,19 @@ describe('Example 6 - GraphQL Grid', () => {
             orderBy:[{field:"billing.address.zip",direction:DESC},{field:"company",direction:ASC}],locale:"en",userId:123){
             totalCount,nodes{id,name,gender,company,billing{address{street,zip}},finish}}}`));
         });
+    });
+
+    it('should open Date picker and no longer expect date range selection in the picker', () => {
+      cy.get('.search-filter.filter-finish')
+        .should('not.have.class', 'filled')
+        .click();
+
+      cy.get('.vanilla-calendar-year:nth(0)')
+        .should('have.text', currentYear);
+
+      cy.get('.vanilla-calendar:visible')
+        .find('.vanilla-calendar-day__btn_selected')
+        .should('not.exist');
     });
   });
 
@@ -507,7 +581,10 @@ describe('Example 6 - GraphQL Grid', () => {
         .click({ force: true });
     });
 
-    it('should switch locale to French', () => {
+    it('should switch locale from English to French', () => {
+      cy.get('[data-test=selected-locale]')
+        .should('contain', 'en.json');
+
       cy.get('[data-test=language-button]')
         .click();
 
@@ -705,7 +782,8 @@ describe('Example 6 - GraphQL Grid', () => {
           expect(text).to.eq(removeWhitespaces(`query{users(last:20,
             orderBy:[{field:"name",direction:ASC},{field:"company",direction:DESC}],
             filterBy:[
-              {field:"gender",operator:EQ,value:"male"},{field:"name",operator:Contains,value:"JohnDoe"},
+              {field:"gender",operator:EQ,value:"male"},
+              {field:"name",operator:StartsWith,value:"Joh"},{field:"name",operator:EndsWith,value:"oe"},
               {field:"company",operator:IN,value:"xyz"},{field:"finish",operator:GE,value:"${presetLowestDay}"},{field:"finish",operator:LE,value:"${presetHighestDay}"}
             ],locale:"en",userId:123){totalCount,nodes{id,name,gender,company,billing{address{street,zip}},finish},pageInfo{hasNextPage,hasPreviousPage,endCursor,startCursor},edges{cursor}}}`));
         });
@@ -725,7 +803,8 @@ describe('Example 6 - GraphQL Grid', () => {
           expect(text).to.eq(removeWhitespaces(`query{users(first:20,
             orderBy:[{field:"name",direction:ASC},{field:"company",direction:DESC}],
             filterBy:[
-              {field:"gender",operator:EQ,value:"male"},{field:"name",operator:Contains,value:"JohnDoe"},
+              {field:"gender",operator:EQ,value:"male"},
+              {field:"name",operator:StartsWith,value:"Joh"},{field:"name",operator:EndsWith,value:"oe"},
               {field:"company",operator:IN,value:"xyz"},{field:"finish",operator:GE,value:"${presetLowestDay}"},{field:"finish",operator:LE,value:"${presetHighestDay}"}
             ],locale:"en",userId:123){totalCount,nodes{id,name,gender,company,billing{address{street,zip}},finish},pageInfo{hasNextPage,hasPreviousPage,endCursor,startCursor},edges{cursor}}}`));
         });
@@ -753,7 +832,8 @@ describe('Example 6 - GraphQL Grid', () => {
               expect(text).to.eq(removeWhitespaces(`query{users(first:20,after:"${afterCursor}",
                 orderBy:[{field:"name",direction:ASC},{field:"company",direction:DESC}],
                 filterBy:[
-                  {field:"gender",operator:EQ,value:"male"},{field:"name",operator:Contains,value:"JohnDoe"},
+                  {field:"gender",operator:EQ,value:"male"},
+                  {field:"name",operator:StartsWith,value:"Joh"},{field:"name",operator:EndsWith,value:"oe"},
                   {field:"company",operator:IN,value:"xyz"},{field:"finish",operator:GE,value:"${presetLowestDay}"},{field:"finish",operator:LE,value:"${presetHighestDay}"}
                 ],locale:"en",userId:123){totalCount,nodes{id,name,gender,company,billing{address{street,zip}},finish},pageInfo{hasNextPage,hasPreviousPage,endCursor,startCursor},edges{cursor}}}`));
             });
@@ -782,12 +862,99 @@ describe('Example 6 - GraphQL Grid', () => {
               expect(text).to.eq(removeWhitespaces(`query{users(last:20,before:"${beforeCursor}",
                 orderBy:[{field:"name",direction:ASC},{field:"company",direction:DESC}],
                 filterBy:[
-                  {field:"gender",operator:EQ,value:"male"},{field:"name",operator:Contains,value:"JohnDoe"},
+                  {field:"gender",operator:EQ,value:"male"},
+                  {field:"name",operator:StartsWith,value:"Joh"},{field:"name",operator:EndsWith,value:"oe"},
                   {field:"company",operator:IN,value:"xyz"},{field:"finish",operator:GE,value:"${presetLowestDay}"},{field:"finish",operator:LE,value:"${presetHighestDay}"}
                 ],locale:"en",userId:123){totalCount,nodes{id,name,gender,company,billing{address{street,zip}},finish},pageInfo{hasNextPage,hasPreviousPage,endCursor,startCursor},edges{cursor}}}`));
             });
         });
       });
+    });
+  });
+
+  describe('Filter Shortcuts', () => {
+    const today = format(new Date(), 'YYYY-MM-DD');
+    const next20Day = format(addDay(new Date(), 20), 'YYYY-MM-DD');
+
+    it('should open header menu of "Finish" again then choose "Filter Shortcuts -> In the Future" and expect date range of the next 20 days', () => {
+      cy.get('[data-test=offset]').click();
+
+      cy.get('#grid6')
+        .find('.slick-header-column:nth-of-type(6)')
+        .trigger('mouseover')
+        .children('.slick-header-menu-button')
+        .invoke('show')
+        .click();
+
+      cy.get('[data-command=filter-shortcuts-root-menu]')
+        .trigger('mouseover');
+
+      cy.get('.slick-header-menu.slick-menu-level-1')
+        .find('[data-command=next-20-days]')
+        .should('contain', 'Next 20 days')
+        .click();
+
+      cy.get('.search-filter.filter-finish input.date-picker')
+        .invoke('val')
+        .should('equal', `${today} — ${next20Day}`);
+
+      // wait for the query to finish
+      cy.get('[data-test=status]').should('contain', 'finished');
+
+      cy.get('[data-test=graphql-query-result]')
+        .should(($span) => {
+          const text = removeSpaces($span.text()); // remove all white spaces
+          expect(text).to.eq(removeSpaces(`query { users (first:20,offset:0,orderBy:[{field:"name",direction:ASC},
+                {field:"company",direction:DESC}],filterBy:[{field:"gender",operator:EQ,value:"male"},
+                {field:"name",operator:StartsWith,value:"Joh"},{field:"name",operator:EndsWith,value:"oe"},
+                {field:"company",operator:IN,value:"xyz"},{field:"finish",operator:GE,value:"${today}"},
+                {field:"finish",operator:LE,value:"${next20Day}"}],locale:"en",userId:123) {
+                totalCount, nodes { id,name,gender,company,billing{address{street,zip}},finish}}}`));
+        });
+    });
+
+    it('should switch locale to French', () => {
+      cy.get('[data-test=language-button]')
+        .click();
+
+      cy.get('[data-test=selected-locale]')
+        .should('contain', 'fr.json');
+    });
+
+    it('should open header menu of "Finish" again now expect French translations "Filter Shortcuts -> In the Future" and expect date range of the next 20 days', () => {
+      cy.get('#grid6')
+        .find('.slick-header-column:nth-of-type(6)')
+        .trigger('mouseover')
+        .children('.slick-header-menu-button')
+        .invoke('show')
+        .click();
+
+      cy.get('[data-command=filter-shortcuts-root-menu]')
+        .should('contain', 'Raccourcis de filtre')
+        .trigger('mouseover');
+
+      cy.get('.slick-header-menu.slick-menu-level-1')
+        .find('[data-command=next-20-days]')
+        .should('contain', '20 prochain jours')
+        .click();
+
+      cy.get('.search-filter.filter-finish input.date-picker')
+        .invoke('val')
+        .should('equal', `${today} — ${next20Day}`);
+
+      // wait for the query to finish
+      cy.get('[data-test=status]').should('contain', 'finished');
+
+      cy.get('[data-test=graphql-query-result]')
+        .should(($span) => {
+          const text = removeSpaces($span.text()); // remove all white spaces
+          expect(text).to.eq(removeSpaces(`query { users (first:20,offset:0,orderBy:[{field:"name",direction:ASC},
+                  {field:"company",direction:DESC}],filterBy:[{field:"gender",operator:EQ,value:"male"},
+                  {field:"name",operator:StartsWith,value:"Joh"},{field:"name",operator:EndsWith,value:"oe"},
+                  {field:"company",operator:IN,value:"xyz"},{field:"finish",operator:GE,value:"${today}"},
+                  {field:"finish",operator:LE,value:"${next20Day}"}],locale:"fr",userId:123) {
+                  totalCount, nodes { id,name,gender,company,billing{address{street,zip}},finish}}}`));
+        });
     });
   });
 });

@@ -16,6 +16,7 @@ export const localeFrench = {
   TEXT_EXPORT_TO_EXCEL: 'Exporter vers Excel',
   TEXT_EXPORT_TO_TAB_DELIMITED: 'Exporter en format texte (délimité par tabulation)',
   TEXT_EXPORT_TO_TEXT_FORMAT: 'Exporter en format texte',
+  TEXT_FILTER_SHORTCUTS: 'Raccourcis de filtre',
   TEXT_FORCE_FIT_COLUMNS: 'Ajustement forcé des colonnes',
   TEXT_GROUP_BY: 'Grouper par',
   TEXT_HIDE_COLUMN: 'Cacher la colonne',
@@ -30,6 +31,14 @@ export const localeFrench = {
   TEXT_STARTS_WITH: 'Commence par',
   TEXT_X_OF_Y_SELECTED: '# de % sélectionné',
   TEXT_X_OF_Y_MASS_SELECTED: '{{x}} de {{y}} sélectionnés',
+  TEXT_CLEAR_PINNING: 'Dégeler les colonnes/rangées',
+  TEXT_EQUAL_TO: 'Égal à',
+  TEXT_GREATER_THAN: 'Plus grand que',
+  TEXT_GREATER_THAN_OR_EQUAL_TO: 'Plus grand ou égal à',
+  TEXT_LESS_THAN: 'Plus petit que',
+  TEXT_LESS_THAN_OR_EQUAL_TO: 'Plus petit ou égal à',
+  TEXT_NOT_CONTAINS: 'Ne contient pas',
+  TEXT_NOT_EQUAL_TO: 'Non égal à',
 
   // optional
   TEXT_ALL_X_RECORDS_SELECTED: 'Sur tous les {{x}} éléments',

@@ -1,10 +1,10 @@
 import { customElement } from 'aurelia';
-import { Column, RowDetailViewOption, SharedService, SlickEvent, SlickEventData, SlickEventHandler, SlickGrid, SlickRowSelectionModel } from '@slickgrid-universal/common';
+import { type Column, type RowDetailViewOption, SharedService, SlickEvent, SlickEventData, SlickEventHandler, type SlickGrid, SlickRowSelectionModel } from '@slickgrid-universal/common';
 import { EventPubSubService } from '@slickgrid-universal/event-pub-sub';
 
-import { GridOption } from '../../models/gridOption.interface';
-import { AureliaUtilService } from '../../services';
-import { RowDetailView } from '../../models';
+import type { GridOption } from '../../models/gridOption.interface';
+import type { AureliaUtilService } from '../../services';
+import type { RowDetailView } from '../../models';
 // import { HttpStub } from '../../../../../test/httpClientStub';
 import { SlickRowDetailView } from '../slickRowDetailView';
 

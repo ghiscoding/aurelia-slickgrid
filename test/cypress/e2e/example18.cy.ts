@@ -1,5 +1,6 @@
 describe('Example 18 - Draggable Grouping & Aggregators', () => {
-  const fullTitles = ['Title', 'Duration', '% Complete', 'Start', 'Finish', 'Cost', 'Effort-Driven'];
+  const preHeaders = ['Common Factor', 'Period', 'Analysis', ''];
+  const fullTitles = ['Title', 'Duration', 'Start', 'Finish', 'Cost', '% Complete', 'Effort-Driven'];
   const GRID_ROW_HEIGHT = 35;
 
   it('should display Example title', () => {
@@ -7,11 +8,24 @@ describe('Example 18 - Draggable Grouping & Aggregators', () => {
     cy.get('h2').should('contain', 'Example 18: Draggable Grouping & Aggregators');
   });
 
-  it('should have exact column titles on 1st grid', () => {
+  it('should have exact column (pre-header) grouping titles in grid', () => {
     cy.get('#grid18')
-      .find('.slick-header-columns')
+      .find('.slick-preheader-panel .slick-header-columns')
+      .children()
+      .each(($child, index) => expect($child.text()).to.eq(preHeaders[index]));
+  });
+
+  it('should have exact column titles in grid', () => {
+    cy.get('#grid18')
+      .find('.slick-header:not(.slick-preheader-panel) .slick-header-columns')
       .children()
       .each(($child, index) => expect($child.text()).to.eq(fullTitles[index]));
+  });
+
+  it('should have a draggable dropzone on top of the grid in the top-header section', () => {
+    cy.get('#grid18')
+      .find('.slick-topheader-panel .slick-dropzone:visible')
+      .contains('Drop a column header here to group by the column');
   });
 
   describe('Grouping Tests', () => {
@@ -141,8 +155,8 @@ describe('Example 18 - Draggable Grouping & Aggregators', () => {
         .should('exist');
     });
 
-    it('should use the preheader Toggle All button and expect all groups to now be expanded', () => {
-      cy.get('.slick-preheader-panel .slick-group-toggle-all').click();
+    it('should use the topheader Toggle All button and expect all groups to now be expanded', () => {
+      cy.get('.slick-topheader-panel .slick-group-toggle-all').click();
 
       cy.get(`[style="top: ${GRID_ROW_HEIGHT * 0}px;"] > .slick-cell:nth(0) .slick-group-toggle.expanded`).should('have.length', 1);
       cy.get(`[style="top: ${GRID_ROW_HEIGHT * 0}px;"] > .slick-cell:nth(0) .slick-group-title`).should('contain', 'Effort-Driven: False');
@@ -153,8 +167,8 @@ describe('Example 18 - Draggable Grouping & Aggregators', () => {
         .should('have.css', 'marginLeft').and('eq', `15px`);
     });
 
-    it('should use the preheader Toggle All button again and expect all groups to now be collapsed', () => {
-      cy.get('.slick-preheader-panel .slick-group-toggle-all').click();
+    it('should use the topheader Toggle All button again and expect all groups to now be collapsed', () => {
+      cy.get('.slick-topheader-panel .slick-group-toggle-all').click();
 
       cy.get(`[style="top: ${GRID_ROW_HEIGHT * 0}px;"] > .slick-cell:nth(0) .slick-group-toggle.collapsed`).should('have.length', 1);
       cy.get(`[style="top: ${GRID_ROW_HEIGHT * 0}px;"] > .slick-cell:nth(0) .slick-group-title`).should('contain', 'Effort-Driven: False');
@@ -195,6 +209,159 @@ describe('Example 18 - Draggable Grouping & Aggregators', () => {
       cy.get('.grouping-selects select:nth(0)').should('not.have.value');
       cy.get('.grouping-selects select:nth(1)').should('not.have.value');
       cy.get('.grouping-selects select:nth(2)').should('not.have.value');
+    });
+  });
+
+  describe('Column Picker tests', () => {
+    it('should open Column Picker from 2nd header column and hide Title & Duration which will hide Common Factor Group as well', () => {
+      const fullTitlesWithGroupNames = ['Common Factor - Title', 'Common Factor - Duration', 'Period - Start', 'Period - Finish', 'Analysis - Cost', 'Analysis - % Complete', 'Analysis - Effort-Driven'];
+
+      cy.get('#grid18')
+        .find('.slick-header-column:nth(1)')
+        .trigger('mouseover')
+        .trigger('contextmenu')
+        .invoke('show');
+
+      cy.get('.slick-column-picker')
+        .find('.slick-column-picker-list')
+        .children()
+        .each(($child, index) => {
+          if (index <= 5) {
+            expect($child.text()).to.eq(fullTitlesWithGroupNames[index]);
+          }
+        });
+
+      cy.get('.slick-column-picker')
+        .find('.slick-column-picker-list')
+        .children('li:nth-child(1)')
+        .children('label')
+        .should('contain', 'Title')
+        .click();
+
+      cy.get('.slick-column-picker .close')
+        .click();
+    });
+
+    it('should open Column Picker from 2nd header column name and hide Duration which will hide Common Factor Group as well', () => {
+      const fullTitlesWithGroupNames = ['Common Factor - Title', 'Common Factor - Duration', 'Period - Start', 'Period - Finish', 'Analysis - Cost', 'Analysis - % Complete', 'Analysis - Effort-Driven'];
+
+      cy.get('#grid18')
+        .find('.slick-header-column:nth(1) .slick-column-name')
+        .trigger('mouseover')
+        .trigger('contextmenu')
+        .invoke('show');
+
+      cy.get('.slick-column-picker')
+        .find('.slick-column-picker-list')
+        .children()
+        .each(($child, index) => {
+          if (index <= 5) {
+            expect($child.text()).to.eq(fullTitlesWithGroupNames[index]);
+          }
+        });
+
+      cy.get('.slick-column-picker')
+        .find('.slick-column-picker-list')
+        .children('li:nth-child(2)')
+        .children('label')
+        .should('contain', 'Duration')
+        .click();
+
+      cy.get('.slick-column-picker .close')
+        .click();
+    });
+
+    it('should expect headers to be without Title/Duration and pre-headers without Common Factor Group header titles', () => {
+      const preHeadersWithoutFactor = ['Period', 'Analysis'];
+      const titlesWithoutTitleDuration = ['Start', 'Finish', 'Cost', '% Complete', 'Effort-Driven'];
+
+      // Column Pre-Headers without Common Factor group
+      cy.get('#grid18')
+        .find('.slick-header:not(.slick-preheader-panel) .slick-header-columns')
+        .children()
+        .each(($child, index) => expect($child.text()).to.eq(titlesWithoutTitleDuration[index]));
+
+      // Column Headers without Title & Duration
+      cy.get('#grid18')
+        .find('.slick-preheader-panel .slick-header-columns')
+        .children()
+        .each(($child, index) => expect($child.text()).to.eq(preHeadersWithoutFactor[index]));
+    });
+
+    it('should open Column Picker from Pre-Header column and show again Title column', () => {
+      const fullTitlesWithGroupNames = ['Common Factor - Title', 'Common Factor - Duration', 'Period - Start', 'Period - Finish', 'Analysis - Cost', 'Analysis - % Complete', 'Analysis - Effort-Driven'];
+
+      cy.get('#grid18')
+        .find('.slick-preheader-panel .slick-header-column:nth(1)')
+        .trigger('mouseover')
+        .trigger('contextmenu')
+        .invoke('show');
+
+      cy.get('.slick-column-picker')
+        .find('.slick-column-picker-list')
+        .children()
+        .each(($child, index) => {
+          if (index <= 5) {
+            expect($child.text()).to.eq(fullTitlesWithGroupNames[index]);
+          }
+        });
+
+      cy.get('.slick-column-picker')
+        .find('.slick-column-picker-list')
+        .children('li:nth-child(1)')
+        .children('label')
+        .should('contain', 'Title')
+        .click();
+
+      // close picker & reopen from a pre-header column name instead
+      cy.get('.slick-column-picker .close')
+        .click();
+    });
+
+    it('should open Column Picker from Pre-Header column name and show again Duration column', () => {
+      const fullTitlesWithGroupNames = ['Common Factor - Title', 'Common Factor - Duration', 'Period - Start', 'Period - Finish', 'Analysis - Cost', 'Analysis - % Complete', 'Analysis - Effort-Driven'];
+
+      cy.get('#grid18')
+        .find('.slick-preheader-panel .slick-header-column:nth(1)')
+        .trigger('mouseover')
+        .trigger('contextmenu')
+        .invoke('show');
+
+      cy.get('.slick-column-picker')
+        .find('.slick-column-picker-list')
+        .children()
+        .each(($child, index) => {
+          if (index <= 5) {
+            expect($child.text()).to.eq(fullTitlesWithGroupNames[index]);
+          }
+        });
+
+      cy.get('.slick-column-picker')
+        .find('.slick-column-picker-list')
+        .children('li:nth-child(2)')
+        .children('label')
+        .should('contain', 'Duration')
+        .click();
+
+      cy.get('.slick-column-picker .close')
+        .click();
+    });
+
+    it('should expect header titles to show again Title/Duration and pre-headers with Common Factor Group header titles', () => {
+      const preHeadersWithFactor = ['Common Factor', 'Period', 'Analysis', ''];
+      const titlesWithTitleDuration = ['Title', 'Duration', 'Start', 'Finish', 'Cost', '% Complete', 'Effort-Driven'];
+
+      // Column Pre-Headers without Common Factor group
+      cy.get('#grid18')
+        .find('.slick-header:not(.slick-preheader-panel) .slick-header-columns')
+        .children()
+        .each(($child, index) => expect($child.text()).to.eq(titlesWithTitleDuration[index]));
+
+      // Column Headers without Title & Duration
+      cy.get('#grid18')
+        .find('.slick-preheader-panel .slick-header-columns')
+        .children()
+        .each(($child, index) => expect($child.text()).to.eq(preHeadersWithFactor[index]));
     });
   });
 });

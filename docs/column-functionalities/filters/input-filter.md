@@ -7,6 +7,8 @@
 - [Dynamic Query Field](#dynamic-query-field)
 - [Debounce/Throttle Text Search (wait for user to stop typing before filtering)](#debouncethrottle-text-search-wait-for-user-to-stop-typing-before-filtering)
 - [Ignore Locale Accent in Text Filter/Sorting](#ignore-locale-accent-in-text-filtersorting)
+- [Custom Filter Predicate](#custom-filter-predicate)
+- [Filter Shortcuts](#filter-shortcuts)
 
 ### Description
 Input filter is the default filter when enabling filters.
@@ -26,11 +28,14 @@ Example:
   - `<02/28/17` => smaller than date `02/28/17`
   - `2001-01-01..2002-02-22` => between 2001-01-01 and 2002-02-22
 - String type
-  - `<>John` (not include the sub-string `John`)
+  - `<>John` => not containing the sub-string `John`
+  - `!=John` => not equal to the text `John` (note that this is **not** equivalent to `<>`)
   - `John*` => starts with the sub-string `John`
   - `*Doe` => ends with the sub-string `Doe`
-  - `ab..ef` => anything between "af" and "ef"
-    - refer to ASCII table, it is however case insensitive
+  - `ab..ef` => anything included between "af" and "ef"
+    - refer to the ASCII table for each character assigned index
+  - `!= ` => get defined only data and exclude any `undefined`, `null` or empty string `''`
+     - notice the empty string in the search value `' '`
 
 Note that you could do the same functionality with a Compound Filter.
 
@@ -175,4 +180,81 @@ You can ignore latin accent (or any other language accent) in text filter via th
 this.gridOptions = {
    ignoreAccentOnStringFilterAndSort: true,
 };
+```
+
+### Custom Filter Predicate
+You can provide a custom predicate by using the `filterPredicate` when defining your `filter`, the callback will provide you with 2 arguments (`dataContext` and `searchFilterArgs`). The `searchFilterArgs` has a type of `SearchColumnFilter` interface which will provide you more info about the filter itself (like parsed operator, search terms, column definition, column id and type as well). You can see a live demo at [Example 14](https://ghiscoding.github.io/slickgrid-universal/#/example14) and the associated [lines](https://github.com/ghiscoding/slickgrid-universal/blob/1a2c2ff4b72ac3f51b30b1d3d101e84ed9ec9ece/examples/vite-demo-vanilla-bundle/src/examples/example14.ts#L153-L178) of code.
+
+```ts
+this.columnDefinitions = [
+  {
+    id: 'title', name: 'Title', field: 'title', sortable: true,
+    filterable: true, type: FieldType.string,
+    filter: {
+      model: Filters.inputText,
+      // you can use your own custom filter predicate when built-in filters aren't working for you
+      // for example the example below will function similarly to an SQL LIKE to answer this SO: https://stackoverflow.com/questions/78471412/angular-slickgrid-filter
+      filterPredicate: (dataContext, searchFilterArgs) => {
+        const searchVals = (searchFilterArgs.searchTerms || []) as SearchTerm[];
+        if (searchVals?.length) {
+          const columnId = searchFilterArgs.columnId;
+          const searchVal = searchVals[0] as string;
+          const likeMatches = searchVal.split('%');
+          if (likeMatches.length > 3) {
+            // for matches like "%Ta%10%" will return text that starts with "Ta" and ends with "10" (e.g. "Task 10", "Task 110", "Task 210")
+            const [_, start, end] = likeMatches;
+            return dataContext[columnId].startsWith(start) && dataContext[columnId].endsWith(end);
+          } else if (likeMatches.length > 2) {
+            // for matches like "%Ta%10" will return text that starts with "Ta" and contains "10" (e.g. "Task 10", "Task 100", "Task 101")
+            const [_, start, contain] = likeMatches;
+            return dataContext[columnId].startsWith(start) && dataContext[columnId].includes(contain);
+          }
+          // for anything else we'll simply expect a Contains
+          return dataContext[columnId].includes(searchVal);
+        }
+        // if we fall here then the value is not filtered out
+        return true;
+      },
+    },
+  },
+];
+```
+
+The custom filter predicate above was to answer a Stack Overflow question and will work similarly to an SQL LIKE matcher (it's not perfect and probably requires more work but is enough to demo the usage of a custom filter predicate)
+
+![image](https://github.com/ghiscoding/slickgrid-universal/assets/643976/3e77774e-3a9f-4ca4-bca7-50a033a4b48d)
+
+### Filter Shortcuts
+
+User can declare some Filter Shortcuts, that will be added to the Header Menu of the Column it was assigned. These shortcuts are simply a list of filter search values (e.g. Filter the Blank/Non-Blanks Values), the end user can type the same search values themselves but the shortcuts are simply meant to be quicker without having to know what to type (e.g. Filter Current Year).
+
+ The shortcuts can be declared via an array that must include at least a `title` (or `titleKey`) a `searchTerms` array and lastly an optional `operator` can also be provided. The available properties of these shortcut is a merge of Header Menu Item interface (except `command` and `action` which are reserved and assigned internally) and of course the 3 properties mentioned above. The declaration is very similar to how we use it when declaring Grid Presets as shown below
+
+```ts
+this.columnDefinitions = [
+  {
+    id: 'country', name: 'Country', field: 'country',
+    filter: {
+      model: Filters.inputText,
+      filterShortcuts: [
+        { title: 'Blank Values', searchTerms: ['A'], operator: '<', iconCssClass: 'mdi mdi-filter-minus-outline', },
+        { title: 'Non-Blank Values', searchTerms: ['A'], operator: '>', iconCssClass: 'mdi mdi-filter-plus-outline', },
+      ]
+    },
+  },
+  {
+    id: 'finish', name: 'Finish', field: 'finish',
+    filter: {
+      model: Filters.dateRange,
+      filterShortcuts: [
+        {
+          // using Locale translations & Tempo to calculate next 30 days
+          titleKey: 'NEXT_30_DAYS',
+          iconCssClass: 'mdi mdi-calendar',
+          searchTerms: [tempoFormat(new Date(), 'YYYY-MM-DD'), tempoFormat(addDay(new Date(), 30), 'YYYY-MM-DD')],
+        },
+      ]
+    },
+  },
+];
 ```

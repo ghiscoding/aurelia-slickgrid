@@ -57,11 +57,27 @@ export class Example13 {
 
   /* Define grid Options and Columns */
   defineGrid() {
+    // add a simple button with event listener on 1st column for testing purposes
+    // a simple button with click event
+    const nameElementColumn1 = document.createElement('div');
+    const btn = document.createElement('button');
+    const btnLabel = document.createElement('span');
+    btnLabel.className = 'mdi mdi-help-circle no-padding';
+    btn.dataset.test = 'col1-hello-btn';
+    btn.className = 'btn btn-outline-secondary btn-xs btn-icon ms-1';
+    btn.textContent = 'Click me';
+    btn.title = 'simple column header test with a button click listener';
+    btn.addEventListener('click', () => alert('Hello World'));
+    btn.appendChild(btnLabel);
+    nameElementColumn1.appendChild(document.createTextNode('Id '));
+    nameElementColumn1.appendChild(btn);
+
     this.columnDefinitions = [
       {
-        id: 'sel', name: '#', field: 'num', width: 40,
+        id: 'sel', name: nameElementColumn1, field: 'num', type: FieldType.number,
+        columnPickerLabel: 'Custom Label', // add a custom label for the ColumnPicker/GridMenu when default header value extractor doesn't work for you ()
+        width: 140, maxWidth: 150,
         excludeFromExport: true,
-        maxWidth: 70,
         resizable: true,
         filterable: true,
         selectable: false,
@@ -178,6 +194,13 @@ export class Example13 {
       excelExportOptions: { sanitizeDataExport: true },
       textExportOptions: { sanitizeDataExport: true },
       externalResources: [this.excelExportService, this.textExportService],
+      showCustomFooter: true,
+      customFooterOptions: {
+        // optionally display some text on the left footer container
+        hideMetrics: false,
+        hideTotalItemCount: false,
+        hideLastUpdateTimestamp: false
+      },
     };
   }
 
