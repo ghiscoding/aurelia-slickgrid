@@ -48,15 +48,15 @@
     "@jest/types": "^29.6.3",
     "@lerna-lite/cli": "^3.8.0",
     "@lerna-lite/publish": "^3.8.0",
-    "@slickgrid-universal/common": "^5.5.0",
+    "@slickgrid-universal/common": "^5.5.1",
     "@types/jest": "^29.5.12",
-    "@types/node": "^22.1.0",
+    "@types/node": "^22.4.0",
     "conventional-changelog-conventionalcommits": "^7.0.2",
     "cross-env": "^7.0.3",
-    "cypress": "^13.13.2",
+    "cypress": "^13.13.3",
     "cypress-real-events": "^1.13.0",
-    "eslint": "^9.8.0",
-    "eslint-plugin-cypress": "^3.4.0",
+    "eslint": "^9.9.0",
+    "eslint-plugin-cypress": "^3.5.0",
     "eslint-plugin-n": "^17.10.2",
     "eslint-plugin-prefer-arrow": "^1.2.3",
     "globals": "^15.9.0",
@@ -72,7 +72,7 @@
     "rxjs": "^7.8.1",
     "ts-jest": "^29.2.4",
     "typescript": "^5.5.4",
-    "typescript-eslint": "^8.0.1"
+    "typescript-eslint": "^8.1.0"
   },
   "packageManager": "pnpm@8.15.9"
 }
