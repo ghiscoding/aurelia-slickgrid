@@ -299,7 +299,7 @@ export class Example39 {
             },
           };
 
-          setTimeout(() => {
+          window.setTimeout(() => {
             this.graphqlQuery = this.gridOptions.backendServiceApi!.service.buildQuery();
             resolve(mockedResult);
           }, this.serverWaitDelay);

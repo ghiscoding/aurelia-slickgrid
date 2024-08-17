@@ -97,7 +97,7 @@ export class Example34 {
   minChangePerCycle = 0;
   maxChangePerCycle = 10;
   refreshRate = 75;
-  timer: any;
+  timer: number;
 
   constructor() {
     // define the grid options & columns and then create the grid itself
@@ -107,7 +107,7 @@ export class Example34 {
   attached() {
     // populate the dataset once the grid is ready
     this.getData();
-    setTimeout(() => {
+    window.setTimeout(() => {
       this.startSimulation();
     }, this.refreshRate);
   }
@@ -304,11 +304,11 @@ export class Example34 {
       // but the cell highlight actually does that for us so we can skip it
     }
 
-    this.timer = setTimeout(this.startSimulation.bind(this), this.refreshRate || 0);
+    this.timer = window.setTimeout(this.startSimulation.bind(this), this.refreshRate || 0);
   }
 
   stopSimulation() {
-    clearTimeout(this.timer);
+    window.clearTimeout(this.timer);
   }
 
   findColumnById(columnName: string): Column {
@@ -323,7 +323,7 @@ export class Example34 {
         this.aureliaGrid.slickGrid.setCellCssStyles(`highlight_${[column.id]}${row}`, hash);
 
         // remove highlight after x amount of time
-        setTimeout(() => this.removeUnsavedStylingFromCell(item, column, row), this.highlightDuration);
+        window.setTimeout(() => this.removeUnsavedStylingFromCell(item, column, row), this.highlightDuration);
       }
     }
   }

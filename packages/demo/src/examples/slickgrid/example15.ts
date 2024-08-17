@@ -70,7 +70,7 @@ export class Example15 {
   clearGridStateFromLocalStorage() {
     this.aureliaGrid.gridService.resetGrid(this.columnDefinitions);
     this.aureliaGrid.paginationService!.changeItemPerPage(DEFAULT_PAGE_SIZE);
-    setTimeout(() => localStorage[LOCAL_STORAGE_KEY] = null);
+    window.setTimeout(() => localStorage[LOCAL_STORAGE_KEY] = null);
   }
 
   /* Define grid Options and Columns */
