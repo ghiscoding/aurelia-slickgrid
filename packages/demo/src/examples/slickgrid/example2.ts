@@ -167,7 +167,7 @@ export class Example2 {
       item.completed = !item.completed;
 
       // simulate a backend http call and refresh the grid row after delay
-      setTimeout(() => {
+      window.setTimeout(() => {
         this.aureliaGrid.gridService.updateItemById(item.id, item, { highlightRow: false });
       }, 250);
     }
