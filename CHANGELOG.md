@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.5.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.5.1...v8.5.2) (2024-08-17)
+
+### Bug Fixes
+
+* use setTimeout/setInterval from window object with correct TS type ([#1252](https://github.com/ghiscoding/aurelia-slickgrid/issues/1252)) ([f272174](https://github.com/ghiscoding/aurelia-slickgrid/commit/f27217482cbea03885da23feb23a29d152b214db)) - by @ghiscoding
+
 ## [8.5.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.5.0...v8.5.1) (2024-08-17)
 
 ### Bug Fixes
