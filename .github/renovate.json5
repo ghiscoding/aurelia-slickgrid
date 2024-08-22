@@ -30,6 +30,6 @@
       allowedVersions: '<6.0.0',
     },
   ],
-  schedule: ['thursday'],
+  schedule: ['on friday'],
   ignoreDeps: ["typescript"],
 }
