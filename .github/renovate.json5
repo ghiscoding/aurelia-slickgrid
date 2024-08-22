@@ -30,6 +30,6 @@
       allowedVersions: '<6.0.0',
     },
   ],
-  schedule: ['every 2 weeks on thursday'],
+  schedule: ['thursday'],
   ignoreDeps: ["typescript"],
 }
