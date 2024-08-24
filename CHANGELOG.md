@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.6.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.5.2...v8.6.0) (2024-08-24)
+
+### Features
+
+* migrate back to Vanilla-Calendar-Pro ([#1256](https://github.com/ghiscoding/aurelia-slickgrid/issues/1256)) ([40f2c34](https://github.com/ghiscoding/aurelia-slickgrid/commit/40f2c346415a3f19917ec9667856a3a05e8df798)) - by @ghiscoding
+* new Drag to Recycle Bin demo ([#1257](https://github.com/ghiscoding/aurelia-slickgrid/issues/1257)) ([640a93c](https://github.com/ghiscoding/aurelia-slickgrid/commit/640a93c044f08fec8820a1675f95bfa9f404ddcf)) - by @ghiscoding
+
+### Bug Fixes
+
+* register RowDetail and dispose of it only once ([#1253](https://github.com/ghiscoding/aurelia-slickgrid/issues/1253)) ([d598c6d](https://github.com/ghiscoding/aurelia-slickgrid/commit/d598c6d2a6e53255eb9b9b6361c3e9e465e6c3a7)) - by @ghiscoding
+
 ## [8.5.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.5.1...v8.5.2) (2024-08-17)
 
 ### Bug Fixes
