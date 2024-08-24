@@ -1,0 +1,42 @@
+<div class="container-fluid">
+  <h2>
+    Example 41: Row Reordering & Drag to Recycle Bin
+    <span class="float-end">
+      <a style="font-size: 18px" target="_blank"
+        href="https://github.com/ghiscoding/aurelia-slickgrid/blob/master/packages/demo/src/examples/slickgrid/example41.ts">
+        <span class="mdi mdi-link-variant"></span> code
+      </a>
+    </span>
+  </h2>
+
+  <h6 class="subtitle italic">
+    <ul>
+      <li>Click to select, Ctrl-click to toggle selection(s).</li>
+      <li>Drag one or more rows by the handle icon to reorder.</li>
+      <li>Drag one or more rows by selection and drag to the recycle bin to delete.</li>
+    </ul>
+  </h6>
+
+  <div class="row">
+    <div class="col">
+      <aurelia-slickgrid grid-id="grid41"
+                    column-definitions.bind="columnDefinitions"
+                    grid-options.bind="gridOptions"
+                    dataset.bind="dataset"
+                    on-aurelia-grid-created.trigger="aureliaGridReady($event.detail)"
+                    on-drag-init.trigger="handleOnDragInit($event.detail.eventData)"
+                    on-drag-start.trigger="handleOnDragStart($event.detail.eventData)"
+                    on-drag.trigger="handleOnDrag($event.detail.eventData, $event.detail.args)"
+                    on-drag-end.trigger="handleOnDragEnd($event.detail.eventData, $event.detail.args)">
+        <div au-slot="slickgrid-header" class="grid-header">
+          <label>Santa's TODO list:</label>
+        </div>
+      </aurelia-slickgrid>
+    </div>
+    <div class="col">
+      <div id="dropzone" class="recycle-bin mt-4">
+        Recycle Bin
+      </div>
+    </div>
+  </div>
+</div>
