@@ -97,7 +97,7 @@ You can change the number of pinned columns/rows and even the pinning of columns
     column-definitions.bind="columnDefinitions"
     grid-options.bind="gridOptions"
     dataset.bind="dataset"
-    on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
+    on-aurelia-grid-created.trigger="aureliaGridReady($event.detail)">
 </aurelia-slickgrid>
 ```
 

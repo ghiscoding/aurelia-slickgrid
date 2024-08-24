@@ -76,7 +76,7 @@ User can pause the resizer at any time and later resume the auto-resize. This mi
 ##### View
 ```html
 <button class="btn btn-default btn-sm"
-  click.delegate="togglePauseResizer()">
+  click.trigger="togglePauseResizer()">
   Pause auto-resize: <b>${resizerPaused}</b>
 </button>
 
@@ -85,7 +85,7 @@ User can pause the resizer at any time and later resume the auto-resize. This mi
       column-definitions.bind="columnDefinitions"
       grid-options.bind="gridOptions"
       dataset.bind="dataset"
-      on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
+      on-aurelia-grid-created.trigger="aureliaGridReady($event.detail)">
   </aurelia-slickgrid>
 ```
 

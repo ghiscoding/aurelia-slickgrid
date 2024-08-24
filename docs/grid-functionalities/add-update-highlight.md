@@ -26,7 +26,7 @@ Please note that you need to provide the `id` by yourself and remember that it h
     column-definitions.bind="columnDefs"
     grid-options.bind="gridOptions"
     dataset.bind="myDataset"
-    on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
+    on-aurelia-grid-created.trigger="aureliaGridReady($event.detail)">
   </aurelia-slickgrid>
 ```
 
@@ -86,7 +86,7 @@ To delete a row, you can use `deleteItem(s)` and the pass the entire object(s) o
     column-definitions.bind="columnDefs"
     grid-options.bind="gridOptions"
     dataset.bind="myDataset"
-    on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
+    on-aurelia-grid-created.trigger="aureliaGridReady($event.detail)">
 </aurelia-slickgrid>
 ```
 

@@ -31,7 +31,7 @@ You can get the `Grid State` at any point in time. However if you wish to save t
     column-definitions.bind="columnDefs"
     grid-options.bind="gridOptions"
     dataset.bind="myDataset"
-    on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
+    on-aurelia-grid-created.trigger="aureliaGridReady($event.detail)">
 </aurelia-slickgrid>
 ```
 
@@ -160,8 +160,8 @@ Examples
     dataset.bind="dataset"
     grid-options.bind="gridOptions"
     column-definitions.bind="columnDefinitions"
-    on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)"
-    on-grid-state-service-changed.delegate="gridStateChanged($event.detail)">
+    on-aurelia-grid-created.trigger="aureliaGridReady($event.detail)"
+    on-grid-state-service-changed.trigger="gridStateChanged($event.detail)">
   </aurelia-slickgrid>
 ```
 ##### ViewModel (recommended way)

@@ -13,10 +13,10 @@ Since version `2.x`, we can now access the Slick `Grid` & `DataView` objects dir
 ```html
 <span id="radioAutoEdit">
    <label class="radio-inline control-label" for="radioTrue">
-       <input type="radio" name="inlineRadioOptions" id="radioTrue" checked value.bind="isAutoEdit" click.delegate="setAutoEdit(true)"> ON (single-click)
+       <input type="radio" name="inlineRadioOptions" id="radioTrue" checked value.bind="isAutoEdit" click.trigger="setAutoEdit(true)"> ON (single-click)
     </label>
     <label class="radio-inline control-label" for="radioFalse">
-       <input type="radio" name="inlineRadioOptions" id="radioFalse" value.bind="isAutoEdit" click.delegate="setAutoEdit(false)"> OFF (double-click)
+       <input type="radio" name="inlineRadioOptions" id="radioFalse" value.bind="isAutoEdit" click.trigger="setAutoEdit(false)"> OFF (double-click)
     </label>
 </span>
 
@@ -25,7 +25,7 @@ Since version `2.x`, we can now access the Slick `Grid` & `DataView` objects dir
       column-definitions.bind="columnDefinitions"
       grid-options.bind="gridOptions"
       dataset.bind="dataset"
-      on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
+      on-aurelia-grid-created.trigger="aureliaGridReady($event.detail)">
 </aurelia-slickgrid>
 ```
 

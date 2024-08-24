@@ -41,7 +41,7 @@ Some users might want to have 1 main single search for filtering the grid data i
                    column-definitions.bind="columnDefinitions"
                    grid-options.bind="gridOptions"
                    dataset.bind="dataset"
-                   on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
+                   on-aurelia-grid-created.trigger="aureliaGridReady($event.detail)">
 </aurelia-slickgrid>
 ```
 

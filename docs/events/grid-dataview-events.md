@@ -16,10 +16,10 @@ All the Slick Grid events (and DataView) are exposed through Event Dispatch and 
     column-definitions.bind="columnDefs"
     grid-options.bind="gridOptions"
     dataset.bind="myDataset"
-    on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)"
-    on-click.delegate="onCellClicked($event.detail.eventData, $event.detail.args)"
-    on-cell-change.delegate="onCellChanged($event.detail.eventData, $event.detail.args)"
-    on-mouse-enter.delegate="onMouseEntered($event.detail.eventData, $event.detail.args)">
+    on-aurelia-grid-created.trigger="aureliaGridReady($event.detail)"
+    on-click.trigger="onCellClicked($event.detail.eventData, $event.detail.args)"
+    on-cell-change.trigger="onCellChanged($event.detail.eventData, $event.detail.args)"
+    on-mouse-enter.trigger="onMouseEntered($event.detail.eventData, $event.detail.args)">
 </aurelia-slickgrid>
 ```
 

@@ -13,7 +13,7 @@ SlickGrid is very flexible and it allows you to change or add CSS Class(es) dyna
     column-definitions.bind="columnDefs"
     grid-options.bind="gridOptions"
     dataset.bind="myDataset"
-    on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
+    on-aurelia-grid-created.trigger="aureliaGridReady($event.detail)">
 </aurelia-slickgrid>
 ```
 

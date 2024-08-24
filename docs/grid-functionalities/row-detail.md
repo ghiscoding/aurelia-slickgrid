@@ -23,7 +23,7 @@ A Row Detail allows you to open a detail panel which can contain extra and/or mo
     column-definitions.bind="columnDefs"
     grid-options.bind="gridOptions"
     dataset.bind="myDataset"
-    on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
+    on-aurelia-grid-created.trigger="aureliaGridReady($event.detail)">
 </aurelia-slickgrid>
 ```
 
@@ -192,7 +192,7 @@ Same concept as the preload, we pass an Aurelia ViewModel to the `viewModel` tha
     <h4>
       Find out who is the Assignee
       <small>
-        <button class="btn btn-primary btn-sm btn-icon" click.delegate="alertAssignee(model.assignee)">Click Me</button>
+        <button class="btn btn-primary btn-sm btn-icon" click.trigger="alertAssignee(model.assignee)">Click Me</button>
       </small>
     </h4>
   </div>
@@ -266,12 +266,12 @@ Then in our Child Component, we can do some action on the Grid, the DataView or 
   <h3>${model.title}</h3>
 
     <-- delete a row using the DataView & SlickGrid objects -->
-    <button class="btn btn-primary btn-danger btn-sm" click.delegate="deleteRow(model)" data-test="delete-btn">
+    <button class="btn btn-primary btn-danger btn-sm" click.trigger="deleteRow(model)" data-test="delete-btn">
       Delete Row
     </button>
 
     <!-- calling a Parent Component method -->
-    <button class="btn btn-default btn-sm" click.delegate="callParentMethod(model)" data-test="parent-btn">
+    <button class="btn btn-default btn-sm" click.trigger="callParentMethod(model)" data-test="parent-btn">
       Call Parent Method
     </button>
 </div>
@@ -340,7 +340,7 @@ The reason is because the Row Selection (checkbox) plugin is a special column an
     column-definitions.bind="columnDefinitions"
     grid-options.bind="gridOptions"
     dataset.bind="dataset"
-    on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
+    on-aurelia-grid-created.trigger="aureliaGridReady($event.detail)">
 </aurelia-slickgrid>
 ```
 ```ts

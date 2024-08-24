@@ -28,7 +28,7 @@ When used with a local JSON dataset, the Infinite Scroll is a feature that must 
     column-definitions.bind="columnDefs"
     grid-options.bind="gridOptions"
     dataset.bind="myDataset"
-    on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)"
+    on-aurelia-grid-created.trigger="aureliaGridReady($event.detail)"
     on-scroll="handleOnScroll($event.$detail.args)"
     on-sort="handleOnSort()">
 </aurelia-slickgrid>
@@ -87,7 +87,7 @@ We'll use the OData Backend Service to demo Infinite Scroll with a Backend Servi
     column-definitions.bind="columnDefs"
     grid-options.bind="gridOptions"
     dataset.bind="myDataset"
-    on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
+    on-aurelia-grid-created.trigger="aureliaGridReady($event.detail)">
 </aurelia-slickgrid>
 ```
 

@@ -109,7 +109,7 @@ You can update/change the Filters dynamically (on the fly) via the `updateFilter
 
 ##### View
 ```html
-<button class="btn btn-default btn-sm" data-test="set-dynamic-filter" click.delegate="setFiltersDynamically()">
+<button class="btn btn-default btn-sm" data-test="set-dynamic-filter" click.trigger="setFiltersDynamically()">
     Set Filters Dynamically
 </button>
 
@@ -117,7 +117,7 @@ You can update/change the Filters dynamically (on the fly) via the `updateFilter
    columnDefinitions.bind="columnDefinitions"
    gridOptions.bind="gridOptions"
    dataset.bind="dataset"
-   on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
+   on-aurelia-grid-created.trigger="aureliaGridReady($event.detail)">
 </aurelia-slickgrid>
 ```
 

@@ -68,8 +68,8 @@ As you can see, you mainly need to define which service to use (GridODataService
                      grid-options.bind="gridOptions"
                      dataset.bind="dataset"
                      pagination-options.bind="paginationOptions"
-                     on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)"
-                     on-grid-state-changed.delegate="gridStateChanged($event.detail)">
+                     on-aurelia-grid-created.trigger="aureliaGridReady($event.detail)"
+                     on-grid-state-changed.trigger="gridStateChanged($event.detail)">
 </aurelia-slickgrid>
 ```
 

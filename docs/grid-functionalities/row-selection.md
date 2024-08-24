@@ -29,7 +29,7 @@ For a single row selection, you need to have `enableCellNavigation: true`, `enab
     columnDefinitions.bind="columnDefinitions"
     gridOptions.bind="gridOptions"
     dataset.bind="dataset"
-    on-selected-rows-changed.delegate="handleRowSelection($event.detail.eventData, $event.detail.args)">
+    on-selected-rows-changed.trigger="handleRowSelection($event.detail.eventData, $event.detail.args)">
 </aurelia-slickgrid>
 ```
 
@@ -63,7 +63,7 @@ As for multiple row selections, you need to provide an extra grid option of `row
     columnDefinitions.bind="columnDefinitions"
     gridOptions.bind="gridOptions"
     dataset.bind="dataset"
-    on-selected-rows-changed.delegate="handleRowSelection($event.detail.eventData, $event.detail.args)">
+    on-selected-rows-changed.trigger="handleRowSelection($event.detail.eventData, $event.detail.args)">
 </aurelia-slickgrid>
 ```
 
@@ -161,7 +161,7 @@ When having an external button that you want to work only when there's row selec
     columnDefinitions.bind="columnDefinitions"
     gridOptions.bind="gridOptions"
     dataset.bind="dataset"
-    on-selected-rows-changed.delegate="handleOnSelectedRowsChanged($event.detail.args)">
+    on-selected-rows-changed.trigger="handleOnSelectedRowsChanged($event.detail.args)">
 </aurelia-slickgrid>
 ```
 ```ts
@@ -178,7 +178,7 @@ handleOnSelectedRowsChanged(args) {
     columnDefinitions.bind="columnDefinitions"
     gridOptions.bind="gridOptions"
     dataset.bind="dataset"
-    on-grid-state-service-changed.delegate="handleOngridStateChanged($event.detail.args)">
+    on-grid-state-service-changed.trigger="handleOngridStateChanged($event.detail.args)">
 </aurelia-slickgrid>
 ```
 ```ts
@@ -200,7 +200,7 @@ You can change which row(s) are selected by using the built-in SlickGrid method 
       column-definitions.bind="columnDefinitions"
       grid-options.bind="gridOptions"
       dataset.bind="dataset"
-      on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
+      on-aurelia-grid-created.trigger="aureliaGridReady($event.detail)">
 </aurelia-slickgrid>
 ```
 
@@ -230,7 +230,7 @@ The reason is because the Row Selection (checkbox) plugin is a special column an
     column-definitions.bind="columnDefinitions"
     grid-options.bind="gridOptions"
     dataset.bind="dataset"
-    on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
+    on-aurelia-grid-created.trigger="aureliaGridReady($event.detail)">
 </aurelia-slickgrid>
 ```
 ```ts

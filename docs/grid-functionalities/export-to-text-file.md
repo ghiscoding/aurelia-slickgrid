@@ -148,8 +148,8 @@ If you have lots of data, you might want to show a spinner telling the user that
     column-definitions.bind="columnDefs"
     grid-options.bind="gridOptions"
     dataset.bind="myDataset"
-    on-before-export-to-text-file.delegate="processing = true"
-    on-after-export-to-text-file.delegate="processing = false">
+    on-before-export-to-text-file.trigger="processing = true"
+    on-after-export-to-text-file.trigger="processing = false">
 </aurelia-slickgrid>
 ```
 

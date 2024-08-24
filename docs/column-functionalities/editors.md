@@ -480,7 +480,7 @@ With that in mind and the code from the SO answer, we end up with the following 
     column-definitions.bind="columnDefs"
     grid-options.bind="gridOptions"
     dataset.bind="myDataset"
-    on-before-edit-cell.delegate="verifyCellIsEditableBeforeEditing($event.detail.eventData, $event.detail.args)"
+    on-before-edit-cell.trigger="verifyCellIsEditableBeforeEditing($event.detail.eventData, $event.detail.args)"
     >
 </aurelia-slickgrid>
 ```
@@ -504,9 +504,9 @@ If your grid uses the `autoResize` and you use Editors in your grid on a mobile 
     column-definitions.bind="columnDefs"
     grid-options.bind="gridOptions"
     dataset.bind="myDataset"
-    on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)"
-    on-before-edit-cell.delegate="onBeforeEditCell($event.detail.eventData, $event.detail.args)"
-    on-before-cell-editor-destroy.delegate="onAfterEditCell($event.detail.eventData, $event.detail.args)">
+    on-aurelia-grid-created.trigger="aureliaGridReady($event.detail)"
+    on-before-edit-cell.trigger="onBeforeEditCell($event.detail.eventData, $event.detail.args)"
+    on-before-cell-editor-destroy.trigger="onAfterEditCell($event.detail.eventData, $event.detail.args)">
   </aurelia-slickgrid>
 </div>
 ```
