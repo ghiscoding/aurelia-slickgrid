@@ -212,12 +212,4 @@ export class Example41 {
     this.aureliaGrid.slickGrid?.setSelectedRows([]);
     this.dataset = [...this.dataset];
   }
-
-  requiredFieldValidator(value: any) {
-    if (value == null || value == undefined || !value.length) {
-      return { valid: false, msg: 'This is a required field' };
-    } else {
-      return { valid: true, msg: null };
-    }
-  }
 }
