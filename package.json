@@ -76,7 +76,9 @@
   },
   "pnpm": {
     "overrides": {
-      "braces": "^3.0.3"
+      "braces": "^3.0.3",
+      "express": "^4.19.2",
+      "ws": "^7.5.10"
     }
   },
   "packageManager": "pnpm@8.15.9"
