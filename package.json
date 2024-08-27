@@ -74,5 +74,10 @@
     "typescript": "^5.5.4",
     "typescript-eslint": "^8.2.0"
   },
+  "pnpm": {
+    "overrides": {
+      "braces": "^3.0.3"
+    }
+  },
   "packageManager": "pnpm@8.15.9"
 }
