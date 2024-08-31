@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.6.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.6.0...v8.6.1) (2024-08-31)
+
+### Bug Fixes
+
+* unflattening tree->flat array multiple times ([#1260](https://github.com/ghiscoding/aurelia-slickgrid/issues/1260)) ([a636297](https://github.com/ghiscoding/aurelia-slickgrid/commit/a6362978e0db52f101e84409edecf077bf9e0582)) - by @ghiscoding
+
 ## [8.6.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.5.2...v8.6.0) (2024-08-24)
 
 ### Features
