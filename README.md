@@ -17,6 +17,7 @@ One of the best JavasSript datagrid [SlickGrid](https://github.com/mleibman/Slic
 📕 [Documentation](https://ghiscoding.gitbook.io/aurelia-slickgrid/getting-started/quick-start) website powered by GitBook for version 7+ (_or use the [Wikis](https://github.com/ghiscoding/aurelia-slickgrid/wiki) for older versions_).
 
 ## Installation
+Available in Stackblitz (Codeflow) below, this can also be used to provide an issue repro.
 
 [![Open in Codeflow](https://developer.stackblitz.com/img/open_in_codeflow.svg)](https:///pr.new/ghiscoding/aurelia-slickgrid)
 
