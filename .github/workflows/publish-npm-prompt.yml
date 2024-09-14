@@ -69,7 +69,7 @@ jobs:
         run: pnpm install
 
       - name: Build Library
-        run: pnpm bundle
+        run: pnpm build
 
       - name: Archive common build artifacts
         uses: actions/upload-artifact@v4
