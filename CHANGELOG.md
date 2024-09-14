@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.6.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.6.1...v8.6.2) (2024-09-14)
+
+### Bug Fixes
+
+* **deps:** update dependency @faker-js/faker to v9 ([#1262](https://github.com/ghiscoding/aurelia-slickgrid/issues/1262)) ([ec26df3](https://github.com/ghiscoding/aurelia-slickgrid/commit/ec26df3af80dbbce9abbed0d622dabc17ef10c06)) - by @renovate-bot
+
+### Performance Improvements
+
+* don't invalidate grid rows more than once ([#1265](https://github.com/ghiscoding/aurelia-slickgrid/issues/1265)) ([740995c](https://github.com/ghiscoding/aurelia-slickgrid/commit/740995c5a7d7b12c2da157f39d9f98568e945cef)) - by @ghiscoding
+* upgrade Slickgrid-Universal with perf improvements ([#1266](https://github.com/ghiscoding/aurelia-slickgrid/issues/1266)) ([f56b0c8](https://github.com/ghiscoding/aurelia-slickgrid/commit/f56b0c87f0f5d077e0d38cb107ea863e5c401d4b)) - by @ghiscoding
+
 ## [8.6.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.6.0...v8.6.1) (2024-08-31)
 
 ### Bug Fixes
