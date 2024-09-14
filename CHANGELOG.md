@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.7.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.6.2...v8.7.0) (2024-09-14)
+
+### Bug Fixes
+
+* sort imports ([21fca2d](https://github.com/ghiscoding/aurelia-slickgrid/commit/21fca2dc331903265fdc2d5574adc5af527ea127)) - by @ghiscoding
+
 ## [8.6.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.6.1...v8.6.2) (2024-09-14)
 
 ### Bug Fixes
