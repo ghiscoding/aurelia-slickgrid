@@ -258,6 +258,8 @@ export class Example13 {
   }
 
   groupByDuration() {
+    // you need to manually add the sort icon(s) in UI
+    this.aureliaGrid.filterService.setSortColumnIcons([{ columnId: 'duration', sortAsc: true }]);
     this.dataviewObj.setGrouping({
       getter: 'duration',
       formatter: (g) => `Duration: ${g.value} <span style="color:green">(${g.count} items)</span>`,
@@ -271,9 +273,6 @@ export class Example13 {
       aggregateCollapsed: false,
       lazyTotalsCalculation: true
     } as Grouping);
-
-    // you need to manually add the sort icon(s) in UI
-    this.aureliaGrid.filterService.setSortColumnIcons([{ columnId: 'duration', sortAsc: true }]);
     this.gridObj.invalidate(); // invalidate all rows and re-render
   }
 
@@ -296,7 +295,9 @@ export class Example13 {
   }
 
   groupByDurationEffortDriven() {
-    this.aureliaGrid.filterService.setSortColumnIcons([]);
+    // you need to manually add the sort icon(s) in UI
+    const sortColumns = [{ columnId: 'duration', sortAsc: true }, { columnId: 'effortDriven', sortAsc: true }];
+    this.aureliaGrid.filterService.setSortColumnIcons(sortColumns);
     this.dataviewObj.setGrouping([
       {
         getter: 'duration',
@@ -319,15 +320,17 @@ export class Example13 {
         lazyTotalsCalculation: true
       }
     ] as Grouping[]);
-
-    // you need to manually add the sort icon(s) in UI
-    const sortColumns = [{ columnId: 'duration', sortAsc: true }, { columnId: 'effortDriven', sortAsc: true }];
-    this.aureliaGrid.filterService.setSortColumnIcons(sortColumns);
     this.gridObj.invalidate(); // invalidate all rows and re-render
   }
 
   groupByDurationEffortDrivenPercent() {
-    this.aureliaGrid.filterService.setSortColumnIcons([]);
+    // you need to manually add the sort icon(s) in UI
+    const sortColumns = [
+      { columnId: 'duration', sortAsc: true },
+      { columnId: 'effortDriven', sortAsc: true },
+      { columnId: 'percentComplete', sortAsc: true }
+    ];
+    this.aureliaGrid.filterService.setSortColumnIcons(sortColumns);
     this.dataviewObj.setGrouping([
       {
         getter: 'duration',
@@ -359,14 +362,6 @@ export class Example13 {
         lazyTotalsCalculation: true
       }
     ] as Grouping[]);
-
-    // you need to manually add the sort icon(s) in UI
-    const sortColumns = [
-      { columnId: 'duration', sortAsc: true },
-      { columnId: 'effortDriven', sortAsc: true },
-      { columnId: 'percentComplete', sortAsc: true }
-    ];
-    this.aureliaGrid.filterService.setSortColumnIcons(sortColumns);
     this.gridObj.invalidate(); // invalidate all rows and re-render
   }
 }
