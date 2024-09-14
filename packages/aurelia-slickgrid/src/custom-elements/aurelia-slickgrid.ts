@@ -18,9 +18,12 @@ import type {
 
 import {
   // services
+  autoAddEditorFormatterToColumnsWithEditor,
   BackendUtilityService,
   CollectionService,
+  emptyElement,
   EventNamingStyle,
+  ExtensionName,
   ExtensionService,
   ExtensionUtility,
   FilterFactory,
@@ -28,6 +31,7 @@ import {
   GridEventService,
   GridService,
   GridStateService,
+  GridStateType,
   GroupingAndColspanService,
   type Observable,
   PaginationService,
@@ -37,16 +41,10 @@ import {
   SlickDataView,
   SlickEventHandler,
   SlickGrid,
-  SlickGroupItemMetadataProvider,
   SlickgridConfig,
+  SlickGroupItemMetadataProvider,
   SortService,
   TreeDataService,
-
-  // utilities
-  autoAddEditorFormatterToColumnsWithEditor,
-  emptyElement,
-  ExtensionName,
-  GridStateType,
 } from '@slickgrid-universal/common';
 import { EventPubSubService } from '@slickgrid-universal/event-pub-sub';
 import { SlickFooterComponent } from '@slickgrid-universal/custom-footer-component';
@@ -55,20 +53,14 @@ import { SlickPaginationComponent } from '@slickgrid-universal/pagination-compon
 import { extend } from '@slickgrid-universal/utils';
 
 import { bindable, BindingMode, customElement, IContainer, IEventAggregator, type IDisposable, IObserverLocator, resolve } from 'aurelia';
-import type { ICollectionSubscriber, ICollectionObserver } from '@aurelia/runtime';
+import type { ICollectionObserver, ICollectionSubscriber } from '@aurelia/runtime';
 import { dequal } from 'dequal/lite';
 
 import { Constants } from '../constants';
 import { GlobalGridOptions } from '../global-grid-options';
 import type { AureliaGridInstance, GridOption } from '../models/index';
-import {
-  AureliaUtilService,
-  ContainerService,
-  disposeAllSubscriptions,
-  TranslaterService,
-} from '../services/index';
+import { AureliaUtilService, ContainerService, disposeAllSubscriptions, TranslaterService } from '../services/index';
 import { SlickRowDetailView } from '../extensions/slickRowDetailView';
-// import template from './aurelia-slickgrid.html?raw';
 
 @customElement({
   name: 'aurelia-slickgrid',
@@ -87,6 +79,10 @@ import { SlickRowDetailView } from '../extensions/slickRowDetailView';
 ` })
 export class AureliaSlickgridCustomElement {
   protected _columnDefinitions: Column[] = [];
+  protected _columnDefinitionObserver?: ICollectionObserver<'array'>;
+  protected _columnDefinitionsSubscriber: ICollectionSubscriber = {
+    handleCollectionChange: this.columnDefinitionsHandler.bind(this)
+  };
   protected _currentDatasetLength = 0;
   protected _darkMode = false;
   protected _dataset: any[] | null = null;
@@ -102,22 +98,18 @@ export class AureliaSlickgridCustomElement {
   protected _paginationOptions: Pagination | undefined;
   protected _registeredResources: ExternalResource[] = [];
   protected _scrollEndCalled = false;
-  protected _columnDefinitionObserver?: ICollectionObserver<'array'>;
-  protected _columnDefinitionsSubscriber: ICollectionSubscriber = {
-    handleCollectionChange: this.columnDefinitionsHandler.bind(this)
-  };
 
-  groupItemMetadataProvider?: SlickGroupItemMetadataProvider;
   backendServiceApi: BackendServiceApi | undefined;
   locales!: Locale;
+  groupItemMetadataProvider?: SlickGroupItemMetadataProvider;
   metrics?: Metrics;
-  showPagination = false;
-  serviceList: any[] = [];
-  subscriptions: Array<EventSubscription | IDisposable> = [];
   paginationData?: {
     gridOptions: GridOption;
     paginationService: PaginationService;
   };
+  serviceList: any[] = [];
+  showPagination = false;
+  subscriptions: Array<EventSubscription | IDisposable> = [];
 
   // components / plugins
   slickEmptyWarning: SlickEmptyWarningComponent | undefined;
