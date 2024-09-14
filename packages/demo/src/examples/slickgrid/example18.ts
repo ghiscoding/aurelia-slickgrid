@@ -295,11 +295,11 @@ export class Example18 {
     this.selectedGroupingFields = [...this.selectedGroupingFields]; // force dirty checking
   }
 
-  clearGrouping() {
-    if (this.draggableGroupingPlugin && this.draggableGroupingPlugin.setDroppedGroups) {
-      this.draggableGroupingPlugin.clearDroppedGroups();
+  clearGrouping(invalidateRows = true) {
+    this.draggableGroupingPlugin?.clearDroppedGroups();
+    if (invalidateRows) {
+      this.gridObj?.invalidate(); // invalidate all rows and re-render
     }
-    this.gridObj.invalidate(); // invalidate all rows and re-render
   }
 
   collapseAllGroups() {
@@ -325,36 +325,27 @@ export class Example18 {
     });
   }
 
-  groupByDuration() {
-    this.clearGrouping();
+  groupByDurationOrderByCount(sortedByCount = false) {
+    this.durationOrderByCount = sortedByCount;
+    this.clearGrouping(false);
+
     if (this.draggableGroupingPlugin?.setDroppedGroups) {
       this.showPreHeader();
       this.draggableGroupingPlugin.setDroppedGroups('duration');
-      this.gridObj.invalidate(); // invalidate all rows and re-render
+
+      // you need to manually add the sort icon(s) in UI
+      const sortColumns = sortedByCount ? [] : [{ columnId: 'duration', sortAsc: true }];
+      this.gridObj?.setSortColumns(sortColumns);
+      this.gridObj?.invalidate(); // invalidate all rows and re-render
     }
   }
 
-  groupByDurationOrderByCount(sortedByCount = false) {
-    this.durationOrderByCount = sortedByCount;
-    this.clearGrouping();
-    this.groupByDuration();
-
-    // you need to manually add the sort icon(s) in UI
-    const sortColumns = sortedByCount ? [] : [{ columnId: 'duration', sortAsc: true }];
-    this.aureliaGrid.filterService.setSortColumnIcons(sortColumns);
-    this.gridObj.invalidate(); // invalidate all rows and re-render
-  }
-
   groupByDurationEffortDriven() {
-    this.clearGrouping();
-    if (this.draggableGroupingPlugin && this.draggableGroupingPlugin.setDroppedGroups) {
+    this.clearGrouping(false);
+    if (this.draggableGroupingPlugin?.setDroppedGroups) {
       this.showPreHeader();
       this.draggableGroupingPlugin.setDroppedGroups(['duration', 'effortDriven']);
-      this.gridObj.invalidate(); // invalidate all rows and re-render
-
-      // you need to manually add the sort icon(s) in UI
-      const sortColumns = [{ columnId: 'duration', sortAsc: true }];
-      this.aureliaGrid.filterService.setSortColumnIcons(sortColumns);
+      this.gridObj?.invalidate(); // invalidate all rows and re-render
     }
   }
 
