@@ -82,6 +82,7 @@ handleOnHeaderMenuCommand(e) {
   - `onGridMenuClearAllPinning`
   - `onGridMenuClearAllFilters`
   - `onGridMenuClearAllSorting`
+  - `onGridMenuColumnsChanged`
   - `onGridMenuCommand`
   - **Slick Events**
     - `onAfterMenuShow`
