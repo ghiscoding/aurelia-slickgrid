@@ -89,7 +89,7 @@ const gridStub = {
   registerPlugin: jest.fn(),
   setSelectionModel: jest.fn(),
   sanitizeHtmlString: (s: string) => s,
-  onColumnsReordered: new SlickEvent(),
+  onRendered: new SlickEvent(),
   onSelectedRowsChanged: new SlickEvent(),
   onSort: new SlickEvent(),
 } as unknown as SlickGrid;
@@ -177,7 +177,7 @@ describe('SlickRowDetailView', () => {
       columnsMock = [{ id: 'field1', field: 'field1', width: 100, cssClass: 'red' }];
       jest.spyOn(gridStub, 'getOptions').mockReturnValue(gridOptionsMock);
       jest.clearAllMocks();
-      gridStub.onColumnsReordered = new SlickEvent();
+      gridStub.onRendered = new SlickEvent();
       gridStub.onSort = new SlickEvent();
     });
 
@@ -392,7 +392,7 @@ describe('SlickRowDetailView', () => {
       });
     });
 
-    it('should call Aurelia Util "createAureliaViewModelAddToSlot" when grid "onColumnsReordered" is triggered', (done) => {
+    it('should call Aurelia Util "createAureliaViewModelAddToSlot" when grid "onRendered" is triggered', (done) => {
       const mockColumn = { id: 'field1', field: 'field1', width: 100, cssClass: 'red', __collapsed: true };
       const handlerSpy = jest.spyOn(plugin.eventHandler, 'subscribe');
       // @ts-ignore:2345
@@ -402,7 +402,7 @@ describe('SlickRowDetailView', () => {
       plugin.onBeforeRowDetailToggle = new SlickEvent();
       plugin.register();
       plugin.eventHandler.subscribe(plugin.onBeforeRowDetailToggle, () => {
-        gridStub.onColumnsReordered.notify({ impactedColumns: [mockColumn] } as any, new SlickEventData(), gridStub);
+        gridStub.onRendered.notify({ impactedColumns: [mockColumn] } as any, new SlickEventData(), gridStub);
         expect(appendSpy).toHaveBeenCalledWith(
           ExampleLoader,
           expect.objectContaining({ model: mockColumn, addon: expect.anything(), grid: gridStub }),
