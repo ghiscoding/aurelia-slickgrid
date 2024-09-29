@@ -33,6 +33,7 @@ import {
   GridStateService,
   GridStateType,
   GroupingAndColspanService,
+  isColumnDateType,
   type Observable,
   PaginationService,
   ResizerService,
@@ -61,6 +62,8 @@ import { GlobalGridOptions } from '../global-grid-options';
 import type { AureliaGridInstance, GridOption } from '../models/index';
 import { AureliaUtilService, ContainerService, disposeAllSubscriptions, TranslaterService } from '../services/index';
 import { SlickRowDetailView } from '../extensions/slickRowDetailView';
+
+const WARN_NO_PREPARSE_DATE_SIZE = 5000; // data size to warn user when pre-parse isn't enabled
 
 @customElement({
   name: 'aurelia-slickgrid',
@@ -173,7 +176,7 @@ export class AureliaSlickgridCustomElement {
     this.filterFactory = new FilterFactory(slickgridConfig, this.translaterService, this.collectionService);
     this.filterService = new FilterService(this.filterFactory as any, this._eventPubSubService, this.sharedService, this.backendUtilityService);
     this.resizerService = new ResizerService(this._eventPubSubService);
-    this.sortService = new SortService(this.sharedService, this._eventPubSubService, this.backendUtilityService);
+    this.sortService = new SortService(this.collectionService, this.sharedService, this._eventPubSubService, this.backendUtilityService);
     this.treeDataService = new TreeDataService(this._eventPubSubService, this.sharedService, this.sortService);
     this.paginationService = new PaginationService(this._eventPubSubService, this.sharedService, this.backendUtilityService);
 
@@ -268,6 +271,8 @@ export class AureliaSlickgridCustomElement {
     if (this.gridOptions.darkMode) {
       this.setDarkMode(true);
     }
+
+    this.suggestDateParsingWhenHelpful();
   }
 
   initialization(eventHandler: SlickEventHandler) {
@@ -612,6 +617,8 @@ export class AureliaSlickgridCustomElement {
       this.grid.autosizeColumns();
       this._isAutosizeColsCalled = true;
     }
+
+    this.suggestDateParsingWhenHelpful();
   }
 
   datasetHierarchicalChanged(newHierarchicalDataset: any[] | undefined) {
@@ -745,6 +752,7 @@ export class AureliaSlickgridCustomElement {
           this.handleOnItemCountChanged(dataView.getFilteredItemCount() || 0, dataView.getItemCount() || 0);
         });
         this._eventHandler.subscribe(dataView.onSetItemsCalled, (_e, args) => {
+          this.sharedService.isItemsDateParsed = false;
           this.handleOnItemCountChanged(dataView.getFilteredItemCount() || 0, args.itemCount);
 
           // when user has resize by content enabled, we'll force a full width calculation since we change our entire dataset
@@ -1534,6 +1542,15 @@ export class AureliaSlickgridCustomElement {
         editorClass: column.editor && this.container.getFactory(column.editor.model).Type,
       };
     });
+  }
+
+  protected suggestDateParsingWhenHelpful() {
+    if (this.dataview?.getItemCount() > WARN_NO_PREPARSE_DATE_SIZE && !this.gridOptions.preParseDateColumns && this.grid.getColumns().some(c => isColumnDateType(c.type))) {
+      console.warn(
+        '[Slickgrid-Universal] For getting better perf, we suggest you enable the `preParseDateColumns` grid option, ' +
+        'for more info visit:: https://ghiscoding.gitbook.io/slickgrid-universal/column-functionalities/sorting#pre-parse-date-columns-for-better-perf'
+      );
+    }
   }
 
   /**

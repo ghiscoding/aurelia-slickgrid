@@ -1,5 +1,5 @@
 import { customElement } from 'aurelia';
-import { type Column, type RowDetailViewOption, SharedService, SlickEvent, SlickEventData, SlickEventHandler, type SlickGrid, SlickRowSelectionModel } from '@slickgrid-universal/common';
+import { type Column, type RowDetailViewOption, SlickEvent, SlickEventData, SlickEventHandler, type SlickGrid, SlickRowSelectionModel } from '@slickgrid-universal/common';
 import { EventPubSubService } from '@slickgrid-universal/event-pub-sub';
 
 import type { GridOption } from '../../models/gridOption.interface';
@@ -175,7 +175,6 @@ describe('SlickRowDetailView', () => {
       gridOptionsMock.rowDetailView!.preloadViewModel = ExamplePreload;
       gridOptionsMock.rowDetailView!.viewModel = ExampleLoader;
       columnsMock = [{ id: 'field1', field: 'field1', width: 100, cssClass: 'red' }];
-      jest.spyOn(SharedService.prototype, 'slickGrid', 'get').mockReturnValue(gridStub);
       jest.spyOn(gridStub, 'getOptions').mockReturnValue(gridOptionsMock);
       jest.clearAllMocks();
       gridStub.onColumnsReordered = new SlickEvent();

@@ -20,7 +20,7 @@ import {
 function randomBetween(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
-const NB_ITEMS = 1500;
+const NB_ITEMS = 5500;
 const URL_SAMPLE_COLLECTION_DATA = 'assets/data/collection_500_numbers.json';
 
 export class Example4 {
@@ -222,7 +222,12 @@ export class Example4 {
         ],
       },
       externalResources: [new ExcelExportService()],
+      preParseDateColumns: '__' // or true
     };
+  }
+
+  logItems() {
+    console.log(this.aureliaGrid.dataView?.getItems());
   }
 
   mockData(itemCount: number, startingIndex = 0): any[] {

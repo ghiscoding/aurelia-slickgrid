@@ -42,6 +42,9 @@
         click.trigger="setSortingDynamically()">
   Set Sorting Dynamically
 </button>
+<button class="btn btn-outline-secondary btn-sm btn-icon" click.trigger="logItems()">
+  <span title="console.log all dataset items">Log Items</span>
+</button>
 
 <aurelia-slickgrid grid-id="grid4"
                     column-definitions.bind="columnDefinitions"
