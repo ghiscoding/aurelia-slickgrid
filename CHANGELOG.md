@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.8.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.7.0...v8.8.0) (2024-09-29)
+
+### Features
+
+* option to improve Date Sorting by pre-parsing date items only once ([#1268](https://github.com/ghiscoding/aurelia-slickgrid/issues/1268)) ([3161d98](https://github.com/ghiscoding/aurelia-slickgrid/commit/3161d98adb1ae19887f170a42f93a4e5a1389803)) - by @ghiscoding
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies ([#1267](https://github.com/ghiscoding/aurelia-slickgrid/issues/1267)) ([64f3cb2](https://github.com/ghiscoding/aurelia-slickgrid/commit/64f3cb24e0867a0a9ab5a8fc8bd1310445d3354f)) - by @renovate-bot
+* redraw all open row details whenever the grid is re-rendered ([#1269](https://github.com/ghiscoding/aurelia-slickgrid/issues/1269)) ([4ecb439](https://github.com/ghiscoding/aurelia-slickgrid/commit/4ecb4393a8033ddc4c0f68a2c6242dc6cb0da21f)) - by @ghiscoding
+
 ## [8.7.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.6.2...v8.7.0) (2024-09-14)
 
 ### Bug Fixes
