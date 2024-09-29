@@ -32,6 +32,7 @@
     "cypress:open": "cypress open --config-file test/cypress.config.ts",
     "cypress:ci": "cypress run --config-file test/cypress.config.ts",
     "lint": "eslint --cache .",
+    "lint:fix": "eslint --fix .",
     "preview:publish": "lerna publish from-package --dry-run --yes",
     "preview:version": "lerna version --dry-run --yes",
     "test:ci": "jest --runInBand --coverage=true --ci --config ./test/jest.config.ts",
