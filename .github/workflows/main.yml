@@ -64,6 +64,9 @@ jobs:
       - name: Build Plugin
         run: pnpm build
 
+      - name: Lint
+        run: pnpm lint
+
       - name: Run Jest unit tests
         if: ${{ !contains(github.event.head_commit.message, 'chore(release)') }}
         run: pnpm test:ci
