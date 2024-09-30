@@ -8,7 +8,7 @@ import type { AureliaViewOutput, ViewModelBindableInputData } from '../models/in
 export class AureliaUtilService {
   constructor(private readonly au: IAurelia = resolve(IAurelia)) { }
 
-  async createAureliaViewModelAddToSlot(viewModel: Constructable, bindableData?: ViewModelBindableInputData, targetElement?: HTMLElement | Element): Promise<AureliaViewOutput | null> {
+  async createAureliaViewModelAddToSlot(viewModel: Constructable, bindableData?: ViewModelBindableInputData, targetElement?: HTMLElement): Promise<AureliaViewOutput | null> {
     if (!targetElement) {
       return null;
     }
