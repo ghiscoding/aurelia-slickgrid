@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 $slick-button-border-color: #ababab !default;
 @import '@slickgrid-universal/common/dist/styles/sass/slickgrid-theme-bootstrap.scss';
 
@@ -29,7 +31,7 @@ $slick-button-border-color: #ababab !default;
   justify-content: center;
   text-align: center;
   &:hover {
-    border-color: darken($slick-button-border-color, 10%);
+    border-color: color.adjust($slick-button-border-color, $lightness: -10%);
   }
 }
 

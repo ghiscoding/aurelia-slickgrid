@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 $slick-input-focus-box-shadow: 0 0 0 0.25rem #0d6efd40;
 $slick-button-border-color: #ababab !default;
 $navbar-height: 56px;
@@ -146,7 +148,7 @@ outline: 0 none;
   justify-content: center;
   text-align: center;
   &:hover {
-    border-color: darken($slick-button-border-color, 10%);
+    border-color: color.adjust($slick-button-border-color, $lightness: -10%);
   }
 }
 
@@ -168,7 +170,7 @@ outline: 0 none;
   text-align: center;
 
   &:hover {
-    border-color: darken($slick-button-border-color, 10%);
+    border-color: color.adjust($slick-button-border-color, $lightness: -10%);
   }
 }
 
