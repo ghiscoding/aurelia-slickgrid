@@ -239,7 +239,7 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
   async renderPreloadView() {
     const containerElements = this.gridContainerElement.getElementsByClassName(`${PRELOAD_CONTAINER_PREFIX}`);
     if (this._preloadViewModel && containerElements?.length >= 0) {
-      await this.aureliaUtilService.createAureliaViewModelAddToSlot(this._preloadViewModel, undefined, containerElements[containerElements.length - 1]);
+      await this.aureliaUtilService.createAureliaViewModelAddToSlot(this._preloadViewModel, undefined, containerElements[containerElements.length - 1] as HTMLElement);
     }
   }
 
@@ -254,7 +254,7 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
         dataView: this.dataView,
         parent: this.rowDetailViewOptions?.parent,
       } as ViewModelBindableInputData;
-      const aureliaComp = await this.aureliaUtilService.createAureliaViewModelAddToSlot(this._viewModel, bindableData, containerElements[containerElements.length - 1]);
+      const aureliaComp = await this.aureliaUtilService.createAureliaViewModelAddToSlot(this._viewModel, bindableData, containerElements[containerElements.length - 1] as HTMLElement);
       const slotObj = this._slots.find(obj => obj.id === item[this.datasetIdPropName]);
 
       if (slotObj && aureliaComp) {
