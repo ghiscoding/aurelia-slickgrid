@@ -19,18 +19,18 @@
     "/dist",
     "/src"
   ],
-  "module": "./dist/esm/index.js",
-  "types": "./dist/types/index.d.ts",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/types/index.d.ts",
-      "default": "./dist/esm/index.js"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
     },
     "./package.json": "./package.json"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/ghiscoding/aurelia-slickgrid.git",
+    "url": "git+https://github.com/ghiscoding/aurelia-slickgrid.git",
     "directory": "packages/aurelia-slickgrid"
   },
   "publishConfig": {
