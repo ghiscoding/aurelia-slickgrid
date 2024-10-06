@@ -47,7 +47,7 @@ For a full compatibility table of Aurelia-Slickgrid with Slickgrid-Universal, yo
 ### Styling Themes
 
 Multiple styling themes are available
-- Bootstrap (see all Angular-Slickgrid [live demos](https://ghiscoding.github.io/Angular-Slickgrid/))
+- Bootstrap (see all Aurelia-Slickgrid [live demos](https://ghiscoding.github.io/aurelia-slickgrid/))
 - Material (see [Slickgrid-Universal](https://ghiscoding.github.io/slickgrid-universal/#/example07))
 - Salesforce (see [Slickgrid-Universal](https://ghiscoding.github.io/slickgrid-universal/#/example16))
 
