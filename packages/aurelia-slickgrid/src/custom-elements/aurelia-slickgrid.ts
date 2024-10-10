@@ -686,7 +686,7 @@ export class AureliaSlickgridCustomElement {
         if (gridOptions.enableTranslate) {
           this.extensionService.translateAllExtensions(args.newLocale);
           if ((gridOptions.createPreHeaderPanel && gridOptions.createTopHeaderPanel) || (gridOptions.createPreHeaderPanel && !gridOptions.enableDraggableGrouping)) {
-            this.headerGroupingService.translateGroupingAndColSpan();
+            this.headerGroupingService.translateHeaderGrouping();
           }
         }
       })
