@@ -57,7 +57,7 @@
     "cypress": "^13.15.0",
     "cypress-real-events": "^1.13.0",
     "eslint": "^9.11.1",
-    "eslint-plugin-cypress": "^3.5.0",
+    "eslint-plugin-cypress": "^4.0.0",
     "eslint-plugin-n": "^17.10.3",
     "eslint-plugin-prefer-arrow": "^1.2.3",
     "globals": "^15.9.0",
