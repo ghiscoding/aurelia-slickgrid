@@ -26,17 +26,17 @@ export interface CreatedView extends AureliaViewOutput {
 
 @transient()
 export class SlickRowDetailView extends UniversalSlickRowDetailView {
-  // override _eventHandler!: SlickEventHandler;
   protected _preloadViewModel?: Constructable;
   protected _slots: CreatedView[] = [];
-  protected _viewModel?: Constructable;
   protected _subscriptions: EventSubscription[] = [];
   protected _userProcessFn?: (item: any) => Promise<any>;
-
+  protected _viewModel?: Constructable;
+  
   constructor(
     protected readonly aureliaUtilService: AureliaUtilService = resolve(AureliaUtilService),
     private readonly eventPubSubService: EventPubSubService = resolve(EventPubSubService),
-    private readonly gridContainerElement: HTMLElement = resolve(HTMLElement)) {
+    private readonly gridContainerElement: HTMLElement = resolve(HTMLElement)
+  ) {
     super(eventPubSubService);
   }
 
@@ -54,7 +54,7 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
   set eventHandler(eventHandler: SlickEventHandler) {
     this._eventHandler = eventHandler;
   }
-  /** Getter for the Grid Options pulled through the Grid Object */
+  
   get gridOptions(): GridOption {
     return (this._grid?.getOptions() || {}) as GridOption;
   }
@@ -272,7 +272,7 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
       const container = this.gridContainerElement.getElementsByClassName(`${ROW_DETAIL_CONTAINER_PREFIX}${this._slots[0].id}`);
       if (container?.length) {
         expandedView.controller.deactivate(expandedView.controller, null);
-        container[0].innerHTML = '';
+        container[0].textContent = '';
         return expandedView;
       }
     }
@@ -288,21 +288,17 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
     // expanding
     if (args?.item?.__collapsed) {
       // expanding row detail
-      if (args?.item) {
-        const viewInfo: CreatedView = {
-          id: args.item[this.datasetIdPropName],
-          dataContext: args.item
-        };
-        const idPropName = this.gridOptions.datasetIdPropertyName || 'id';
-        addToArrayWhenNotExists(this._slots, viewInfo, idPropName);
-      }
+      const viewInfo: CreatedView = {
+        id: args.item[this.datasetIdPropName],
+        dataContext: args.item
+      };
+      const idPropName = this.gridOptions.datasetIdPropertyName || 'id';
+      addToArrayWhenNotExists(this._slots, viewInfo, idPropName);
     } else {
       // collapsing, so dispose of the View/ViewSlot
       const foundSlotIndex = this._slots.findIndex((slot: CreatedView) => slot.id === args.item[this.datasetIdPropName]);
-      if (foundSlotIndex >= 0) {
-        if (this.disposeViewSlot(this._slots[foundSlotIndex])) {
-          this._slots.splice(foundSlotIndex, 1);
-        }
+      if (foundSlotIndex >= 0 && this.disposeViewSlot(this._slots[foundSlotIndex])) {
+        this._slots.splice(foundSlotIndex, 1);
       }
     }
   }
@@ -353,8 +349,8 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
       }
 
       if (!awaitedItemDetail || !awaitedItemDetail.hasOwnProperty(this.datasetIdPropName)) {
-        throw new Error(`[Aurelia-Slickgrid] could not process the Row Detail, you must make sure that your "process" callback
-          (a Promise or an HttpClient call returning an Observable) returns an item object that has an "${this.datasetIdPropName}" property`);
+        throw new Error('[Aurelia-Slickgrid] could not process the Row Detail, please make sure that your "process" callback ' +
+          '(a Promise or an HttpClient call returning an Observable) returns an item object that has an "${this.datasetIdPropName}" property');
       }
 
       // notify the plugin with the new item details

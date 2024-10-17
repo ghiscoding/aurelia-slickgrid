@@ -5,7 +5,6 @@ import { EventPubSubService } from '@slickgrid-universal/event-pub-sub';
 import type { GridOption } from '../../models/gridOption.interface';
 import type { AureliaUtilService } from '../../services';
 import type { RowDetailView } from '../../models';
-// import { HttpStub } from '../../../../../test/httpClientStub';
 import { SlickRowDetailView } from '../slickRowDetailView';
 
 jest.mock('@slickgrid-universal/row-detail-view-plugin');
@@ -656,7 +655,7 @@ describe('SlickRowDetailView', () => {
       try {
         await gridOptionsMock.rowDetailView!.process(mockItem);
       } catch (e) {
-        expect(e.toString()).toContain(`[Aurelia-Slickgrid] could not process the Row Detail, you must make sure that your "process" callback`);
+        expect(e.toString()).toContain(`Error: [Aurelia-Slickgrid] could not process the Row Detail, please make sure that your "process" callback`);
       }
     });
 
