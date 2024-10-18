@@ -13,6 +13,7 @@ import { DateFormatValueConverter, DecimalValueConverter, StringifyValueConverte
 import 'bootstrap';
 
 // dynamic components that can be enhanced in Example 19, 26
+import { CustomPagerComponent } from './examples/slickgrid/example42-pager';
 import { CustomTitleFormatter } from './examples/slickgrid/custom-title-formatter';
 import { EditorSelect } from './examples/slickgrid/editor-select';
 import { FilterSelect } from './examples/slickgrid/filter-select';
@@ -32,6 +33,7 @@ Aurelia
 
     // dynamic components to enhance
     CustomTitleFormatter,
+    CustomPagerComponent,
     Example19DetailView,
     Example19Preload,
     EditorSelect,

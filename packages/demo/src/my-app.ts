@@ -46,6 +46,7 @@ export class MyApp {
     { path: 'example39', component: () => import('./examples/slickgrid/example39'), title: '39- Infinite Scroll with GraphQL' },
     { path: 'example40', component: () => import('./examples/slickgrid/example40'), title: '40- Infinite Scroll from JSON data' },
     { path: 'example41', component: () => import('./examples/slickgrid/example41'), title: '41- Drag & Drop' },
+    { path: 'example42', component: () => import('./examples/slickgrid/example42'), title: '42- Custom Pagination' },
     { path: 'home', component: () => import('./home-page'), title: 'Home' },
   ];
 

@@ -1,5 +1,6 @@
 import type {
   BackendService,
+  BasePaginationComponent,
   ExtensionService,
   FilterService,
   GridEventService,
@@ -53,6 +54,9 @@ export interface AureliaGridInstance {
 
   /** Grouping (and colspan) Service */
   groupingService: GroupingAndColspanService;
+
+  /** Pagination Component */
+  paginationComponent?: BasePaginationComponent;
 
   /** Pagination Service (allows you to programmatically go to first/last page, etc...) */
   paginationService?: PaginationService;
