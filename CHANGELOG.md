@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.9.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.8.0...v8.9.0) (2024-10-19)
+
+### Features
+
+* allow providing a Custom Pagination Component ([#1275](https://github.com/ghiscoding/aurelia-slickgrid/issues/1275)) ([247aa56](https://github.com/ghiscoding/aurelia-slickgrid/commit/247aa56229098041de9dd8a9dc99c70dd9b31ee9)) - by @ghiscoding
+
+### Bug Fixes
+
+* **deps:** update Aurelia 2.Beta 22 ([#1270](https://github.com/ghiscoding/aurelia-slickgrid/issues/1270)) ([7d8ae06](https://github.com/ghiscoding/aurelia-slickgrid/commit/7d8ae06acd91e5e9251d221445f8dc5a3851d04c)) - by @ghiscoding
+* improve project exports & types ([3786f34](https://github.com/ghiscoding/aurelia-slickgrid/commit/3786f343cc565cab270df09717d3cc5d521b10fe)) - by @ghiscoding
+* Row Detail redraw all Views when GridMenu/ColPicker columns changes ([#1277](https://github.com/ghiscoding/aurelia-slickgrid/issues/1277)) ([8f549b0](https://github.com/ghiscoding/aurelia-slickgrid/commit/8f549b0e83d5e228e1e6ddd65bb57c0c4e81ef9b)) - by @ghiscoding
+
+### Reverts
+
+* Revert "fix: redraw all open row details whenever the grid is re-rendered (#1…" (#1276) ([8527bb2](https://github.com/ghiscoding/aurelia-slickgrid/commit/8527bb2494e4baa8c77a049cb2e920d63c6b7a60)), closes [#1](https://github.com/ghiscoding/aurelia-slickgrid/issues/1) [#1276](https://github.com/ghiscoding/aurelia-slickgrid/issues/1276) - by @ghiscoding
+
 ## [8.8.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.7.0...v8.8.0) (2024-09-29)
 
 ### Features
