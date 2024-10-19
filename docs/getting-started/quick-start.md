@@ -31,12 +31,10 @@ import '@slickgrid-universal/common/dist/styles/css/slickgrid-theme-bootstrap.cs
 You could also compile the SASS files with your own customization, for that simply take any of the [_variables.scss](https://github.com/ghiscoding/slickgrid-universal/blob/master/packages/common/src/styles/_variables.scss) (without the `!default` flag) variable from the file and make sure to import the Bootstrap Theme afterward. For example, you could modify your `style.scss` with the following changes:
 
 ```scss
-/* for example, let's change the mouse hover color */
-$cell-odd-background-color: lightyellow;
-$row-mouse-hover-color: lightgreen;
-
-/* make sure to add the @use the SlickGrid Bootstrap Theme AFTER the variables changes */
-@use '../node_modules/@slickgrid-universal/common/dist/styles/sass/slickgrid-theme-bootstrap.scss';
+@use '../node_modules/@slickgrid-universal/common/dist/styles/sass/slickgrid-theme-bootstrap.scss' with (
+  $cell-odd-background-color: lightyellow,
+  $row-mouse-hover-color: lightgreen
+);
 ```
 
 ### 3. Include it in your App
