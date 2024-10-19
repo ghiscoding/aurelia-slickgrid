@@ -55,6 +55,14 @@ module.exports = ({ production, node } = {}, { server } = {}, { analyze } = {}) 
       }
     },
     devServer: {
+      client: {
+        overlay: {
+          errors: true,
+          runtimeErrors: true,
+          warnings: false
+        },
+        progress: true,
+      },
       historyApiFallback: true,
       open: !process.env.CI,
       port: 9000

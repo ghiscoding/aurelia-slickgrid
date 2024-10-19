@@ -1,12 +1,14 @@
 @use 'sass:color';
 
-$slick-input-focus-box-shadow: 0 0 0 0.25rem #0d6efd40;
-$slick-button-border-color: #ababab !default;
 $navbar-height: 56px;
 $side-menu-width: 250px;
+$button-border-color: #ababab;
 
-/* make sure to add the @import the SlickGrid Bootstrap Theme AFTER the variables changes */
-@import '@slickgrid-universal/common/dist/styles/sass/slickgrid-theme-bootstrap.scss';
+/* make sure to add the @use the SlickGrid Bootstrap Theme AFTER the variables changes */
+@use '@slickgrid-universal/common/dist/styles/sass/slickgrid-theme-bootstrap.scss' with (
+  $slick-input-focus-box-shadow: 0 0 0 0.25rem #0d6efd40,
+  $slick-button-border-color: $button-border-color
+);
 
 .btn-group-xs > .btn, .btn-xs {
   padding  : 1px 5px;
@@ -143,12 +145,12 @@ outline: 0 none;
 .button-style {
   cursor: pointer;
   background-color: white;
-  border: 1px solid #{$slick-button-border-color};
+  border: 1px solid #{$button-border-color};
   border-radius: 2px;
   justify-content: center;
   text-align: center;
   &:hover {
-    border-color: color.adjust($slick-button-border-color, $lightness: -10%);
+    border-color: color.adjust($button-border-color, $lightness: -10%);
   }
 }
 
@@ -163,14 +165,14 @@ outline: 0 none;
 
 .button-style {
   cursor: pointer;
-  background-color: var(--slick-button-style-bg-color, $slick-button-style-bg-color);
-  border: 1px solid #{var(--slick-button-border-color, $slick-button-border-color)};
+  background-color: var(--slick-button-style-bg-color, #fff);
+  border: 1px solid #{var(--slick-button-border-color, $button-border-color)};
   border-radius: 2px;
   justify-content: center;
   text-align: center;
 
   &:hover {
-    border-color: color.adjust($slick-button-border-color, $lightness: -10%);
+    border-color: color.adjust($button-border-color, $lightness: -10%);
   }
 }
 

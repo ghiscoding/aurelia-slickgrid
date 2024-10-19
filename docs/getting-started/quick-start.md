@@ -35,8 +35,8 @@ You could also compile the SASS files with your own customization, for that simp
 $cell-odd-background-color: lightyellow;
 $row-mouse-hover-color: lightgreen;
 
-/* make sure to add the @import the SlickGrid Bootstrap Theme AFTER the variables changes */
-@import '../node_modules/@slickgrid-universal/common/dist/styles/sass/slickgrid-theme-bootstrap.scss';
+/* make sure to add the @use the SlickGrid Bootstrap Theme AFTER the variables changes */
+@use '../node_modules/@slickgrid-universal/common/dist/styles/sass/slickgrid-theme-bootstrap.scss';
 ```
 
 ### 3. Include it in your App
