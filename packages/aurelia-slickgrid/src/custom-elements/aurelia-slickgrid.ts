@@ -1501,7 +1501,7 @@ export class AureliaSlickgridCustomElement {
 
       if (this.slickPagination) {
         this.slickPagination.init(this.grid, this.paginationService, this._eventPubSubService, this.translaterService);
-        this.slickPagination.renderPagination(this.elm as HTMLElement);
+        this.slickPagination.renderPagination(this.elm.querySelector('div') as HTMLDivElement);
         this._isPaginationInitialized = true;
       }
     } else if (!showPagination) {
