@@ -1,6 +1,9 @@
-// interfaces/types
+import type { ICollectionObserver, ICollectionSubscriber } from '@aurelia/runtime';
+import { bindable, BindingMode, customElement, IContainer, IEventAggregator, type IDisposable, IObserverLocator, resolve } from 'aurelia';
+import { dequal } from 'dequal/lite';
 import type {
   BackendService,
+  BasePaginationComponent,
   AutocompleterEditor,
   BackendServiceApi,
   BackendServiceOption,
@@ -12,10 +15,9 @@ import type {
   Locale,
   Metrics,
   Pagination,
+  PaginationMetadata,
   SelectEditor,
-  ServicePagination,
 } from '@slickgrid-universal/common';
-
 import {
   // services
   autoAddEditorFormatterToColumnsWithEditor,
@@ -52,10 +54,6 @@ import { SlickFooterComponent } from '@slickgrid-universal/custom-footer-compone
 import { SlickEmptyWarningComponent } from '@slickgrid-universal/empty-warning-component';
 import { SlickPaginationComponent } from '@slickgrid-universal/pagination-component';
 import { extend } from '@slickgrid-universal/utils';
-
-import { bindable, BindingMode, customElement, IContainer, IEventAggregator, type IDisposable, IObserverLocator, resolve } from 'aurelia';
-import type { ICollectionObserver, ICollectionSubscriber } from '@aurelia/runtime';
-import { dequal } from 'dequal/lite';
 
 import { Constants } from '../constants';
 import { GlobalGridOptions } from '../global-grid-options';
@@ -117,7 +115,8 @@ export class AureliaSlickgridCustomElement {
   // components / plugins
   slickEmptyWarning: SlickEmptyWarningComponent | undefined;
   slickFooter: SlickFooterComponent | undefined;
-  slickPagination: SlickPaginationComponent | undefined;
+  paginationComponent: BasePaginationComponent | undefined;
+  slickPagination: BasePaginationComponent | undefined;
   slickRowDetailView?: SlickRowDetailView;
 
   // services
@@ -193,7 +192,7 @@ export class AureliaSlickgridCustomElement {
 
     this.gridStateService = new GridStateService(this.extensionService, this.filterService, this._eventPubSubService, this.sharedService, this.sortService, this.treeDataService);
     this.gridService = new GridService(this.gridStateService, this.filterService, this._eventPubSubService, this.paginationService, this.sharedService, this.sortService, this.treeDataService);
-    this.headerGroupingService = new HeaderGroupingService(this.extensionUtility, this._eventPubSubService);
+    this.headerGroupingService = new HeaderGroupingService(this.extensionUtility);
 
     this.serviceList = [
       this.extensionService,
@@ -478,6 +477,7 @@ export class AureliaSlickgridCustomElement {
       groupingService: this.headerGroupingService,
       headerGroupingService: this.headerGroupingService,
       extensionService: this.extensionService,
+      paginationComponent: this.slickPagination,
       paginationService: this.paginationService,
       resizerService: this.resizerService,
       sortService: this.sortService,
@@ -943,7 +943,7 @@ export class AureliaSlickgridCustomElement {
    * On a Pagination changed, we will trigger a Grid State changed with the new pagination info
    * Also if we use Row Selection or the Checkbox Selector with a Backend Service (Odata, GraphQL), we need to reset any selection
    */
-  paginationChanged(pagination: ServicePagination) {
+  paginationChanged(pagination: PaginationMetadata) {
     const isSyncGridSelectionEnabled = this.gridStateService?.needToPreserveRowSelection() ?? false;
     if (this.grid && !isSyncGridSelectionEnabled && this.gridOptions?.backendServiceApi && (this.gridOptions.enableRowSelection || this.gridOptions.enableCheckboxSelector)) {
       this.grid.setSelectedRows([]);
@@ -1175,7 +1175,7 @@ export class AureliaSlickgridCustomElement {
       this.paginationService.totalItems = this.totalItems;
       this.paginationService.init(this.grid, paginationOptions, this.backendServiceApi);
       this.subscriptions.push(
-        this._eventPubSubService.subscribe('onPaginationChanged', (paginationChanges: ServicePagination) => this.paginationChanged(paginationChanges)),
+        this._eventPubSubService.subscribe('onPaginationChanged', (paginationChanges: PaginationMetadata) => this.paginationChanged(paginationChanges)),
         this._eventPubSubService.subscribe('onPaginationVisibilityChanged', (visibility: { visible: boolean }) => {
           this.showPagination = visibility?.visible ?? false;
           if (this.gridOptions?.backendServiceApi) {
@@ -1484,11 +1484,26 @@ export class AureliaSlickgridCustomElement {
    * @param {Boolean} showPagination - show (new render) or not (dispose) the Pagination
    * @param {Boolean} shouldDisposePaginationService - when disposing the Pagination, do we also want to dispose of the Pagination Service? (defaults to True)
    */
-  protected renderPagination(showPagination = true) {
-    if (this.gridOptions?.enablePagination && !this._isPaginationInitialized && showPagination) {
-      this.slickPagination = new SlickPaginationComponent(this.paginationService, this._eventPubSubService, this.sharedService, this.translaterService);
-      this.slickPagination.renderPagination(this.elm.querySelector('div') as HTMLDivElement);
-      this._isPaginationInitialized = true;
+  protected async renderPagination(showPagination = true) {
+    if (this.grid && this.gridOptions?.enablePagination && !this._isPaginationInitialized && showPagination) {
+      if (this.gridOptions.customPaginationComponent) {
+        const paginationContainer = document.createElement('section');
+        this.elm.appendChild(paginationContainer);
+        const vm = await this.aureliaUtilService.createAureliaViewModelAddToSlot(this.gridOptions.customPaginationComponent!, undefined, paginationContainer);
+        const elmBindingContext = vm?.controller?.children?.[0].scope.bindingContext;
+        if (elmBindingContext) {
+          this.instances!.paginationComponent = elmBindingContext as BasePaginationComponent;
+          this.slickPagination = elmBindingContext as BasePaginationComponent;
+        }
+      } else {
+        this.slickPagination = new SlickPaginationComponent();
+      }
+
+      if (this.slickPagination) {
+        this.slickPagination.init(this.grid, this.paginationService, this._eventPubSubService, this.translaterService);
+        this.slickPagination.renderPagination(this.elm.querySelector('div') as HTMLDivElement);
+        this._isPaginationInitialized = true;
+      }
     } else if (!showPagination) {
       this.slickPagination?.dispose();
       this._isPaginationInitialized = false;
@@ -1546,7 +1561,7 @@ export class AureliaSlickgridCustomElement {
   }
 
   protected suggestDateParsingWhenHelpful() {
-    if (/* !this.gridOptions.silenceWarnings && */ this.dataview?.getItemCount() > WARN_NO_PREPARSE_DATE_SIZE && !this.gridOptions.preParseDateColumns && this.grid.getColumns().some(c => isColumnDateType(c.type))) {
+    if (!this.gridOptions.silenceWarnings && this.dataview?.getItemCount() > WARN_NO_PREPARSE_DATE_SIZE && !this.gridOptions.preParseDateColumns && this.grid.getColumns().some(c => isColumnDateType(c.type))) {
       console.warn(
         '[Slickgrid-Universal] For getting better perf, we suggest you enable the `preParseDateColumns` grid option, ' +
         'for more info visit => https://ghiscoding.gitbook.io/aurelia-slickgrid/column-functionalities/sorting#pre-parse-date-columns-for-better-perf'

@@ -1,7 +1,9 @@
 @use 'sass:color';
+$button-border-color: #ababab;
 
-$slick-button-border-color: #ababab !default;
-@import '@slickgrid-universal/common/dist/styles/sass/slickgrid-theme-bootstrap.scss';
+@use '@slickgrid-universal/common/dist/styles/sass/slickgrid-theme-bootstrap.scss' with (
+  $slick-button-border-color: $button-border-color
+);
 
 // --
 // Custom Tooltips CSS Variables (or SASS equivalent)
@@ -26,12 +28,12 @@ $slick-button-border-color: #ababab !default;
 .button-style {
   cursor: pointer;
   background-color: white;
-  border: 1px solid #{$slick-button-border-color};
+  border: 1px solid #{$button-border-color};
   border-radius: 2px;
   justify-content: center;
   text-align: center;
   &:hover {
-    border-color: color.adjust($slick-button-border-color, $lightness: -10%);
+    border-color: color.adjust($button-border-color, $lightness: -10%);
   }
 }
 
