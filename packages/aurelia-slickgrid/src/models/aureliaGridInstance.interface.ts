@@ -6,7 +6,7 @@ import type {
   GridEventService,
   GridService,
   GridStateService,
-  GroupingAndColspanService,
+  HeaderGroupingService,
   PaginationService,
   ResizerService,
   SlickDataView,
@@ -52,8 +52,11 @@ export interface AureliaGridInstance {
   /** Grid State Service */
   gridStateService: GridStateService;
 
+  /** @deprecated @use `headerGroupingService` */
+  groupingService: HeaderGroupingService;
+
   /** Grouping (and colspan) Service */
-  groupingService: GroupingAndColspanService;
+  headerGroupingService: HeaderGroupingService;
 
   /** Pagination Component */
   paginationComponent?: BasePaginationComponent;

@@ -34,7 +34,7 @@ import {
   GridService,
   GridStateService,
   GridStateType,
-  GroupingAndColspanService,
+  HeaderGroupingService,
   isColumnDateType,
   type Observable,
   PaginationService,
@@ -129,7 +129,7 @@ export class AureliaSlickgridCustomElement {
   gridEventService: GridEventService;
   gridService: GridService;
   gridStateService: GridStateService;
-  groupingService: GroupingAndColspanService;
+  headerGroupingService: HeaderGroupingService;
   paginationService: PaginationService;
   resizerService!: ResizerService;
   rxjs?: RxJsFacade;
@@ -192,7 +192,7 @@ export class AureliaSlickgridCustomElement {
 
     this.gridStateService = new GridStateService(this.extensionService, this.filterService, this._eventPubSubService, this.sharedService, this.sortService, this.treeDataService);
     this.gridService = new GridService(this.gridStateService, this.filterService, this._eventPubSubService, this.paginationService, this.sharedService, this.sortService, this.treeDataService);
-    this.groupingService = new GroupingAndColspanService(this.extensionUtility, this._eventPubSubService);
+    this.headerGroupingService = new HeaderGroupingService(this.extensionUtility, this._eventPubSubService);
 
     this.serviceList = [
       this.extensionService,
@@ -200,7 +200,7 @@ export class AureliaSlickgridCustomElement {
       this.gridEventService,
       this.gridService,
       this.gridStateService,
-      this.groupingService,
+      this.headerGroupingService,
       this.paginationService,
       this.resizerService,
       this.sortService,
@@ -215,7 +215,7 @@ export class AureliaSlickgridCustomElement {
     this.containerService.registerInstance('GridEventService', this.gridEventService);
     this.containerService.registerInstance('GridService', this.gridService);
     this.containerService.registerInstance('GridStateService', this.gridStateService);
-    this.containerService.registerInstance('GroupingAndColspanService', this.groupingService);
+    this.containerService.registerInstance('HeaderGroupingService', this.headerGroupingService);
     this.containerService.registerInstance('PaginationService', this.paginationService);
     this.containerService.registerInstance('ResizerService', this.resizerService);
     this.containerService.registerInstance('SharedService', this.sharedService);
@@ -474,7 +474,8 @@ export class AureliaSlickgridCustomElement {
       gridEventService: this.gridEventService,
       gridStateService: this.gridStateService,
       gridService: this.gridService,
-      groupingService: this.groupingService,
+      groupingService: this.headerGroupingService,
+      headerGroupingService: this.headerGroupingService,
       extensionService: this.extensionService,
       paginationComponent: this.slickPagination,
       paginationService: this.paginationService,
@@ -685,7 +686,7 @@ export class AureliaSlickgridCustomElement {
         if (gridOptions.enableTranslate) {
           this.extensionService.translateAllExtensions(args.newLocale);
           if ((gridOptions.createPreHeaderPanel && gridOptions.createTopHeaderPanel) || (gridOptions.createPreHeaderPanel && !gridOptions.enableDraggableGrouping)) {
-            this.groupingService.translateGroupingAndColSpan();
+            this.headerGroupingService.translateHeaderGrouping();
           }
         }
       })
@@ -1434,9 +1435,9 @@ export class AureliaSlickgridCustomElement {
     // when using Grouping/DraggableGrouping/Colspan register its Service
     if (
       ((this.gridOptions.createPreHeaderPanel && this.gridOptions.createTopHeaderPanel) || (this.gridOptions.createPreHeaderPanel && !this.gridOptions.enableDraggableGrouping))
-      && !this._registeredResources.some(r => r instanceof GroupingAndColspanService)
+      && !this._registeredResources.some(r => r instanceof HeaderGroupingService)
     ) {
-      this._registeredResources.push(this.groupingService);
+      this._registeredResources.push(this.headerGroupingService);
     }
 
     // when using Tree Data View, register its Service
