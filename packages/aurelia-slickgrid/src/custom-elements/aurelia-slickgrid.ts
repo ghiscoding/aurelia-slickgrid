@@ -192,7 +192,7 @@ export class AureliaSlickgridCustomElement {
 
     this.gridStateService = new GridStateService(this.extensionService, this.filterService, this._eventPubSubService, this.sharedService, this.sortService, this.treeDataService);
     this.gridService = new GridService(this.gridStateService, this.filterService, this._eventPubSubService, this.paginationService, this.sharedService, this.sortService, this.treeDataService);
-    this.headerGroupingService = new HeaderGroupingService(this.extensionUtility, this._eventPubSubService);
+    this.headerGroupingService = new HeaderGroupingService(this.extensionUtility);
 
     this.serviceList = [
       this.extensionService,
