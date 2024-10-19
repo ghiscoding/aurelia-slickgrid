@@ -31,7 +31,7 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
   protected _subscriptions: EventSubscription[] = [];
   protected _userProcessFn?: (item: any) => Promise<any>;
   protected _viewModel?: Constructable;
-  
+
   constructor(
     protected readonly aureliaUtilService: AureliaUtilService = resolve(AureliaUtilService),
     private readonly eventPubSubService: EventPubSubService = resolve(EventPubSubService),
@@ -54,7 +54,7 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
   set eventHandler(eventHandler: SlickEventHandler) {
     this._eventHandler = eventHandler;
   }
-  
+
   get gridOptions(): GridOption {
     return (this._grid?.getOptions() || {}) as GridOption;
   }
@@ -205,11 +205,10 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
           // on column sort/reorder, all row detail are collapsed so we can dispose of all the Views as well
           this._eventHandler.subscribe(this._grid.onSort, this.disposeAllViewSlot.bind(this));
 
-          // on filter changed, we need to re-render all Views
+          // redraw all Views whenever certain events are triggered
           this._subscriptions.push(
-            this.eventPubSubService?.subscribe('onFilterChanged', this.redrawAllViewSlots.bind(this)),
-            this.eventPubSubService?.subscribe('onGridMenuClearAllFilters', () => window.setTimeout(() => this.redrawAllViewSlots())),
-            this.eventPubSubService?.subscribe('onGridMenuClearAllSorting', () => window.setTimeout(() => this.redrawAllViewSlots())),
+            this.eventPubSubService?.subscribe(['onFilterChanged', 'onGridMenuColumnsChanged', 'onColumnPickerColumnsChanged'], this.redrawAllViewSlots.bind(this)),
+            this.eventPubSubService?.subscribe(['onGridMenuClearAllFilters', 'onGridMenuClearAllSorting'], () => window.setTimeout(() => this.redrawAllViewSlots())),
           );
         }
       }
