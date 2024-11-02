@@ -1,4 +1,5 @@
 import Aurelia from 'aurelia';
+import 'bootstrap';
 import { MyApp } from './my-app';
 // Css files imported in this main file are NOT processed by style-loader
 // They are for sharedStyles in shadowDOM.
@@ -10,7 +11,6 @@ import { I18nConfiguration } from '@aurelia/i18n';
 import Fetch from 'i18next-fetch-backend';
 import { RouterConfiguration } from '@aurelia/router';
 import { DateFormatValueConverter, DecimalValueConverter, StringifyValueConverter } from './examples/resources/value-converters';
-import 'bootstrap';
 
 // dynamic components that can be enhanced in Example 19, 26
 import { CustomPagerComponent } from './examples/slickgrid/example42-pager';
