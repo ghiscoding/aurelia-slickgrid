@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.9.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.9.0...v8.9.1) (2024-11-02)
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies ([#1279](https://github.com/ghiscoding/aurelia-slickgrid/issues/1279)) ([0af14d2](https://github.com/ghiscoding/aurelia-slickgrid/commit/0af14d23c2ec9c9f314126aea3ac14af9c16336f)) - by @renovate-bot
+
 ## [8.9.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.8.0...v8.9.0) (2024-10-19)
 
 ### Features
