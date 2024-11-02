@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.10.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.9.1...v8.10.0) (2024-11-02)
+
+### Features
+
+* bump to minor version ([729d38c](https://github.com/ghiscoding/aurelia-slickgrid/commit/729d38c06e4459965eb38077bbd90c0e2ce93218)) - by @ghiscoding
+* replace `[@import](https://github.com/import)` with `[@use](https://github.com/use)` to fix SASS 2.0 deprecations ([12d9096](https://github.com/ghiscoding/aurelia-slickgrid/commit/12d9096f24850b3a1d6abf3cd7eebe3118a7fd88)) - by @ghiscoding
+* replace `[@import](https://github.com/import)` with `[@use](https://github.com/use)` to fix SASS 2.0 deprecations ([c760439](https://github.com/ghiscoding/aurelia-slickgrid/commit/c760439656a58a9659f54893f242819477beda9f)) - by @ghiscoding
+
 ## [8.9.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.9.0...v8.9.1) (2024-11-02)
 
 ### Features

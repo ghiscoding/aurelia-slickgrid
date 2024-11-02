@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.10.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.9.1...v8.10.0) (2024-11-02)
+
+### Features
+
+* bump to minor version ([729d38c](https://github.com/ghiscoding/aurelia-slickgrid/commit/729d38c06e4459965eb38077bbd90c0e2ce93218)) - by @ghiscoding
+
 ## [8.9.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.9.0...v8.9.1) (2024-11-02)
 
 ### Bug Fixes
