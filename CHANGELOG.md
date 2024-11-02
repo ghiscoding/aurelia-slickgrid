@@ -7,20 +7,14 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Features
 
-* bump to minor version ([729d38c](https://github.com/ghiscoding/aurelia-slickgrid/commit/729d38c06e4459965eb38077bbd90c0e2ce93218)) - by @ghiscoding
-* replace `[@import](https://github.com/import)` with `[@use](https://github.com/use)` to fix SASS 2.0 deprecations ([12d9096](https://github.com/ghiscoding/aurelia-slickgrid/commit/12d9096f24850b3a1d6abf3cd7eebe3118a7fd88)) - by @ghiscoding
-* replace `[@import](https://github.com/import)` with `[@use](https://github.com/use)` to fix SASS 2.0 deprecations ([c760439](https://github.com/ghiscoding/aurelia-slickgrid/commit/c760439656a58a9659f54893f242819477beda9f)) - by @ghiscoding
+* switch to SASS `@use` and remove any `@import` to fix deprecations ([#1278](https://github.com/ghiscoding/aurelia-slickgrid/issues/1278)) ([d1a90af](https://github.com/ghiscoding/aurelia-slickgrid/commit/d1a90afd85822eca4e911abbce6b5c869acfbbf0)) - by @ghiscoding
 
-## [8.9.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.9.0...v8.9.1) (2024-11-02)
-
-### Features
-
-* switch to SASS `[@use](https://github.com/use)` and remove any `[@import](https://github.com/import)` to fix deprecations ([#1278](https://github.com/ghiscoding/aurelia-slickgrid/issues/1278)) ([d1a90af](https://github.com/ghiscoding/aurelia-slickgrid/commit/d1a90afd85822eca4e911abbce6b5c869acfbbf0)) - by @ghiscoding
 
 ### Bug Fixes
 
 * **deps:** update all non-major dependencies ([#1279](https://github.com/ghiscoding/aurelia-slickgrid/issues/1279)) ([0af14d2](https://github.com/ghiscoding/aurelia-slickgrid/commit/0af14d23c2ec9c9f314126aea3ac14af9c16336f)) - by @renovate-bot
 * more styling fixes after switching to [@use](https://github.com/use) instead of [@imports](https://github.com/imports) ([#1281](https://github.com/ghiscoding/aurelia-slickgrid/issues/1281)) ([00acc4a](https://github.com/ghiscoding/aurelia-slickgrid/commit/00acc4a86035ab908b566c1b5f2f42edbe975a40)) - by @ghiscoding
+
 
 ## [8.9.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.8.0...v8.9.0) (2024-10-19)
 
