@@ -19,7 +19,6 @@ import type {
   SelectEditor,
 } from '@slickgrid-universal/common';
 import {
-  // services
   autoAddEditorFormatterToColumnsWithEditor,
   BackendUtilityService,
   CollectionService,
