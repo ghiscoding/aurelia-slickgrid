@@ -65,9 +65,9 @@
   },
   "devDependencies": {
     "copyfiles": "^2.4.1",
-    "dompurify": "^3.2.0",
+    "dompurify": "^3.2.1",
     "rimraf": "^5.0.10",
     "tslib": "^2.8.1",
-    "typescript": "^5.6.3"
+    "typescript": "^5.7.2"
   }
 }
