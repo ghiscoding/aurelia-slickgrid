@@ -80,8 +80,8 @@
         <div class="row form-group">
           <label for="field1" class="col-sm-3 mb-2">Group by field(s)</label>
           <div class="form-group col-md-3 grouping-selects" repeat.for="groupField of selectedGroupingFields">
-            <select class="form-select" change.trigger="groupByFieldName(column.id, $index)"
-                    value.bind="selectedGroupingFields[$index]">
+            <select class="form-select" change.trigger="groupByFieldName()"
+                    value.bind="groupField">
               <option model.bind="''">...</option>
               <option model.bind="column.id" repeat.for="column of columnDefinitions">${column.name}</option>
             </select>
