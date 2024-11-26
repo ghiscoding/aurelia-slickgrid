@@ -34,7 +34,7 @@
       <button class="btn btn-outline-secondary btn-xs btn-icon" data-test="expand-all-btn" click.trigger="expandAllGroups()">
         <i class="mdi mdi-arrow-expand"></i> Expand all groups
       </button>
-      <button class="btn btn-outline-secondary btn-xs btn-icon" click.trigger="toggleDraggableGroupingRow()">
+      <button class="btn btn-outline-secondary btn-xs btn-icon" data-test="toggle-draggable-grouping-row" click.trigger="toggleDraggableGroupingRow()">
         Toggle Draggable Grouping Row
       </button>
       <button class="btn btn-outline-secondary btn-xs btn-icon" click.trigger="exportToExcel()">
@@ -80,8 +80,8 @@
         <div class="row form-group">
           <label for="field1" class="col-sm-3 mb-2">Group by field(s)</label>
           <div class="form-group col-md-3 grouping-selects" repeat.for="groupField of selectedGroupingFields">
-            <select class="form-select" change.trigger="groupByFieldName(column.id, $index)"
-                    value.bind="selectedGroupingFields[$index]">
+            <select class="form-select" change.trigger="groupByFieldName()"
+                    value.bind="groupField">
               <option model.bind="''">...</option>
               <option model.bind="column.id" repeat.for="column of columnDefinitions">${column.name}</option>
             </select>

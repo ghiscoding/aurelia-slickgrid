@@ -4,7 +4,6 @@ import {
   Aggregators,
   type AureliaGridInstance,
   type Column,
-  DelimiterType,
   FieldType,
   FileType,
   Filters,
@@ -317,14 +316,6 @@ export class Example18 {
     });
   }
 
-  exportToCsv(type = 'csv') {
-    this.textExportService.exportToFile({
-      delimiter: (type === 'csv') ? DelimiterType.comma : DelimiterType.tab,
-      filename: 'myExport',
-      format: (type === 'csv') ? FileType.csv : FileType.txt
-    });
-  }
-
   groupByDurationOrderByCount(sortedByCount = false) {
     this.durationOrderByCount = sortedByCount;
     this.clearGrouping(false);
@@ -399,7 +390,7 @@ export class Example18 {
 
   toggleDraggableGroupingRow() {
     this.clearGroupsAndSelects();
-    this.gridObj.setPreHeaderPanelVisibility(!this.gridObj.getOptions().showPreHeaderPanel);
+    this.gridObj.setTopHeaderPanelVisibility(!this.gridObj.getOptions().showTopHeaderPanel);
   }
 
   toggleDarkMode() {
