@@ -26,7 +26,7 @@ export class Example11 {
     <ul>
       <li>"$row-highlight-background-color" or "$row-highlight-fade-animation"</li>
     </ul>
-    <li>You can also add CSS class(es) on the fly (or on page load) on rows with certain criteria, (e.g. click on last button)
+    <li>You can also add CSS class(es) on the fly (or on page load) on rows with certain criteria, (e.g. click on last button)<li>
     <ul>
       <li>Example, click on button "Highlight Rows with Duration over 50" to see row styling changing. <a href="https://ghiscoding.gitbook.io/aurelia-slickgrid/grid-functionalities/dynamic-item-metadata" target="_blank">Wiki doc</a></li>
     </ul>
@@ -40,7 +40,6 @@ export class Example11 {
   columnDefinitions: Column[] = [];
   gridOptions!: GridOption;
   dataset: any[] = [];
-  updatedObject: any;
 
   constructor() {
     // define the grid options & columns and then create the grid itself

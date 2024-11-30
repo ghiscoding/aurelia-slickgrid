@@ -1,6 +1,5 @@
 import Aurelia from 'aurelia';
 import 'bootstrap';
-import { MyApp } from './my-app';
 // Css files imported in this main file are NOT processed by style-loader
 // They are for sharedStyles in shadowDOM.
 // However, css files imported in other js/ts files are processed by style-loader.
@@ -10,6 +9,8 @@ import DOMPurify from 'dompurify';
 import { I18nConfiguration } from '@aurelia/i18n';
 import Fetch from 'i18next-fetch-backend';
 import { RouterConfiguration } from '@aurelia/router';
+
+import { MyApp } from './my-app';
 import { DateFormatValueConverter, DecimalValueConverter, StringifyValueConverter } from './examples/resources/value-converters';
 
 // dynamic components that can be enhanced in Example 19, 26
@@ -46,9 +47,9 @@ Aurelia
         loadPath: './assets/i18n/{{lng}}/{{ns}}.json',
       },
       lng: 'en',
+      fallbackLng: 'en',
       ns: ['aurelia-slickgrid'],
       defaultNS: 'aurelia-slickgrid',
-      fallbackLng: 'en',
       debug: false,
       plugins: [Fetch],
     };

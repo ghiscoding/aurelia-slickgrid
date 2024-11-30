@@ -4,17 +4,20 @@ import type { SlickRowDetailView } from '@slickgrid-universal/row-detail-view-pl
 
 import './example19-detail-view.scss';
 
+interface Item {
+  assignee: string;
+  duration: Date;
+  percentComplete: number;
+  reporter: string;
+  start: Date;
+  finish: Date;
+  effortDriven: boolean;
+  title: string;
+  rowId: number;
+}
+
 export class Example19DetailView {
-  @bindable() model!: {
-    duration: Date;
-    percentComplete: number;
-    reporter: string;
-    start: Date;
-    finish: Date;
-    effortDriven: boolean;
-    assignee: string;
-    title: string;
-  };
+  @bindable() model!: Item;
 
   // you also have access to the following objects (it must match the exact property names shown below)
   @bindable() addon!: SlickRowDetailView; // row detail addon instance

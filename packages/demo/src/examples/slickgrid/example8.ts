@@ -1,5 +1,5 @@
 import { I18N } from '@aurelia/i18n';
-import { type AureliaGridInstance, type Column, Formatters, type GridOption, type SlickDataView, type SlickGrid } from 'aurelia-slickgrid';
+import { type Column, Formatters, type GridOption } from 'aurelia-slickgrid';
 import './example8.scss'; // provide custom CSS/SASS styling
 import { resolve } from 'aurelia';
 
@@ -25,12 +25,9 @@ export class Example8 {
     </ul>
   `;
 
-  aureliaGrid!: AureliaGridInstance;
   columnDefinitions: Column[] = [];
   gridOptions!: GridOption;
   dataset: any[] = [];
-  dataView!: SlickDataView;
-  gridObj!: SlickGrid;
   selectedLanguage: string;
   visibleColumns: Column[] = [];
 
@@ -47,12 +44,6 @@ export class Example8 {
   attached() {
     // populate the dataset once the grid is ready
     this.getData();
-  }
-
-  aureliaGridReady(aureliaGrid: AureliaGridInstance) {
-    this.aureliaGrid = aureliaGrid;
-    this.gridObj = aureliaGrid?.slickGrid;
-    this.dataView = aureliaGrid?.dataView;
   }
 
   defineGrid() {

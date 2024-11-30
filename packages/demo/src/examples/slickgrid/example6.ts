@@ -29,7 +29,7 @@ export class Example6 {
     <ul class="small">
       <li><span class="red bold">(*) NO DATA SHOWN</span> - just change filters &amp; page and look at the "GraphQL Query" changing</li>
       <li>Only "Name" field is sortable for the demo (because we use JSON files), however "multiColumnSort: true" is also supported</li>
-      <li>String column also support operator (>, >=, <, <=, <>, !=, =, ==, *)
+      <li>String column also support operator (>, >=, <, <=, <>, !=, =, ==, *)</li>
       <ul>
         <li>The (*) can be used as startsWith (ex.: "abc*" => startsWith "abc") / endsWith (ex.: "*xyz" => endsWith "xyz")</li>
         <li>The other operators can be used on column type number for example: ">=100" (greater or equal than 100)</li>

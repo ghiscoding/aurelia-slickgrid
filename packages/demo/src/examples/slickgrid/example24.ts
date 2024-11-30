@@ -64,7 +64,7 @@ export class Example24 {
   title = 'Example 24: Cell Menu & Context Menu Plugins';
   subTitle = `Add Cell Menu and Context Menu
     <ul>
-      <li>This example demonstrates 2 SlickGrid plugins
+      <li>This example demonstrates 2 SlickGrid plugins</li>
       <ol>
         <li>Using the <b>Slick.Plugins.CellMenu</b> plugin, often used for an Action Menu(s), 1 or more per grid
           (<a href="https://ghiscoding.gitbook.io/aurelia-slickgrid/grid-functionalities/cell-menu" target="_blank">Wiki docs</a>).

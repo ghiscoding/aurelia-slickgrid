@@ -22,9 +22,7 @@ const sampleDataRoot = 'assets/data';
 
 export class Example31 {
   title = 'Example 31: Grid with OData Backend Service using RxJS Observables';
-  subTitle = `
-    Optionally use RxJS instead of Promises, you would typically use this with a Backend Service API (OData/GraphQL)
-  `;
+  subTitle = `Optionally use RxJS instead of Promises, you would typically use this with a Backend Service API (OData/GraphQL)`;
 
   aureliaGrid!: AureliaGridInstance;
   columnDefinitions: Column[] = [];

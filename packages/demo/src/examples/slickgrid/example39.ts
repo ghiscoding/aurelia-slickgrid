@@ -25,7 +25,6 @@ function unescapeAndLowerCase(val: string) {
 }
 
 export class Example39 {
-  private _darkMode = false;
   aureliaGrid: AureliaGridInstance;
   backendService!: GraphqlService;
   columnDefinitions!: Column[];
@@ -320,21 +319,5 @@ export class Example39 {
     const nextLanguage = (this.selectedLanguage === 'en') ? 'fr' : 'en';
     await this.i18n.setLocale(nextLanguage);
     this.selectedLanguage = nextLanguage;
-  }
-
-  toggleDarkMode() {
-    this._darkMode = !this._darkMode;
-    this.toggleBodyBackground();
-    this.aureliaGrid.slickGrid?.setOptions({ darkMode: this._darkMode });
-  }
-
-  toggleBodyBackground() {
-    if (this._darkMode) {
-      document.querySelector<HTMLDivElement>('.panel-wm-content')!.classList.add('dark-mode');
-      document.querySelector<HTMLDivElement>('#demo-container')!.dataset.bsTheme = 'dark';
-    } else {
-      document.querySelector('.panel-wm-content')!.classList.remove('dark-mode');
-      document.querySelector<HTMLDivElement>('#demo-container')!.dataset.bsTheme = 'light';
-    }
   }
 }
