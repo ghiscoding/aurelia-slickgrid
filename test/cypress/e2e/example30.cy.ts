@@ -174,7 +174,7 @@ describe('Example 30  Composite Editor Modal', () => {
     cy.get('[data-test=undo-last-edit-btn]').click();
 
     cy.get('.vanilla-calendar')
-      .should('not.exist');
+      .should('not.be.visible');
 
     cy.get('.unsaved-editable-field')
       .should('have.length', 11);
