@@ -52,7 +52,7 @@ export function configure(aurelia) {
 ### 4. Install/Setup `I18N` for Localization (optional)
 #### If you don't want to use any Translate Service and use only 1 Locale then take a look at this [demo](https://github.com/ghiscoding/aurelia-slickgrid-demos/tree/master/webpack-bs3-demo-with-locales)
 To provide locales other than English (default locale), you have 2 options that you can go with. If you only use English, there is nothing to do (you can still change some of the texts in the grid via option 1.)
-1. Using [Custom Locale](../localization/localization-with-custom-locales.md), that is when you use **only 1** locale (other thank English)... this is a new feature starting from version `2.10.0` and up.
+1. Using [Custom Locale](../localization/localization-with-custom-locales.md), that is when you use **only 1** locale (other than English)... this is a new feature starting from version `2.10.0` and up.
 2. Using [Localization with I18N](../localization/localization.md), that is when you want to use multiple locales dynamically.
 
 ### 5. Create a basic grid
@@ -141,10 +141,9 @@ The last step is really to explore all the pages that are available in this Wiki
 You might notice that all demos are made with mocked dataset that are embedded in each examples, that is mainly for demo purposes, but you might be wondering how to connect this with an `FetchClient`? Easy... just replace the mocked data, assigned to the `dataset` property, by your `FetchClient` call and that's it. The `dataset` property can be changed at any time, which is why you can use local data and/or connect it to a `Promise` or an async call with `FetchClient` (internally it's just a SETTER that refreshes the grid). See [Example 22](https://ghiscoding.github.io/aurelia-slickgrid/#/slickgrid/example22) for a demo showing how to load a JSON file with `FetchClient`.
 
 ### 9. Get Started
-The best way to get started is to clone the [Aurelia-Slickgrid-demos](https://github.com/ghiscoding/aurelia-slickgrid-demos), it has multiple examples and it is also updated frequently since it is used for the GitHub Bootstrap 4 demo page. `Aurelia-Slickgrid` has 2 `Bootstrap` themes, you can see a demo of each one below.
-- [Bootstrap 4 demo](https://ghiscoding.github.io/aurelia-slickgrid) / [examples repo](https://github.com/ghiscoding/aurelia-slickgrid-demos/tree/master/webpack-bs4-demo) (with `I18N` Service)
-  - [Bootstrap 4 - examples repo](https://github.com/ghiscoding/aurelia-slickgrid-demos/tree/master/webpack-bs4-demo-with-locales) (**without** `I18N` Service)
-- [Bootstrap 5 demo](https://ghiscoding.github.io/aurelia-slickgrid/) / [examples repo](https://github.com/ghiscoding/aurelia-slickgrid-demos/tree/master/webpack-bs5-demo) (with `I18N` Service)
+The best way to get started is to clone the [Aurelia-Slickgrid-demos](https://github.com/ghiscoding/aurelia-slickgrid-demos), it has multiple examples and it is also updated frequently since it is used for the GitHub Bootstrap 5 demo page. `Aurelia-Slickgrid` has 2 `Bootstrap` themes, you can see a demo of each one below.
+- [Bootstrap 5 demo](https://ghiscoding.github.io/aurelia-slickgrid) / [examples repo](https://github.com/ghiscoding/aurelia-slickgrid-demos/tree/master/webpack-bs5-demo) (with `I18N` Service)
+- [Bootstrap 5 - examples repo](https://github.com/ghiscoding/aurelia-slickgrid-demos/tree/master/webpack-bs5-demo-with-locales) (**without** `I18N` Service)
 
 ##### All Live Demo Examples have links to the actual code
 Like to see the code to a particular Example? Just click on the "see code" that is available in every live examples.
