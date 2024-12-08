@@ -30,10 +30,10 @@ export class Example26 {
   <ul>
     <li>Support of Aurelia Custom Element as Custom Editor (click on any "Assignee" name cell)</li>
     <ul>
-      <li>That column uses a simple select drodown wrapped in an Aurelia Custom Element
+      <li>That column uses a simple select drodown wrapped in an Aurelia Custom Element</li>
       <li>Increased Grid Options "rowHeight" &amp; "headerRowHeight" to 45 so that the Custom Element fits in the cell.</li>
     </ul>
-    <li>Support of Aurelia Custom Element as Custom Filter ("Assignee" columns), which also uses Custom Element
+    <li>Support of Aurelia Custom Element as Custom Filter ("Assignee" columns), which also uses Custom Element</li>
     <li>The 2nd "Assignee" column (showing in bold text) uses "asyncPostRender" with an Aurelia Custom Element</li>
     <ul>
       <li>Why can't we use Aurelia Custom Element as Customer Formatter and why do I see a slight delay in loading the data?</li>

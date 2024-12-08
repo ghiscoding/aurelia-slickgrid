@@ -25,6 +25,6 @@ export class EditorSelect {
   }
 
   // we need to define the method, it can be empty so that we can override it
-  // inside the `custom-aureliaViewModelFilter()` method
+  // inside the `custom-aureliaViewModelEditor()` method
   selectedItemChanged() { }
 }
