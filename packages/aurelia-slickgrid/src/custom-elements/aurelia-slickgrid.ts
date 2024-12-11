@@ -149,7 +149,7 @@ export class AureliaSlickgridCustomElement {
   @bindable() dataset: any[] = [];
   @bindable() datasetHierarchical?: any[] | null;
   @bindable() gridId = '';
-  @bindable() gridOptions!: GridOption;
+  @bindable() gridOptions: GridOption = {};
 
   constructor(
     protected readonly aureliaUtilService: AureliaUtilService = resolve(AureliaUtilService),
@@ -248,8 +248,8 @@ export class AureliaSlickgridCustomElement {
   }
 
   attached() {
-    if (!this.gridOptions || !this.columnDefinitions) {
-      throw new Error('Using `<aurelia-slickgrid>` requires `grid-options.bind` and `column-definitions.bind`, it seems that you might have forgot to provide them since at least of them is undefined.');
+    if (!this.columnDefinitions) {
+      throw new Error('Using `<aurelia-slickgrid>` requires `column-definitions.bind`, it seems that you might have forgot to provide the missing bindable model.');
     }
 
     this._eventHandler = new SlickEventHandler();
@@ -291,7 +291,7 @@ export class AureliaSlickgridCustomElement {
     this._eventPubSubService.publish('onBeforeGridCreate', true);
 
     // make sure the dataset is initialized (if not it will throw an error that it cannot getLength of null)
-    this._dataset = this._dataset || this.dataset || [];
+    this._dataset ||= [];
     this._currentDatasetLength = this._dataset.length;
     this.gridOptions = this.mergeGridOptions(this.gridOptions);
     this._paginationOptions = this.gridOptions?.pagination;
@@ -556,7 +556,7 @@ export class AureliaSlickgridCustomElement {
   }
 
   emptyGridContainerElm() {
-    const gridContainerId = this.gridOptions?.gridContainerId ?? 'grid1';
+    const gridContainerId = this.gridOptions?.gridContainerId || 'grid1';
     const gridContainerElm = document.querySelector(`#${gridContainerId}`) as HTMLDivElement;
     emptyElement(gridContainerElm);
   }
