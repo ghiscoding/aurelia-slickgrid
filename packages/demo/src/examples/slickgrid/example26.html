@@ -10,54 +10,56 @@
 </h2>
 <div class="subtitle" innerhtml.bind="subTitle"></div>
 
-<div class="col-sm-6">
-  <label>autoEdit setting</label>
-  <br />
-  <span id="radioAutoEdit">
-    <div class="row">
-      <div class="col">
-        <label class="radio-inline control-label" for="radioTrue">
-          <input type="radio" name="inlineRadioOptions" id="radioTrue" checked value.bind="isAutoEdit"
-                  click.trigger="setAutoEdit(true)"> ON
-          (single-click)
-        </label>
-        <label class="radio-inline control-label" for="radioFalse">
-          <input type="radio" name="inlineRadioOptions" id="radioFalse" value.bind="isAutoEdit"
-                  click.trigger="setAutoEdit(false)"> OFF
-          (double-click)
-        </label>
+<div class="row">
+  <div class="col-sm-6">
+    <label>autoEdit setting</label>
+    <br />
+    <span id="radioAutoEdit">
+      <div class="row">
+        <div class="col">
+          <label class="radio-inline control-label" for="radioTrue">
+            <input type="radio" name="inlineRadioOptions" id="radioTrue" checked value.bind="isAutoEdit"
+                    click.trigger="setAutoEdit(true)"> ON
+            (single-click)
+          </label>
+          <label class="radio-inline control-label" for="radioFalse">
+            <input type="radio" name="inlineRadioOptions" id="radioFalse" value.bind="isAutoEdit"
+                    click.trigger="setAutoEdit(false)"> OFF
+            (double-click)
+          </label>
+        </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <button class="btn btn-outline-secondary btn-sm btn-icon" click.trigger="undo()">
-          <i class="mdi mdi-undo"></i>
-          Undo last edit(s)
-        </button>
-        <label class="checkbox-inline control-label" for="autoCommitEdit">
-          <input type="checkbox" id="autoCommitEdit" value.bind="gridOptions.autoCommitEdit"
-                  click.trigger="changeAutoCommit()">
-          Auto Commit Edit
-        </label>
+      <div class="row">
+        <div class="col">
+          <button class="btn btn-outline-secondary btn-sm btn-icon" click.trigger="undo()">
+            <i class="mdi mdi-undo"></i>
+            Undo last edit(s)
+          </button>
+          <label class="checkbox-inline control-label" for="autoCommitEdit">
+            <input type="checkbox" id="autoCommitEdit" data-test="auto-edit-checkbox" value.bind="gridOptions.autoCommitEdit"
+                    click.trigger="changeAutoCommit()">
+            Auto Commit Edit
+          </label>
+        </div>
       </div>
-    </div>
-  </span>
-  <div class="row" style="margin-top: 5px">
-    <div class="col">
-      <button class="btn btn-outline-secondary btn-sm btn-icon" click.trigger="aureliaGrid.filterService.clearFilters()">Clear
-        Filters</button>
-      <button class="btn btn-outline-secondary btn-sm btn-icon" click.trigger="aureliaGrid.sortService.clearSorting()">Clear
-        Sorting</button>
+    </span>
+    <div class="row" style="margin-top: 5px">
+      <div class="col">
+        <button class="btn btn-outline-secondary btn-sm btn-icon" data-test="clear-filters" click.trigger="aureliaGrid.filterService.clearFilters()">Clear
+          Filters</button>
+        <button class="btn btn-outline-secondary btn-sm btn-icon" data-test="clear-sorting" click.trigger="aureliaGrid.sortService.clearSorting()">Clear
+          Sorting</button>
+      </div>
     </div>
   </div>
-</div>
 
-<div class="col-sm-6">
-  <div class="alert alert-info" show.bind="updatedObject">
-    <strong>Updated Item:</strong> ${updatedObject | stringify}
-  </div>
-  <div class="alert alert-warning" show.bind="alertWarning">
-    ${alertWarning}
+  <div class="col-sm-6">
+    <div class="alert alert-info" show.bind="updatedObject">
+      <strong>Updated Item:</strong> ${updatedObject | stringify}
+    </div>
+    <div class="alert alert-warning" show.bind="alertWarning">
+      ${alertWarning}
+    </div>
   </div>
 </div>
 
