@@ -46,6 +46,7 @@ export class MyApp {
     { path: 'example40', component: () => import('./examples/slickgrid/example40'), title: '40- Infinite Scroll from JSON data' },
     { path: 'example41', component: () => import('./examples/slickgrid/example41'), title: '41- Drag & Drop' },
     { path: 'example42', component: () => import('./examples/slickgrid/example42'), title: '42- Custom Pagination' },
+    { path: 'example43', component: () => import('./examples/slickgrid/example43'), title: '43- Grid from CSV' },
     { path: 'home', component: () => import('./home-page'), title: 'Home' },
   ];
 
