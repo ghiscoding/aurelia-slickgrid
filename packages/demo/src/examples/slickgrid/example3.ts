@@ -21,7 +21,7 @@ import {
 
 import { CustomInputEditor } from './custom-inputEditor';
 import { CustomInputFilter } from './custom-inputFilter';
-import fetchJsonp from './jsonp.js';
+import fetchJsonp from './jsonp';
 
 const NB_ITEMS = 100;
 const URL_SAMPLE_COLLECTION_DATA = 'assets/data/collection_100_numbers.json';
