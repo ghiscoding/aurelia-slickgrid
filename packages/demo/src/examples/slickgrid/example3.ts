@@ -279,7 +279,7 @@ export class Example3 {
               // this.http.get(`http://gd.geobytes.com/AutoCompleteCity?q=${searchText}`).subscribe(data => updateCallback(data));
 
               /** with JSONP AJAX will work locally but not on the GitHub demo because of CORS */
-              fetchJsonp<string[]>(`http://gd.geobytes.com/AutoCompleteCity?q=${searchText}`, { crossorigin: true })
+              fetchJsonp<string[]>(`http://gd.geobytes.com/AutoCompleteCity?q=${searchText}`)
                 .then((response: { json: () => Promise<any[]> }) => response.json())
                 .then((json: any[]) => updateCallback(json))
                 .catch((ex) => console.log('invalid JSONP response', ex));
@@ -298,7 +298,7 @@ export class Example3 {
           filterOptions: {
             minLength: 3,
             fetch: (searchText: string, updateCallback: (items: false | any[]) => void) => {
-              fetchJsonp<string[]>(`http://gd.geobytes.com/AutoCompleteCity?q=${searchText}`, { crossorigin: true })
+              fetchJsonp<string[]>(`http://gd.geobytes.com/AutoCompleteCity?q=${searchText}`)
                 .then((response: { json: () => Promise<any[]> }) => response.json())
                 .then((json: any[]) => updateCallback(json))
                 .catch((ex: any) => console.log('invalid JSONP response', ex));
