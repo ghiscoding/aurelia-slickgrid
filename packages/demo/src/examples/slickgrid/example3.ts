@@ -1,8 +1,6 @@
 import { IHttpClient } from '@aurelia/fetch-client';
 import { newInstanceOf, resolve } from '@aurelia/kernel';
 import { I18N } from '@aurelia/i18n';
-import fetchJsonp from 'fetch-jsonp';
-
 import {
   type AureliaGridInstance,
   type AutocompleterOption,
@@ -20,8 +18,10 @@ import {
   SortComparers,
   type VanillaCalendarOption,
 } from 'aurelia-slickgrid';
+
 import { CustomInputEditor } from './custom-inputEditor';
 import { CustomInputFilter } from './custom-inputFilter';
+import fetchJsonp from './jsonp';
 
 const NB_ITEMS = 100;
 const URL_SAMPLE_COLLECTION_DATA = 'assets/data/collection_100_numbers.json';
@@ -279,7 +279,7 @@ export class Example3 {
               // this.http.get(`http://gd.geobytes.com/AutoCompleteCity?q=${searchText}`).subscribe(data => updateCallback(data));
 
               /** with JSONP AJAX will work locally but not on the GitHub demo because of CORS */
-              fetchJsonp(`http://gd.geobytes.com/AutoCompleteCity?q=${searchText}`)
+              fetchJsonp<string[]>(`http://gd.geobytes.com/AutoCompleteCity?q=${searchText}`, { crossorigin: true })
                 .then((response: { json: () => Promise<any[]> }) => response.json())
                 .then((json: any[]) => updateCallback(json))
                 .catch((ex) => console.log('invalid JSONP response', ex));
@@ -298,7 +298,7 @@ export class Example3 {
           filterOptions: {
             minLength: 3,
             fetch: (searchText: string, updateCallback: (items: false | any[]) => void) => {
-              fetchJsonp(`http://gd.geobytes.com/AutoCompleteCity?q=${searchText}`)
+              fetchJsonp<string[]>(`http://gd.geobytes.com/AutoCompleteCity?q=${searchText}`, { crossorigin: true })
                 .then((response: { json: () => Promise<any[]> }) => response.json())
                 .then((json: any[]) => updateCallback(json))
                 .catch((ex: any) => console.log('invalid JSONP response', ex));
