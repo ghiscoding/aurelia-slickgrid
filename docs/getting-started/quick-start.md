@@ -126,16 +126,16 @@ export class Example1 {
 ### 6. Client samples
 There are multiple demos (WebPack, RequireJS, CLI, ...) that you can clone and refer to (2 of them are actually used to update the GitHub demo pages and are updated frequently). So to get you started, you can clone the [aurelia-slickgrid-demos](https://github.com/ghiscoding/aurelia-slickgrid-demos) repo.
 
-### 7. Explore the Wiki page content
-The last step is really to explore all the pages that are available in this Wiki, all the documentation will be place in here and so you should visit it often. For example a good starter is to look at the following
+### 7. Explore the Documentation page content
+The last step is really to explore all the pages that are available in the documentation, everything you need to use the library should be available in here and so you should visit it often. For example a good starter is to look at the following
 
-- for all the `Grid Options`, take a look at [Wiki - Grid Options](https://github.com/ghiscoding/slickgrid-universal/blob/master/packages/common/src/interfaces/gridOption.interface.ts)
+- for all the `Grid Options`, take a look at all the [Grid Options](https://github.com/ghiscoding/slickgrid-universal/blob/master/packages/common/src/interfaces/gridOption.interface.ts) interface.
 - [Formatters](../column-functionalities/formatters.md)
 - [Editors](../column-functionalities/editors.md)
 - [Filters](../column-functionalities/filters/select-filter.md)
 - [Grid Menu](../grid-functionalities/grid-menu.md)
-- ... and much more, just explorer the Wikis through the sidebar index (on your right)
-  - it gets updated very frequently, we usually mention any new/updated wikis in any new version release
+- ... and much more, just explorer all the Documentations available
+  - it gets updated very frequently, we usually mention any new/updated documentation in any new version release
 
 ### 8. How to load data with `Fetch-Client` or `Http-Client`?
 You might notice that all demos are made with mocked dataset that are embedded in each examples, that is mainly for demo purposes, but you might be wondering how to connect this with an `FetchClient`? Easy... just replace the mocked data, assigned to the `dataset` property, by your `FetchClient` call and that's it. The `dataset` property can be changed at any time, which is why you can use local data and/or connect it to a `Promise` or an async call with `FetchClient` (internally it's just a SETTER that refreshes the grid). See [Example 22](https://ghiscoding.github.io/aurelia-slickgrid/#/slickgrid/example22) for a demo showing how to load a JSON file with `FetchClient`.
@@ -152,7 +152,7 @@ Like to see the code to a particular Example? Just click on the "see code" that 
 The project supports Content Security Policy (CSP) as long as you provide an optional `sanitizer` in your grid options (we recommend DOMPurify). Review the [CSP Compliance](../developer-guides/csp-compliance.md) documentation for more info.
 
 ### 11. Add Optional Feature like Excel Export
-Starting with version 3.0.0, the Excel Export is now an optional package and if you want to use it then you'll need to install it via npm from the monorepo library with `npm install @slickgrid-universal/excel-export`. Refer to the [Excel Export - Wiki](../grid-functionalities/export-to-excel.md) for more info.
+Starting with version 3.0.0, the Excel Export is now an optional package and if you want to use it then you'll need to install it via npm from the monorepo library with `npm install @slickgrid-universal/excel-export`. Refer to the "Excel Export" from the documentations for more info.
 
 Here's a quick list of some of these optional packages
 - [@slickgrid-universal/excel-export](https://github.com/ghiscoding/slickgrid-universal/tree/master/packages/excel-export)
@@ -161,11 +161,11 @@ Here's a quick list of some of these optional packages
 - [@slickgrid-universal/odata](https://github.com/ghiscoding/slickgrid-universal/tree/master/packages/odata)
 
 ### 12. Missing Features? (fear not)
-What if `Aurelia-Slickgrid` is missing feature(s) versus the original `SlickGrid`? Fear not and directly use the `SlickGrid` and `DataView` objects that are expose from the start through Event Emitters. For more info continue reading on [Wiki - SlickGrid & DataView objects](../slick-grid-dataview-objects/slickgrid-dataview-objects.md) and [Docs - Grid & DataView Events](../events/grid-dataview-events.md)
+What if `Aurelia-Slickgrid` is missing feature(s) versus the original `SlickGrid`? Fear not and directly use the `SlickGrid` and `DataView` objects that are expose from the start through Event Emitters. For more info continue reading on "SlickGrid & DataView objects" and "Grid & DataView Events"
 
 ### 13. Having some issues?
 After reading all this HOW TO, what if you have an issue with the grid?
-Please start by searching any related [issues](/ghiscoding/aurelia-slickgrid/issues). If you can't find anything in the issues log and you made sure to also look through the multiple [wiki](/ghiscoding/aurelia-slickgrid/wiki) pages as well, then go ahead and fill in a [new issue](/ghiscoding/aurelia-slickgrid/issues/new) and we'll try to help.
+Please start by searching any related [issues](/ghiscoding/aurelia-slickgrid/issues). If you can't find anything in the issues log and you made sure to also look through the multiple documentation pages as well, then go ahead and fill in a [new issue](/ghiscoding/aurelia-slickgrid/issues/new) and we'll try to help.
 
 ### Final word
 This project is Open Source and is, for the most part, mainly done in spare time. So please be respectful when creating issues (and fill in the issue template) and I will try to help you out. If you like my work, you can also [buy me a coffee](https://ko-fi.com/N4N679OT) ☕️, some part of the code happens when I'm at StarBucks... That is it, thank you and don't forget to ⭐ it if you like the lib 😉
