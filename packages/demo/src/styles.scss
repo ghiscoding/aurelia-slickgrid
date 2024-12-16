@@ -109,6 +109,15 @@ outline: 0 none;
   border-bottom: 1px solid #d6d6d6;
 }
 
+.navbar {
+  .navbar-brand {
+    margin-right: 0px;
+  }
+  .logo {
+    margin: 0 8px;
+  }
+}
+
 .panel-wm {
   padding: #{$navbar-height} 0 0 0;
 
