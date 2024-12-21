@@ -47,21 +47,21 @@ describe('Example 19 - Row Detail View', () => {
     const alertStub = cy.stub();
     cy.on('window:alert', alertStub);
 
-    cy.get('#grid19')
-      .find('.slick-cell + .dynamic-cell-detail .innerDetailView_2 .container_2')
-      .as('detailContainer');
+    cy.get('#grid19').find('.slick-cell + .dynamic-cell-detail .innerDetailView_2 .container_2').as('detailContainer');
 
     cy.get('@detailContainer')
       .find('input')
       .invoke('val')
-      .then(text => assignee = text as string);
+      .then((text) => (assignee = `${text || ''}`));
+
+    cy.wait(10);
 
     cy.get('@detailContainer')
       .find('[data-test=assignee-btn]')
       .click()
       .then(() => {
-        if (assignee === '') {
-          expect(alertStub.getCall(0)).to.be.calledWith(`No one is assigned to this task.`);
+        if (!assignee) {
+          expect(alertStub.getCall(0)).to.be.calledWith('No one is assigned to this task.');
         } else {
           expect(alertStub.getCall(0)).to.be.calledWith(`Assignee on this task is: ${assignee.toUpperCase()}`);
         }
