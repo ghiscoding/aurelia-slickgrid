@@ -26,5 +26,5 @@
       allowedVersions: '<6.0.0',
     },
   ],
-  schedule: ['every 2 weeks on friday']
+  schedule: ['every 3 weeks on friday']
 }
