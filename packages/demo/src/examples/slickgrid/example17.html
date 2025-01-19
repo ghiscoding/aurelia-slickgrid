@@ -1,46 +1,53 @@
-<h2>
-  ${title}
-  <span class="float-end">
-    <a style="font-size: 18px"
-        target="_blank"
+<div class="container-fluid">
+  <h2>
+    Example 17: Dynamically Create Grid from CSV / Excel import
+    <span class="float-end">
+      <a style="font-size: 18px" target="_blank"
         href="https://github.com/ghiscoding/aurelia-slickgrid/blob/master/packages/demo/src/examples/slickgrid/example17.ts">
-      <span class="mdi mdi-link-variant"></span> code
-    </a>
-  </span>
-</h2>
-<div class="subtitle"
-      innerhtml.bind="subTitle"></div>
+        <span class="mdi mdi-link-variant"></span> code
+      </a>
+    </span>
+    <button
+      class="ms-2 btn btn-outline-secondary btn-sm btn-icon"
+      type="button"
+      data-test="toggle-subtitle"
+      click.trigger="toggleSubTitle()"
+    >
+      <span class="mdi mdi-information-outline" title="Toggle example sub-title details"></span>
+    </button>
+  </h2>
 
-<hr>
+  <div if.bind="showSubTitle" class="subtitle">
+    Allow creating a grid dynamically by importing an external CSV or Excel file. This script demo will read the CSV file and will
+    consider the first row as the column header and create the column definitions accordingly, while the next few rows will be
+    considered the dataset. Note that this example is demoing a CSV file import but in your application you could easily implemnt
+    an Excel file uploading.
+  </div>
 
-<div class="col-md-6"
-      style="margin-bottom: 15px">
-  <label>Octopart Catalog Search <small>(throttle search to 1.5sec)</small></label>
-  <input type="text"
-          class="form-control"
-          value.bind="search & throttle:1500">
+  <div>A default CSV file can be download <a id="template-dl" href.bind="templateUrl">here</a>.</div>
+
+  <div class="d-flex mt-5 align-items-end">
+    <div class="file-upload">
+      <label for="formFile" class="form-label">Choose a CSV file…</label>
+      <input class="form-control" type="file" data-test="file-upload-input" value.bind="uploadFileRef" change.trigger="handleFileImport($event)" />
+    </div>
+    <span class="mx-3">or</span>
+    <div>
+      <button id="uploadBtn" data-test="static-data-btn" class="btn btn-outline-secondary" click.trigger="handleDefaultCsv">
+        Use default CSV data
+      </button>
+      &nbsp;/
+      <button class="btn btn-outline-danger btn-sm ms-2" click.trigger="destroyGrid()">Destroy Grid</button>
+    </div>
+  </div>
+
+  <hr />
+
+  <aurelia-slickgrid
+    if="value.bind: gridCreated; cache: false"
+    grid-id="grid17"
+    column-definitions.bind="columnDefinitions"
+    grid-options.bind="gridOptions"
+    dataset.bind="dataset">
+  </aurelia-slickgrid>
 </div>
-
-<div class="alert alert-danger col-md-7" role="alert">
-  <strong>Note:</strong>
-  this demo no longer displays any results because the WebAPI Key to connect and query the <b>Octopart Component
-    Search</b> is no longer valid. However the concept remains valid, which is to use your own Custom DataView
-  instead of the default SlickGrid DataView used by this library.
-</div>
-
-<div class="alert alert-warning col-md-6"
-      role="alert"
-      if.bind="loading">
-  <i class="mdi mdi-sync mdi-spin"></i>
-  <span>Loading...</span>
-</div>
-
-<aurelia-slickgrid grid-id="grid1"
-                    column-definitions.bind="columnDefinitions"
-                    grid-options.bind="gridOptions"
-                    dataset.bind="dataset"
-                    custom-data-view.bind="customDataView"
-                    on-aurelia-grid-created.trigger="aureliaGridReady($event.detail)"
-                    on-viewport-changed.trigger="onViewportChanged()"
-                    on-sort.trigger="onSort($event.detail.eventData, $event.detail.args)">
-</aurelia-slickgrid>

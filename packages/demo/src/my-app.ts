@@ -20,7 +20,7 @@ export class MyApp {
     { path: 'example14', component: () => import('./examples/slickgrid/example14'), title: '14- Column Span & Header Grouping' },
     { path: 'example15', component: () => import('./examples/slickgrid/example15'), title: '15- Grid State & Local Storage' },
     { path: 'example16', component: () => import('./examples/slickgrid/example16'), title: '16- Row Move Plugin' },
-    { path: 'example17', component: () => import('./examples/slickgrid/example17'), title: '17- Remote Model' },
+    { path: 'example17', component: () => import('./examples/slickgrid/example17'), title: '17- Grid from CSV' },
     { path: 'example18', component: () => import('./examples/slickgrid/example18'), title: '18- Draggable Grouping' },
     { path: 'example19', component: () => import('./examples/slickgrid/example19'), title: '19- Row Detail View' },
     { path: 'example20', component: () => import('./examples/slickgrid/example20'), title: '20- Pinned Columns/Rows' },
@@ -46,7 +46,6 @@ export class MyApp {
     { path: 'example40', component: () => import('./examples/slickgrid/example40'), title: '40- Infinite Scroll from JSON data' },
     { path: 'example41', component: () => import('./examples/slickgrid/example41'), title: '41- Drag & Drop' },
     { path: 'example42', component: () => import('./examples/slickgrid/example42'), title: '42- Custom Pagination' },
-    { path: 'example43', component: () => import('./examples/slickgrid/example43'), title: '43- Grid from CSV' },
     { path: 'home', component: () => import('./home-page'), title: 'Home' },
   ];
 

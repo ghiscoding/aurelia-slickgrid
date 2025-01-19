@@ -1,147 +1,102 @@
-// import 'slickgrid/slick.remotemodel'; // SlickGrid Remote Plugin
-import { bindable, BindingMode } from 'aurelia';
+import { type Column, type GridOption, toCamelCase } from 'aurelia-slickgrid';
+import { ExcelExportService } from '@slickgrid-universal/excel-export';
 
-import {
-  type AureliaGridInstance,
-  type Column,
-  type Formatter,
-  type GridOption,
-  SlickEventHandler,
-} from 'aurelia-slickgrid';
-
-const brandFormatter: Formatter = (_row, _cell, _value, _columnDef, dataContext) => {
-  return dataContext && dataContext.brand && dataContext.brand.name || '';
-};
-
-const mpnFormatter: Formatter = (_row, _cell, _value, _columnDef, dataContext) => {
-  let link = '';
-  if (dataContext && dataContext.octopart_url && dataContext.mpn) {
-    link = `<a href="${dataContext.octopart_url}" target="_blank">${dataContext.mpn}</a>`;
-  }
-  return link;
-};
+const sampleDataRoot = 'assets/data';
 
 export class Example17 {
-  @bindable({ mode: BindingMode.twoWay }) search = '';
-  private _eventHandler: any = new SlickEventHandler();
-
-  title = 'Example 17: Octopart Catalog Search - Remote Model Plugin';
-  subTitle = `
-    This example demonstrates how to use "slick.remotemodel.js" or any Remote implementation through an external Remote Service
-    <ul>
-      <li>Your browser might block access to the Octopart query, if you get "block content" then just unblock it.</li>
-      <li>If the demo throws some errors, try again later (there's a limit per day).</li>
-      <li>
-        Uses <a href="https://github.com/6pac/SlickGrid/blob/master/slick.remotemodel.js" target="_blank">slick.remotemodel.js</a>
-        which is hooked up to load search results from Octopart, but can easily be extended
-        to support any JSONP-compatible backend that accepts paging parameters.
-      </li>
-      <li>
-        This demo implements a custom DataView, however please note that you are on your own to implement all necessary DataView methods
-        for Sorting, Filtering, etc...
-      </li>
-      <li>
-        Soure code for this example is available <a href="https://github.com/ghiscoding/aurelia-slickgrid/blob/master/doc/github-demo/src/examples/slickgrid/example17.ts" target="_blank">here</a>
-      </li>
-    </ul>
-  `;
-  aureliaGrid!: AureliaGridInstance;
   columnDefinitions: Column[] = [];
-  customDataView: any;
-  dataset = [];
-  gridObj: any;
   gridOptions!: GridOption;
-  loaderDataView: any;
-  loading = false; // spinner when loading data
+  gridCreated = false;
+  showSubTitle = true;
+  dataset: any[] = [];
+  paginationPosition: 'bottom' | 'top' = 'top';
+  templateUrl = `${sampleDataRoot}/users.csv`;
+  uploadFileRef = '';
 
-  constructor() {
-    // define the grid options & columns and then create the grid itself
-    this.defineGrid();
-    // this.loaderDataView = new Slick.Data.RemoteModel!();
-    // this.customDataView = this.loaderDataView && this.loaderDataView.data;
+  destroyGrid() {
+    this.gridCreated = false;
   }
 
-  attached() {
-    this.hookAllLoaderEvents();
-
-    // set default search
-    // this.search = 'switch';
-    // this.loaderDataView.setSearch(this.search);
+  handleFileImport(event: any) {
+    const file: File = event.target.files[0];
+    if (file.name.endsWith('.csv')) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        const content = e.target.result;
+        this.dynamicallyCreateGrid(content);
+      };
+      reader.readAsText(file);
+    } else {
+      alert('File must be a CSV file');
+    }
   }
 
-  detaching() {
-    // unsubscribe all SlickGrid events
-    this._eventHandler.unsubscribeAll();
+  handleDefaultCsv() {
+    const staticDataCsv = `First Name,Last Name,Age,Type\nBob,Smith,33,Teacher\nJohn,Doe,20,Student\nJane,Doe,21,Student`;
+    this.dynamicallyCreateGrid(staticDataCsv);
+    this.uploadFileRef = '';
   }
 
-  aureliaGridReady(aureliaGrid: AureliaGridInstance) {
-    this.aureliaGrid = aureliaGrid;
-    this.gridObj = aureliaGrid.slickGrid; // grid object
-    // this.loaderDataView.setSort('score', -1);
-    // this.gridObj.setSortColumn('score', false);
+  dynamicallyCreateGrid(csvContent: string) {
+    // dispose of any previous grid before creating a new one
+    this.gridCreated = false;
 
-    // simulate a delayed search to preload the first page
-    window.setTimeout(() => this.searchChanged(this.search), 100);
-  }
+    const dataRows = csvContent?.split('\n');
+    const colDefs: Column[] = [];
+    const outputData: any[] = [];
 
-  defineGrid() {
-    this.columnDefinitions = [
-      { id: 'mpn', name: 'MPN', field: 'mpn', formatter: mpnFormatter, width: 100, sortable: true },
-      { id: 'brand', name: 'Brand', field: 'brand.name', formatter: brandFormatter, width: 100, sortable: true },
-      { id: 'short_description', name: 'Description', field: 'short_description', width: 520 },
-    ];
+    // create column definitions
+    dataRows.forEach((dataRow, rowIndex) => {
+      const cellValues = dataRow.split(',');
+      const dataEntryObj: any = {};
+
+      if (rowIndex === 0) {
+        // the 1st row is considered to be the header titles, we can create the column definitions from it
+        for (const cellVal of cellValues) {
+          const camelFieldName = toCamelCase(cellVal);
+          colDefs.push({
+            id: camelFieldName,
+            name: cellVal,
+            field: camelFieldName,
+            filterable: true,
+            sortable: true,
+          });
+        }
+      } else {
+        // at this point all column defs were created and we can loop through them and
+        // we can now start adding data as an object and then simply push it to the dataset array
+        cellValues.forEach((cellVal, colIndex) => {
+          dataEntryObj[colDefs[colIndex].id] = cellVal;
+        });
+
+        // a unique "id" must be provided, if not found then use the row index and push it to the dataset
+        if ('id' in dataEntryObj) {
+          outputData.push(dataEntryObj);
+        } else {
+          outputData.push({ ...dataEntryObj, id: rowIndex });
+        }
+      }
+    });
 
     this.gridOptions = {
-      enableAutoResize: true,
-      autoResize: {
-        container: '#demo-container',
-        rightPadding: 10
-      },
-      enableCellNavigation: true,
-      enableColumnReorder: false,
-      enableGridMenu: false,
-      multiColumnSort: false
+      gridHeight: 300,
+      gridWidth: 800,
+      enableFiltering: true,
+      enableExcelExport: true,
+      externalResources: [new ExcelExportService()],
+      headerRowHeight: 35,
+      rowHeight: 33,
     };
+
+    this.dataset = outputData;
+    this.columnDefinitions = colDefs;
+    console.log(this.columnDefinitions, this.dataset)
+    this.gridCreated = true;
   }
 
-  hookAllLoaderEvents() {
-    if (this._eventHandler && this._eventHandler.subscribe && this.loaderDataView && this.loaderDataView.onDataLoading && this.loaderDataView.onDataLoaded) {
-      this._eventHandler.subscribe(this.loaderDataView.onDataLoading, () => this.loading = true);
-      this._eventHandler.subscribe(this.loaderDataView.onDataLoaded, (_e: Event, args: any) => {
-        if (args && this.gridObj && this.gridObj.invalidateRow && this.gridObj.updateRowCount && this.gridObj.render) {
-          for (let i = args.from; i <= args.to; i++) {
-            this.gridObj.invalidateRow(i);
-          }
-          this.gridObj.updateRowCount();
-          this.gridObj.render();
-          this.loading = false;
-        }
-      });
-    }
-  }
-
-  searchChanged(newValue: string) {
-    if (newValue && this.gridObj && this.gridObj.getViewport && this.loaderDataView && this.loaderDataView.ensureData && this.loaderDataView.setSearch) {
-      const vp = this.gridObj.getViewport();
-      this.loaderDataView.setSearch(newValue);
-      this.loaderDataView.ensureData(vp.top, vp.bottom);
-    }
-  }
-
-  onSort(_e: Event, args: any) {
-    if (this.gridObj && this.gridObj.getViewport && this.loaderDataView && this.loaderDataView.ensureData && this.loaderDataView.setSort) {
-      const vp = this.gridObj.getViewport();
-      if (args && args.sortCol && args.sortCol.field) {
-        this.loaderDataView.setSort(args.sortCol.field, args.sortAsc ? 1 : -1);
-      }
-      this.loaderDataView.ensureData(vp.top, vp.bottom);
-    }
-  }
-
-  onViewportChanged() {
-    if (this.gridObj && this.gridObj.getViewport && this.loaderDataView && this.loaderDataView.ensureData) {
-      const vp = this.gridObj.getViewport();
-      this.loaderDataView.ensureData(vp.top, vp.bottom);
-    }
+  toggleSubTitle() {
+    this.showSubTitle = !this.showSubTitle;
+    const action = this.showSubTitle ? 'remove' : 'add';
+    document.querySelector('.subtitle')?.classList[action]('hidden');
   }
 }
