@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.12.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.11.0...v8.12.0) (2025-01-21)
+
+### Features
+
+* add `rowspan` implementation ([#1307](https://github.com/ghiscoding/aurelia-slickgrid/issues/1307)) ([9be6b78](https://github.com/ghiscoding/aurelia-slickgrid/commit/9be6b7826169d48c1d3b5f82a03881b1b2614abb)) - by @ghiscoding
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies ([#1302](https://github.com/ghiscoding/aurelia-slickgrid/issues/1302)) ([1e23bcf](https://github.com/ghiscoding/aurelia-slickgrid/commit/1e23bcf2c783128a830e707db7ab9a1611a6458c)) - by @renovate-bot
+
 ## [8.11.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.10.2...v8.11.0) (2024-12-14)
 
 ### Features
