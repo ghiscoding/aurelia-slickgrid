@@ -16,10 +16,15 @@ Default compiled `css` (if you use the plain Bootstrap Theme CSS, you could simp
 ```
 ##### WebPack
 ```typescript
+// Bootstrap is optional, you can use other framework
 import 'bootstrap/dist/css/bootstrap.css';
 
 // if you use CSS instead of SASS
+import '@slickgrid-universal/common/dist/styles/css/slickgrid-theme-default.css';
+// or other themes
 import '@slickgrid-universal/common/dist/styles/css/slickgrid-theme-bootstrap.css';
+import '@slickgrid-universal/common/dist/styles/css/slickgrid-theme-material.css';
+import '@slickgrid-universal/common/dist/styles/css/slickgrid-theme-salesforce.css';
 ```
 
 ### Using built-in Themes
@@ -28,9 +33,10 @@ The Material & Salesforce Themes are using SVGs internally for the icons used by
 ##### with CSS
 ```scss
 /* style.css */
-@use '@slickgrid-universal/common/dist/styles/css/slickgrid-theme-bootstrap.css';
+@use '@slickgrid-universal/common/dist/styles/css/slickgrid-theme-default.css';
 
 // or other Themes
+@use '@slickgrid-universal/common/dist/styles/css/slickgrid-theme-bootstrap.css';
 @use '@slickgrid-universal/common/dist/styles/styles/css/slickgrid-theme-material.css';
 @use '@slickgrid-universal/common/dist/styles/css/slickgrid-theme-salesforce.css';
 ```
@@ -38,7 +44,7 @@ The Material & Salesforce Themes are using SVGs internally for the icons used by
 ##### with SASS
 ```scss
 /* style.scss */
-@use '@slickgrid-universal/common/dist/styles/sass/slickgrid-theme-bootstrap.scss' with (
+@use '@slickgrid-universal/common/dist/styles/sass/slickgrid-theme-default.scss' with (
   $slick-primary-color: green,
   $slick-cell-odd-background-color: lightyellow,
   $slick-row-mouse-hover-color: lightgreen
@@ -73,7 +79,7 @@ You could use Custom SVGs and create your own Theme and/or a different set of SV
 $primary-color: blue;
 
 // then on the last line, import the Theme that you wish to override
-@use '@slickgrid-universal/common/dist/styles/sass/slickgrid-theme-bootstrap.scss' with (
+@use '@slickgrid-universal/common/dist/styles/sass/slickgrid-theme-default.scss' with (
   $slick-primary-color: $primary-color,
   $slick-icon-group-color: $primary-color,
   $slick-icon-group-collapsed-svg-path: "M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z",
