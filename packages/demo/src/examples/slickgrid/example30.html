@@ -75,7 +75,6 @@
                     on-composite-editor-change.trigger="handleOnCompositeEditorChange($event.detail.eventData, $event.detail.args)"
                     on-item-deleted.trigger="handleItemDeleted($event.detail)"
                     on-grid-state-changed.trigger="handleOnGridStateChanged($event.detail)"
-                    on-filter-changed.trigger="handleReRenderUnsavedStyling()"
-                    on-pagination-changed.trigger="handleReRenderUnsavedStyling()"
+                    on-rows-or-count-changed.trigger="handleReRenderUnsavedStyling()"
                     on-validation-error.trigger="handleValidationError($event.detail.eventData, $event.detail.args)">
 </aurelia-slickgrid>
