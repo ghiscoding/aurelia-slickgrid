@@ -306,7 +306,7 @@ export class AureliaSlickgridCustomElement {
 
     if (!this.customDataView) {
       const dataviewInlineFilters = this.gridOptions.dataView && this.gridOptions.dataView.inlineFilters || false;
-      let dataViewOptions: Partial<DataViewOption> = { inlineFilters: dataviewInlineFilters };
+      let dataViewOptions: Partial<DataViewOption> = { ...this.gridOptions.dataView, inlineFilters: dataviewInlineFilters };
 
       if (this.gridOptions.draggableGrouping || this.gridOptions.enableGrouping) {
         this.groupItemMetadataProvider = new SlickGroupItemMetadataProvider();
@@ -778,6 +778,7 @@ export class AureliaSlickgridCustomElement {
       }
     }
 
+    // @deprecated @user `dataview.globalItemMetadataProvider.getRowMetadata`
     // did the user add a colspan callback? If so, hook it into the DataView getItemMetadata
     if (gridOptions?.colspanCallback && dataView?.getItem && dataView?.getItemMetadata) {
       dataView.getItemMetadata = (rowNumber: number) => {
