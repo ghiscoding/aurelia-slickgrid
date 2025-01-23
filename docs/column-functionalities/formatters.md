@@ -11,7 +11,6 @@
   - [Example of Custom Formatter with Native DOM Element](#example-of-custom-formatter-with-native-dom-element)
 * [Common Formatter Options](#common-formatter-options)
 * [PostRenderer Formatter](#postrender-formatter)
-* [UI Sample](#ui-sample)
 
 ### Demo
 [Demo Page](https://ghiscoding.github.io/aurelia-slickgrid/#/slickgrid/example2) / [Demo ViewModel](https://github.com/ghiscoding/aurelia-slickgrid/blob/master/packages/demo/src/examples/slickgrid/example2.ts)
