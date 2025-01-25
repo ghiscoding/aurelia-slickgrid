@@ -40,8 +40,8 @@ importers:
         specifier: ^3.11.0
         version: 3.11.0(@types/node@22.10.10)(typescript@5.7.3)
       '@slickgrid-universal/common':
-        specifier: ^5.12.0
-        version: 5.12.0
+        specifier: ^5.12.1
+        version: 5.12.1
       '@types/jest':
         specifier: ^29.5.14
         version: 29.5.14
@@ -61,17 +61,17 @@ importers:
         specifier: ^1.14.0
         version: 1.14.0(cypress@14.0.0)
       eslint:
-        specifier: ^9.18.0
-        version: 9.18.0(jiti@1.21.0)
+        specifier: ^9.19.0
+        version: 9.19.0(jiti@1.21.0)
       eslint-plugin-cypress:
         specifier: ^4.1.0
-        version: 4.1.0(eslint@9.18.0(jiti@1.21.0))
+        version: 4.1.0(eslint@9.19.0(jiti@1.21.0))
       eslint-plugin-n:
         specifier: ^17.15.1
-        version: 17.15.1(eslint@9.18.0(jiti@1.21.0))
+        version: 17.15.1(eslint@9.19.0(jiti@1.21.0))
       eslint-plugin-prefer-arrow:
         specifier: ^1.2.3
-        version: 1.2.3(eslint@9.18.0(jiti@1.21.0))
+        version: 1.2.3(eslint@9.19.0(jiti@1.21.0))
       globals:
         specifier: ^15.14.0
         version: 15.14.0
@@ -113,7 +113,7 @@ importers:
         version: 5.7.3
       typescript-eslint:
         specifier: ^8.21.0
-        version: 8.21.0(eslint@9.18.0(jiti@1.21.0))(typescript@5.7.3)
+        version: 8.21.0(eslint@9.19.0(jiti@1.21.0))(typescript@5.7.3)
 
   packages/aurelia-slickgrid:
     dependencies:
@@ -130,23 +130,23 @@ importers:
         specifier: ^0.1.2
         version: 0.1.2
       '@slickgrid-universal/common':
-        specifier: ~5.12.0
-        version: 5.12.0
+        specifier: ~5.12.1
+        version: 5.12.1
       '@slickgrid-universal/custom-footer-component':
-        specifier: ~5.12.0
-        version: 5.12.0
+        specifier: ~5.12.1
+        version: 5.12.1
       '@slickgrid-universal/empty-warning-component':
-        specifier: ~5.12.0
-        version: 5.12.0
+        specifier: ~5.12.1
+        version: 5.12.1
       '@slickgrid-universal/event-pub-sub':
         specifier: ~5.12.0
         version: 5.12.0
       '@slickgrid-universal/pagination-component':
-        specifier: ~5.12.0
-        version: 5.12.0
+        specifier: ~5.12.1
+        version: 5.12.1
       '@slickgrid-universal/row-detail-view-plugin':
-        specifier: ~5.12.0
-        version: 5.12.0
+        specifier: ~5.12.1
+        version: 5.12.1
       '@slickgrid-universal/utils':
         specifier: ~5.12.0
         version: 5.12.0
@@ -212,32 +212,32 @@ importers:
         specifier: ^2.11.8
         version: 2.11.8
       '@slickgrid-universal/common':
-        specifier: ^5.12.0
-        version: 5.12.0
+        specifier: ^5.12.1
+        version: 5.12.1
       '@slickgrid-universal/composite-editor-component':
-        specifier: ^5.12.0
-        version: 5.12.0
+        specifier: ^5.12.1
+        version: 5.12.1
       '@slickgrid-universal/custom-tooltip-plugin':
-        specifier: ^5.12.0
-        version: 5.12.0
+        specifier: ^5.12.1
+        version: 5.12.1
       '@slickgrid-universal/excel-export':
-        specifier: ^5.12.0
-        version: 5.12.0
+        specifier: ^5.12.1
+        version: 5.12.1
       '@slickgrid-universal/graphql':
-        specifier: ^5.12.0
-        version: 5.12.0
+        specifier: ^5.12.1
+        version: 5.12.1
       '@slickgrid-universal/odata':
-        specifier: ^5.12.0
-        version: 5.12.0
+        specifier: ^5.12.1
+        version: 5.12.1
       '@slickgrid-universal/row-detail-view-plugin':
-        specifier: ^5.12.0
-        version: 5.12.0
+        specifier: ^5.12.1
+        version: 5.12.1
       '@slickgrid-universal/rxjs-observable':
-        specifier: ^5.12.0
-        version: 5.12.0
+        specifier: ^5.12.1
+        version: 5.12.1
       '@slickgrid-universal/text-export':
-        specifier: ^5.12.0
-        version: 5.12.0
+        specifier: ^5.12.1
+        version: 5.12.1
       aurelia:
         specifier: ^2.0.0-beta.22
         version: 2.0.0-beta.22
@@ -655,8 +655,8 @@ packages:
     resolution: {integrity: sha512-grOjVNN8P3hjJn/eIETF1wwd12DdnwFDoyceUJLYYdkpbwq3nLi+4fqrTAONx7XDALqlL220wC/RHSC/QTI/0w==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@eslint/js@9.18.0':
-    resolution: {integrity: sha512-fK6L7rxcq6/z+AaQMtiFTkvbHkBLNlwyRxHpKawP0x3u9+NC6MQTnFW+AdpwC6gfHTW0051cokQgtTN2FqlxQA==}
+  '@eslint/js@9.19.0':
+    resolution: {integrity: sha512-rbq9/g38qjfqFLOVPvwjIvFFdNziEC5S65jmjPw5r6A//QH+W91akh9irMwjDN8zKUTak6W9EsAv4m/7Wnw0UQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
   '@eslint/object-schema@2.1.4':
@@ -1143,45 +1143,45 @@ packages:
   '@slickgrid-universal/binding@5.12.0':
     resolution: {integrity: sha512-A4RNtlSkpAg7+lmtrUF0TVYM+Li/p9WxX7IHC8McqCA/4T412Twit+/cNeohTuje8P/zo5cpHpQlbciuh9HsbA==}
 
-  '@slickgrid-universal/common@5.12.0':
-    resolution: {integrity: sha512-u3DX6sIkLeqaKotyaRM9gVGqKEP2uum0vjvblOH78vy8wqyST4DK3a4m5p9CgHypuRBnMnNsd6NdmjuKjsj74A==}
+  '@slickgrid-universal/common@5.12.1':
+    resolution: {integrity: sha512-YBCWPjRtpyzllt2fmj8t+jTGcEXlbqXG77j8niHc3nX00yZ+D3gn35y8LuJXApEvvgz21bqefTSjJ6Hi2eNv1w==}
     engines: {node: ^18.0.0 || >=20.0.0}
 
-  '@slickgrid-universal/composite-editor-component@5.12.0':
-    resolution: {integrity: sha512-IocfF5j2YrOm5bA4y3/XC0ZFXNL/zU94zvJihaFg/p84/7nnA0X5I/V+TKY4Ff8OaArkJUtkwVbfhbr8hBZ+Dg==}
+  '@slickgrid-universal/composite-editor-component@5.12.1':
+    resolution: {integrity: sha512-AkB/rHYlyy2SCspIYrYQFsNlQtyLDiHU+iMYu9X913DIN7a3tW2kbvuRJnf0wHme/HfcvHRVpszmp9NkKxUj0Q==}
 
-  '@slickgrid-universal/custom-footer-component@5.12.0':
-    resolution: {integrity: sha512-V1yzQnaezqtHivuGd7UlLcyY7lhZ3oS3ArAZAWABJosh+HfhG3ttzn6qAJUrDg5oHzGuLq/WwCNRyfxy4yg0uQ==}
+  '@slickgrid-universal/custom-footer-component@5.12.1':
+    resolution: {integrity: sha512-LP8uJrpjbAQTM/Y7d0/SwRxrId+CjOjnVvcBBdXCI+zeAsOL74ba2q3XdvV1CPWoggeHS/zUaiHdrRGSvLdHxw==}
 
-  '@slickgrid-universal/custom-tooltip-plugin@5.12.0':
-    resolution: {integrity: sha512-p8CONc2NwCpuPJj4EPkT1hIu0aU0fdyj1qvTQSXH658r1IOBQ2cjUlHQ3S4ymFPYF5RymNlYoaHsgHWwDSzmuA==}
+  '@slickgrid-universal/custom-tooltip-plugin@5.12.1':
+    resolution: {integrity: sha512-oreuqFpo2O5tSweyPIdADWywFpOxPbx+9ucqPD8+WTdD4rJjzSnLkjBCznM6tLqXyZuacDXvsEYfIlTKKmpuyA==}
 
-  '@slickgrid-universal/empty-warning-component@5.12.0':
-    resolution: {integrity: sha512-n7fUCeb4IEaSInphvrhf028DcdRdMdPDxEjDvr+CyQMZp1xQAePvAkt7I/dqVtstJtHToavk1ZFwrDc/pnpXVA==}
+  '@slickgrid-universal/empty-warning-component@5.12.1':
+    resolution: {integrity: sha512-tXyfxkxz3fiComkiytrFBqTvfVxhsfkOxmldAF2RQWIt3RGpxzLoFI/316aoKT9v1qt23easPOqlgcMM01XlxA==}
 
   '@slickgrid-universal/event-pub-sub@5.12.0':
     resolution: {integrity: sha512-7EuBvsYykHRP12wiquzqW0LMv5ZyuVkQEzhMVE1pu0gp4K6Eh+Hdl7Kw5hLEr29ERfvUCN/zBlpDVIx6OlZ9PQ==}
 
-  '@slickgrid-universal/excel-export@5.12.0':
-    resolution: {integrity: sha512-yBxXr1QRqA6OGCVQ62/R8lXpgXQibcDh41jFlnV96k/dCinR5B/R1l4fX11Y+MhNn379tmBrfXFzMYCt4bPEHA==}
+  '@slickgrid-universal/excel-export@5.12.1':
+    resolution: {integrity: sha512-R7p+N6PonrR6FBmIUMX3LXQ1mfmOd9Bd0KPLCWmrsQEpRF85rsWOo7rE9SKqTI5YzghV5A7Gihzd5f8R3xnZrQ==}
 
-  '@slickgrid-universal/graphql@5.12.0':
-    resolution: {integrity: sha512-S2JzVBjluAJJQIt0+ZneaMBDFgS3TtTkiclVfxGH7DKrFm5OHaNxbN1o6UIxJS1ksdTh1xRMsRuaZZS9aHi7dQ==}
+  '@slickgrid-universal/graphql@5.12.1':
+    resolution: {integrity: sha512-j4V7fFI409h2ksshWhQ/1aYVKXNWFCLh5SRnz0oPg72QKeS4RxuX9myDGk8YADNsJVmFSzlJTkF3RFK3SuZSVg==}
 
-  '@slickgrid-universal/odata@5.12.0':
-    resolution: {integrity: sha512-wI3AW4N/yRRPQEmpay5qiOL9nFH7eY9wHGriCHz8UHnTHR4xz+EGxZvjWqGLW2osvSMOvPkoeW/k/uEcgEuD6A==}
+  '@slickgrid-universal/odata@5.12.1':
+    resolution: {integrity: sha512-pV6Jj9OBdZb0nXIqz0zIIui1+n41IFPo7fDLhmdTSudbKg14qqSruOzSabB2ZRpL5KJIJEna5Q+u7TzXM9+eHA==}
 
-  '@slickgrid-universal/pagination-component@5.12.0':
-    resolution: {integrity: sha512-B2walKcTMsdtxcjctazkpuUUmKBXnwlJ2azsoJzKRREK02NVdktqK2051/0ZDebD6CCABoaC6U6fMmoa4lDk2A==}
+  '@slickgrid-universal/pagination-component@5.12.1':
+    resolution: {integrity: sha512-OU4WPx7+8hagcLLw5vwhQOb9DiFYZfbgEBUmkheaAeA6qsxuTfheNYBCa1sFjLvGRn3z7L7FJiWdHQkcYOo3oQ==}
 
-  '@slickgrid-universal/row-detail-view-plugin@5.12.0':
-    resolution: {integrity: sha512-wkkBcXxO6wv39fBTzg2q6oXaxNRinS1AAI0gM76ijsWQT8IDD1FuqmF1m8P7UQiraCU7A9C2rG6blDif6zF7gg==}
+  '@slickgrid-universal/row-detail-view-plugin@5.12.1':
+    resolution: {integrity: sha512-wsoChAvhvjohEtGFJps84r0qnXY4cg1wQ2I6IcrkdzpcntuF1MrHnoLeBT7UEOyn+RxPofovzOxjjWJyqzd2cA==}
 
-  '@slickgrid-universal/rxjs-observable@5.12.0':
-    resolution: {integrity: sha512-bulgCBGtxcF1cYSYI9qqMQAsMU/1YWeiltxi+a7jMTYSzZAb7NA39poLDs1PVVncvFuVvidoaGEu8s2mRn1izQ==}
+  '@slickgrid-universal/rxjs-observable@5.12.1':
+    resolution: {integrity: sha512-qc3U1mAKhnxVcIDCvCzO0rWgrxceUt2+ARg5KLCFpxNHdZlhxF3s+HEzzM0+0LNkNENLo/9c45hBv+sXv+3frg==}
 
-  '@slickgrid-universal/text-export@5.12.0':
-    resolution: {integrity: sha512-z4hoNPYsDvW6hjsF73FRgXdnDP2e1PxLwa41SfJrYhdOkz+25wH4q6qWjtoMDqOwfqwGEUOKK/QREYecCVZHEg==}
+  '@slickgrid-universal/text-export@5.12.1':
+    resolution: {integrity: sha512-9cFMFZ1o+oDalLSM+uNoEI5gY/Znpg3gdUI/2AuNdf6Mia3WYNRD2H+LYKO7QnY0fANV+7511RCF1Ugv89sZNg==}
 
   '@slickgrid-universal/utils@5.12.0':
     resolution: {integrity: sha512-vw5Is2bdY+EjYw8dAJaAW6f+Iir0trwcz43cVI+Cpic9sTC6c7+UP89cvyW1sISN7YsWYRdtJjDT+BW9i6sSwg==}
@@ -1510,11 +1510,6 @@ packages:
 
   acorn@8.11.3:
     resolution: {integrity: sha512-Y9rRfJG5jcKOE0CLisYbojUjIrIEE7AGMzA/Sm4BslANhbS+cDMpgBdcPT91oJ7OuJ9hYJBx59RjbhxVnrF8Xg==}
-    engines: {node: '>=0.4.0'}
-    hasBin: true
-
-  acorn@8.12.0:
-    resolution: {integrity: sha512-RTvkC4w+KNXrM39/lWCUaG0IbRkWdCv7W/IOW9oU6SawyxulvkQy5HQPVTKxEjczcUvapcrw3cFx/60VN/NRNw==}
     engines: {node: '>=0.4.0'}
     hasBin: true
 
@@ -2536,8 +2531,8 @@ packages:
     resolution: {integrity: sha512-UyLnSehNt62FFhSwjZlHmeokpRK59rcz29j+F1/aDgbkbRTk7wIc9XzdoasMUbRNKDM0qQt/+BJ4BrpFeABemw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  eslint@9.18.0:
-    resolution: {integrity: sha512-+waTfRWQlSbpt3KWE+CjrPPYnbq9kfZIYUqapc0uBXyjTp8aYXZDsUH16m39Ryq3NjAVP4tjuF7KaukeqoCoaA==}
+  eslint@9.19.0:
+    resolution: {integrity: sha512-ug92j0LepKlbbEv6hD911THhoRHmbdXt2gX+VDABAW/Ir7D3nqKdv5Pf5vtlyY6HQMTEP2skXY43ueqTCWssEA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     hasBin: true
     peerDependencies:
@@ -5837,9 +5832,9 @@ snapshots:
 
   '@discoveryjs/json-ext@0.6.3': {}
 
-  '@eslint-community/eslint-utils@4.4.1(eslint@9.18.0(jiti@1.21.0))':
+  '@eslint-community/eslint-utils@4.4.1(eslint@9.19.0(jiti@1.21.0))':
     dependencies:
-      eslint: 9.18.0(jiti@1.21.0)
+      eslint: 9.19.0(jiti@1.21.0)
       eslint-visitor-keys: 3.4.3
 
   '@eslint-community/regexpp@4.12.1': {}
@@ -5870,7 +5865,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@eslint/js@9.18.0': {}
+  '@eslint/js@9.19.0': {}
 
   '@eslint/object-schema@2.1.4': {}
 
@@ -6641,7 +6636,7 @@ snapshots:
 
   '@slickgrid-universal/binding@5.12.0': {}
 
-  '@slickgrid-universal/common@5.12.0':
+  '@slickgrid-universal/common@5.12.1':
     dependencies:
       '@excel-builder-vanilla/types': 3.0.14
       '@formkit/tempo': 0.1.2
@@ -6657,65 +6652,65 @@ snapshots:
       un-flatten-tree: 2.0.12
       vanilla-calendar-pro: 2.9.10
 
-  '@slickgrid-universal/composite-editor-component@5.12.0':
+  '@slickgrid-universal/composite-editor-component@5.12.1':
     dependencies:
       '@slickgrid-universal/binding': 5.12.0
-      '@slickgrid-universal/common': 5.12.0
+      '@slickgrid-universal/common': 5.12.1
       '@slickgrid-universal/utils': 5.12.0
 
-  '@slickgrid-universal/custom-footer-component@5.12.0':
+  '@slickgrid-universal/custom-footer-component@5.12.1':
     dependencies:
       '@formkit/tempo': 0.1.2
       '@slickgrid-universal/binding': 5.12.0
-      '@slickgrid-universal/common': 5.12.0
+      '@slickgrid-universal/common': 5.12.1
 
-  '@slickgrid-universal/custom-tooltip-plugin@5.12.0':
+  '@slickgrid-universal/custom-tooltip-plugin@5.12.1':
     dependencies:
-      '@slickgrid-universal/common': 5.12.0
+      '@slickgrid-universal/common': 5.12.1
       '@slickgrid-universal/utils': 5.12.0
 
-  '@slickgrid-universal/empty-warning-component@5.12.0':
+  '@slickgrid-universal/empty-warning-component@5.12.1':
     dependencies:
-      '@slickgrid-universal/common': 5.12.0
+      '@slickgrid-universal/common': 5.12.1
 
   '@slickgrid-universal/event-pub-sub@5.12.0':
     dependencies:
       '@slickgrid-universal/utils': 5.12.0
 
-  '@slickgrid-universal/excel-export@5.12.0':
+  '@slickgrid-universal/excel-export@5.12.1':
     dependencies:
-      '@slickgrid-universal/common': 5.12.0
+      '@slickgrid-universal/common': 5.12.1
       '@slickgrid-universal/utils': 5.12.0
       excel-builder-vanilla: 3.0.14
 
-  '@slickgrid-universal/graphql@5.12.0':
+  '@slickgrid-universal/graphql@5.12.1':
     dependencies:
-      '@slickgrid-universal/common': 5.12.0
+      '@slickgrid-universal/common': 5.12.1
       '@slickgrid-universal/utils': 5.12.0
 
-  '@slickgrid-universal/odata@5.12.0':
+  '@slickgrid-universal/odata@5.12.1':
     dependencies:
-      '@slickgrid-universal/common': 5.12.0
+      '@slickgrid-universal/common': 5.12.1
       '@slickgrid-universal/utils': 5.12.0
 
-  '@slickgrid-universal/pagination-component@5.12.0':
+  '@slickgrid-universal/pagination-component@5.12.1':
     dependencies:
       '@slickgrid-universal/binding': 5.12.0
-      '@slickgrid-universal/common': 5.12.0
+      '@slickgrid-universal/common': 5.12.1
 
-  '@slickgrid-universal/row-detail-view-plugin@5.12.0':
+  '@slickgrid-universal/row-detail-view-plugin@5.12.1':
     dependencies:
-      '@slickgrid-universal/common': 5.12.0
+      '@slickgrid-universal/common': 5.12.1
       '@slickgrid-universal/utils': 5.12.0
 
-  '@slickgrid-universal/rxjs-observable@5.12.0':
+  '@slickgrid-universal/rxjs-observable@5.12.1':
     dependencies:
-      '@slickgrid-universal/common': 5.12.0
+      '@slickgrid-universal/common': 5.12.1
       rxjs: 7.8.1
 
-  '@slickgrid-universal/text-export@5.12.0':
+  '@slickgrid-universal/text-export@5.12.1':
     dependencies:
-      '@slickgrid-universal/common': 5.12.0
+      '@slickgrid-universal/common': 5.12.1
       '@slickgrid-universal/utils': 5.12.0
       text-encoding-utf-8: 1.0.2
 
@@ -6915,15 +6910,15 @@ snapshots:
       '@types/node': 22.10.10
     optional: true
 
-  '@typescript-eslint/eslint-plugin@8.21.0(@typescript-eslint/parser@8.21.0(eslint@9.18.0(jiti@1.21.0))(typescript@5.7.3))(eslint@9.18.0(jiti@1.21.0))(typescript@5.7.3)':
+  '@typescript-eslint/eslint-plugin@8.21.0(@typescript-eslint/parser@8.21.0(eslint@9.19.0(jiti@1.21.0))(typescript@5.7.3))(eslint@9.19.0(jiti@1.21.0))(typescript@5.7.3)':
     dependencies:
       '@eslint-community/regexpp': 4.12.1
-      '@typescript-eslint/parser': 8.21.0(eslint@9.18.0(jiti@1.21.0))(typescript@5.7.3)
+      '@typescript-eslint/parser': 8.21.0(eslint@9.19.0(jiti@1.21.0))(typescript@5.7.3)
       '@typescript-eslint/scope-manager': 8.21.0
-      '@typescript-eslint/type-utils': 8.21.0(eslint@9.18.0(jiti@1.21.0))(typescript@5.7.3)
-      '@typescript-eslint/utils': 8.21.0(eslint@9.18.0(jiti@1.21.0))(typescript@5.7.3)
+      '@typescript-eslint/type-utils': 8.21.0(eslint@9.19.0(jiti@1.21.0))(typescript@5.7.3)
+      '@typescript-eslint/utils': 8.21.0(eslint@9.19.0(jiti@1.21.0))(typescript@5.7.3)
       '@typescript-eslint/visitor-keys': 8.21.0
-      eslint: 9.18.0(jiti@1.21.0)
+      eslint: 9.19.0(jiti@1.21.0)
       graphemer: 1.4.0
       ignore: 5.3.2
       natural-compare: 1.4.0
@@ -6932,14 +6927,14 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@typescript-eslint/parser@8.21.0(eslint@9.18.0(jiti@1.21.0))(typescript@5.7.3)':
+  '@typescript-eslint/parser@8.21.0(eslint@9.19.0(jiti@1.21.0))(typescript@5.7.3)':
     dependencies:
       '@typescript-eslint/scope-manager': 8.21.0
       '@typescript-eslint/types': 8.21.0
       '@typescript-eslint/typescript-estree': 8.21.0(typescript@5.7.3)
       '@typescript-eslint/visitor-keys': 8.21.0
       debug: 4.4.0(supports-color@8.1.1)
-      eslint: 9.18.0(jiti@1.21.0)
+      eslint: 9.19.0(jiti@1.21.0)
       typescript: 5.7.3
     transitivePeerDependencies:
       - supports-color
@@ -6949,12 +6944,12 @@ snapshots:
       '@typescript-eslint/types': 8.21.0
       '@typescript-eslint/visitor-keys': 8.21.0
 
-  '@typescript-eslint/type-utils@8.21.0(eslint@9.18.0(jiti@1.21.0))(typescript@5.7.3)':
+  '@typescript-eslint/type-utils@8.21.0(eslint@9.19.0(jiti@1.21.0))(typescript@5.7.3)':
     dependencies:
       '@typescript-eslint/typescript-estree': 8.21.0(typescript@5.7.3)
-      '@typescript-eslint/utils': 8.21.0(eslint@9.18.0(jiti@1.21.0))(typescript@5.7.3)
+      '@typescript-eslint/utils': 8.21.0(eslint@9.19.0(jiti@1.21.0))(typescript@5.7.3)
       debug: 4.4.0(supports-color@8.1.1)
-      eslint: 9.18.0(jiti@1.21.0)
+      eslint: 9.19.0(jiti@1.21.0)
       ts-api-utils: 2.0.0(typescript@5.7.3)
       typescript: 5.7.3
     transitivePeerDependencies:
@@ -6976,13 +6971,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@typescript-eslint/utils@8.21.0(eslint@9.18.0(jiti@1.21.0))(typescript@5.7.3)':
+  '@typescript-eslint/utils@8.21.0(eslint@9.19.0(jiti@1.21.0))(typescript@5.7.3)':
     dependencies:
-      '@eslint-community/eslint-utils': 4.4.1(eslint@9.18.0(jiti@1.21.0))
+      '@eslint-community/eslint-utils': 4.4.1(eslint@9.19.0(jiti@1.21.0))
       '@typescript-eslint/scope-manager': 8.21.0
       '@typescript-eslint/types': 8.21.0
       '@typescript-eslint/typescript-estree': 8.21.0(typescript@5.7.3)
-      eslint: 9.18.0(jiti@1.21.0)
+      eslint: 9.19.0(jiti@1.21.0)
       typescript: 5.7.3
     transitivePeerDependencies:
       - supports-color
@@ -7115,8 +7110,6 @@ snapshots:
   acorn-walk@8.3.2: {}
 
   acorn@8.11.3: {}
-
-  acorn@8.12.0: {}
 
   acorn@8.14.0: {}
 
@@ -8099,38 +8092,38 @@ snapshots:
     optionalDependencies:
       source-map: 0.6.1
 
-  eslint-compat-utils@0.5.1(eslint@9.18.0(jiti@1.21.0)):
+  eslint-compat-utils@0.5.1(eslint@9.19.0(jiti@1.21.0)):
     dependencies:
-      eslint: 9.18.0(jiti@1.21.0)
+      eslint: 9.19.0(jiti@1.21.0)
       semver: 7.6.3
 
-  eslint-plugin-cypress@4.1.0(eslint@9.18.0(jiti@1.21.0)):
+  eslint-plugin-cypress@4.1.0(eslint@9.19.0(jiti@1.21.0)):
     dependencies:
-      eslint: 9.18.0(jiti@1.21.0)
+      eslint: 9.19.0(jiti@1.21.0)
       globals: 15.14.0
 
-  eslint-plugin-es-x@7.8.0(eslint@9.18.0(jiti@1.21.0)):
+  eslint-plugin-es-x@7.8.0(eslint@9.19.0(jiti@1.21.0)):
     dependencies:
-      '@eslint-community/eslint-utils': 4.4.1(eslint@9.18.0(jiti@1.21.0))
+      '@eslint-community/eslint-utils': 4.4.1(eslint@9.19.0(jiti@1.21.0))
       '@eslint-community/regexpp': 4.12.1
-      eslint: 9.18.0(jiti@1.21.0)
-      eslint-compat-utils: 0.5.1(eslint@9.18.0(jiti@1.21.0))
+      eslint: 9.19.0(jiti@1.21.0)
+      eslint-compat-utils: 0.5.1(eslint@9.19.0(jiti@1.21.0))
 
-  eslint-plugin-n@17.15.1(eslint@9.18.0(jiti@1.21.0)):
+  eslint-plugin-n@17.15.1(eslint@9.19.0(jiti@1.21.0)):
     dependencies:
-      '@eslint-community/eslint-utils': 4.4.1(eslint@9.18.0(jiti@1.21.0))
+      '@eslint-community/eslint-utils': 4.4.1(eslint@9.19.0(jiti@1.21.0))
       enhanced-resolve: 5.17.1
-      eslint: 9.18.0(jiti@1.21.0)
-      eslint-plugin-es-x: 7.8.0(eslint@9.18.0(jiti@1.21.0))
+      eslint: 9.19.0(jiti@1.21.0)
+      eslint-plugin-es-x: 7.8.0(eslint@9.19.0(jiti@1.21.0))
       get-tsconfig: 4.8.1
       globals: 15.14.0
       ignore: 5.3.2
       minimatch: 9.0.5
       semver: 7.6.3
 
-  eslint-plugin-prefer-arrow@1.2.3(eslint@9.18.0(jiti@1.21.0)):
+  eslint-plugin-prefer-arrow@1.2.3(eslint@9.19.0(jiti@1.21.0)):
     dependencies:
-      eslint: 9.18.0(jiti@1.21.0)
+      eslint: 9.19.0(jiti@1.21.0)
 
   eslint-scope@5.1.1:
     dependencies:
@@ -8146,14 +8139,14 @@ snapshots:
 
   eslint-visitor-keys@4.2.0: {}
 
-  eslint@9.18.0(jiti@1.21.0):
+  eslint@9.19.0(jiti@1.21.0):
     dependencies:
-      '@eslint-community/eslint-utils': 4.4.1(eslint@9.18.0(jiti@1.21.0))
+      '@eslint-community/eslint-utils': 4.4.1(eslint@9.19.0(jiti@1.21.0))
       '@eslint-community/regexpp': 4.12.1
       '@eslint/config-array': 0.19.0
       '@eslint/core': 0.10.0
       '@eslint/eslintrc': 3.2.0
-      '@eslint/js': 9.18.0
+      '@eslint/js': 9.19.0
       '@eslint/plugin-kit': 0.2.5
       '@humanfs/node': 0.16.6
       '@humanwhocodes/module-importer': 1.0.1
@@ -9381,7 +9374,7 @@ snapshots:
   jsdom@20.0.3:
     dependencies:
       abab: 2.0.6
-      acorn: 8.12.0
+      acorn: 8.14.0
       acorn-globals: 7.0.1
       cssom: 0.5.0
       cssstyle: 2.3.0
@@ -10963,12 +10956,12 @@ snapshots:
       media-typer: 0.3.0
       mime-types: 2.1.35
 
-  typescript-eslint@8.21.0(eslint@9.18.0(jiti@1.21.0))(typescript@5.7.3):
+  typescript-eslint@8.21.0(eslint@9.19.0(jiti@1.21.0))(typescript@5.7.3):
     dependencies:
-      '@typescript-eslint/eslint-plugin': 8.21.0(@typescript-eslint/parser@8.21.0(eslint@9.18.0(jiti@1.21.0))(typescript@5.7.3))(eslint@9.18.0(jiti@1.21.0))(typescript@5.7.3)
-      '@typescript-eslint/parser': 8.21.0(eslint@9.18.0(jiti@1.21.0))(typescript@5.7.3)
-      '@typescript-eslint/utils': 8.21.0(eslint@9.18.0(jiti@1.21.0))(typescript@5.7.3)
-      eslint: 9.18.0(jiti@1.21.0)
+      '@typescript-eslint/eslint-plugin': 8.21.0(@typescript-eslint/parser@8.21.0(eslint@9.19.0(jiti@1.21.0))(typescript@5.7.3))(eslint@9.19.0(jiti@1.21.0))(typescript@5.7.3)
+      '@typescript-eslint/parser': 8.21.0(eslint@9.19.0(jiti@1.21.0))(typescript@5.7.3)
+      '@typescript-eslint/utils': 8.21.0(eslint@9.19.0(jiti@1.21.0))(typescript@5.7.3)
+      eslint: 9.19.0(jiti@1.21.0)
       typescript: 5.7.3
     transitivePeerDependencies:
       - supports-color
