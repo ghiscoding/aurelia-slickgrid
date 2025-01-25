@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.12.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.12.0...v8.12.1) (2025-01-25)
+
+### Bug Fixes
+
+* add `autoResize.autoHeight` to resize by dataset length ([#1310](https://github.com/ghiscoding/aurelia-slickgrid/issues/1310)) ([1070d19](https://github.com/ghiscoding/aurelia-slickgrid/commit/1070d19643bf5af8311bb2e2dff5ccf8bde7f96d)) - by @ghiscoding
+* RowSpan should work with Excel Export and merge cells ([#1309](https://github.com/ghiscoding/aurelia-slickgrid/issues/1309)) ([b7ef2a8](https://github.com/ghiscoding/aurelia-slickgrid/commit/b7ef2a82410d2e2a65d42a28295f8122246e0513)) - by @ghiscoding
+
 ## [8.12.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.11.0...v8.12.0) (2025-01-21)
 
 ### Features
