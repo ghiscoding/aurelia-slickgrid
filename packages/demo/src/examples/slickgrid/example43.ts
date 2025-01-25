@@ -16,6 +16,7 @@ export class Example43 {
   dataset: any[] = [];
   isEditable = false;
   showSubTitle = true;
+  excelExportService = new ExcelExportService();
   metadata: ItemMetadata | Record<number, ItemMetadata> = {
     // 10001: Davolio
     0: {
@@ -154,7 +155,7 @@ export class Example43 {
       enableColumnReorder: true,
       enableCellRowSpan: true,
       enableExcelExport: true,
-      externalResources: [new ExcelExportService()],
+      externalResources: [this.excelExportService],
       enableExcelCopyBuffer: true,
       autoEdit: true,
       editable: false,
@@ -171,6 +172,10 @@ export class Example43 {
       },
       rowTopOffsetRenderType: 'top', // rowspan doesn't render well with 'transform', default is 'top'
     };
+  }
+
+  exportToExcel() {
+    this.excelExportService.exportToExcel({ filename: 'export', format: 'xlsx' });
   }
 
   navigateDown() {
