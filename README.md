@@ -83,6 +83,44 @@ Check out the [Releases](https://github.com/ghiscoding/aurelia-slickgrid/release
 ### Tested with [Jest](https://jestjs.io/) (Unit Tests) - [Cypress](https://www.cypress.io/) (E2E Tests)
 Slickgrid-Universal has **100%** Unit Test Coverage and all Aurelia-Slickgrid Examples are tested with [Cypress](https://www.cypress.io/) as E2E tests.
 
+
+#### Basic Grid
+
+```ts
+import { type Column, type GridOption } from 'aurelia-slickgrid';
+
+export class Example {
+  columnDefinitions: Column[] = [];
+  gridOptions: GridOption;
+  dataset: any[] = [];
+
+  constructor() {
+    this.columnDefinitions = [
+      { id: 'firstName', name: 'First Name', field: 'firstName'},
+      { id: 'lastName', name: 'Last Name', field: 'lastName'},
+      { id: 'age', name: 'Age', field: 'age' }
+    ];
+  }
+
+  attached() {
+    this.dataset = [
+      { id: 1, firstName: 'John', lastName: 'Doe', age: 20 },
+      { id: 2, firstName: 'Jane', lastName: 'Smith', age: 21 }
+    ];
+    this.gridOptions = { /*...*/ }; // optional grid options
+  }
+}
+```
+
+```html
+<aurelia-slickgrid
+  grid-id="grid2"
+  column-definitions.bind="columnDefinitions"
+  grid-options.bind="gridOptions"
+  dataset.bind="dataset">
+</aurelia-slickgrid>
+```
+
 ## Sponsors
 
 <div>
