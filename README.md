@@ -33,7 +33,7 @@ npm install @slickgrid-universal/excel-export
 
 ### Versions Compatibility
 
-> **Note** please be aware that only the latest version of Aurelia-Slickgrid is supported and will receive bug fixes. The reason older versions are not supported is simply because it's already a lot of work to maintain for a single developer.
+> **Note** please be aware that only the latest version of Aurelia-Slickgrid is supported and will receive bug fixes. It's already a lot of work to maintain for a single developer like me.
 
 | Aurelia-Slickgrid | Aurelia version | Migration Guide | Notes |
 |-------------------|-----------------|-----------------|------|
@@ -47,6 +47,7 @@ For a full compatibility table of Aurelia-Slickgrid with Slickgrid-Universal, yo
 ### Styling Themes
 
 Multiple styling themes are available
+- Default (UI agnostic)
 - Bootstrap (see all Aurelia-Slickgrid [live demos](https://ghiscoding.github.io/aurelia-slickgrid/))
 - Material (see [Slickgrid-Universal](https://ghiscoding.github.io/slickgrid-universal/#/example07))
 - Salesforce (see [Slickgrid-Universal](https://ghiscoding.github.io/slickgrid-universal/#/example16))
