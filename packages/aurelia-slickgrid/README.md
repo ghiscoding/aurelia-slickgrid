@@ -23,36 +23,40 @@ npm install @slickgrid-universal/excel-export
 ## License
 [MIT License](LICENSE)
 
-## Screenshots
 
-Screenshots from the demo app with the `Bootstrap` theme.
+#### Basic Grid
 
-### Slickgrid example with Formatters (last column shown is a custom Formatter)
+```ts
+import { type Column, type GridOption } from 'aurelia-slickgrid';
 
-#### You can also see the Grid Menu opened (aka hambuger menu)
+export class Example {
+  columnDefinitions: Column[] = [];
+  gridOptions: GridOption;
+  dataset: any[] = [];
 
-![Default Slickgrid Example](../../screenshots/formatters.png)
+  constructor() {
+    this.columnDefinitions = [
+      { id: 'firstName', name: 'First Name', field: 'firstName'},
+      { id: 'lastName', name: 'Last Name', field: 'lastName'},
+      { id: 'age', name: 'Age', field: 'age' }
+    ];
+  }
 
-### Filter and Sort (clientside with DataView)
+  attached() {
+    this.dataset = [
+      { id: 1, firstName: 'John', lastName: 'Doe', age: 20 },
+      { id: 2, firstName: 'Jane', lastName: 'Smith', age: 21 }
+    ];
+    this.gridOptions = { /*...*/ }; // optional grid options
+  }
+}
+```
 
-![Filter and Sort](../../screenshots/filter_and_sort.png)
-
-### Editors and/or onCellClick
-
-![Editors](../../screenshots/editors.png)
-
-### Pinned (aka frozen) Columns/Rows
-
-![Pinned Columns/Rows](../../screenshots/frozen.png)
-
-### Draggable Grouping & Aggregators
-
-![Draggable Grouping](../../screenshots/draggable-grouping.png)
-
-### Slickgrid Example with Server Side (Filter/Sort/Pagination)
-#### Comes with OData & GraphQL support (you can implement custom too)
-
-![Slickgrid Server Side](../../screenshots/pagination.png)
-
-### Composite Editor Modal Windows
-![Composite Editor Modal](../../screenshots/composite-editor.png)
+```html
+<aurelia-slickgrid
+  grid-id="grid2"
+  column-definitions.bind="columnDefinitions"
+  grid-options.bind="gridOptions"
+  dataset.bind="dataset">
+</aurelia-slickgrid>
+```
