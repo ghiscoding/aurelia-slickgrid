@@ -16,17 +16,17 @@ importers:
         specifier: ^2.2.5
         version: 2.2.5(cypress@14.0.0)
       '@aurelia/fetch-client':
-        specifier: ^2.0.0-beta.22
-        version: 2.0.0-beta.22
+        specifier: ^2.0.0-beta.23
+        version: 2.0.0-beta.23
       '@aurelia/i18n':
-        specifier: ^2.0.0-beta.22
-        version: 2.0.0-beta.22
+        specifier: ^2.0.0-beta.23
+        version: 2.0.0-beta.23
       '@aurelia/platform':
-        specifier: ^2.0.0-beta.22
-        version: 2.0.0-beta.22
+        specifier: ^2.0.0-beta.23
+        version: 2.0.0-beta.23
       '@aurelia/platform-browser':
-        specifier: ^2.0.0-beta.22
-        version: 2.0.0-beta.22
+        specifier: ^2.0.0-beta.23
+        version: 2.0.0-beta.23
       '@formkit/tempo':
         specifier: ^0.1.2
         version: 0.1.2
@@ -118,14 +118,14 @@ importers:
   packages/aurelia-slickgrid:
     dependencies:
       '@aurelia/i18n':
-        specifier: ^2.0.0-beta.22
-        version: 2.0.0-beta.22
+        specifier: ^2.0.0-beta.23
+        version: 2.0.0-beta.23
       '@aurelia/runtime':
-        specifier: ^2.0.0-beta.22
-        version: 2.0.0-beta.22
+        specifier: ^2.0.0-beta.23
+        version: 2.0.0-beta.23
       '@aurelia/runtime-html':
-        specifier: ^2.0.0-beta.22
-        version: 2.0.0-beta.22
+        specifier: ^2.0.0-beta.23
+        version: 2.0.0-beta.23
       '@formkit/tempo':
         specifier: ^0.1.2
         version: 0.1.2
@@ -151,8 +151,8 @@ importers:
         specifier: ~5.12.0
         version: 5.12.0
       aurelia:
-        specifier: ^2.0.0-beta.22
-        version: 2.0.0-beta.22
+        specifier: ^2.0.0-beta.23
+        version: 2.0.0-beta.23
       dequal:
         specifier: ^2.0.3
         version: 2.0.3
@@ -179,26 +179,26 @@ importers:
   packages/demo:
     dependencies:
       '@aurelia/fetch-client':
-        specifier: ^2.0.0-beta.22
-        version: 2.0.0-beta.22
+        specifier: ^2.0.0-beta.23
+        version: 2.0.0-beta.23
       '@aurelia/i18n':
-        specifier: ^2.0.0-beta.22
-        version: 2.0.0-beta.22
+        specifier: ^2.0.0-beta.23
+        version: 2.0.0-beta.23
       '@aurelia/kernel':
-        specifier: ^2.0.0-beta.22
-        version: 2.0.0-beta.22
+        specifier: ^2.0.0-beta.23
+        version: 2.0.0-beta.23
       '@aurelia/metadata':
-        specifier: ^2.0.0-beta.22
-        version: 2.0.0-beta.22
+        specifier: ^2.0.0-beta.23
+        version: 2.0.0-beta.23
       '@aurelia/router':
-        specifier: ^2.0.0-beta.22
-        version: 2.0.0-beta.22
+        specifier: ^2.0.0-beta.23
+        version: 2.0.0-beta.23
       '@aurelia/runtime':
-        specifier: ^2.0.0-beta.22
-        version: 2.0.0-beta.22
+        specifier: ^2.0.0-beta.23
+        version: 2.0.0-beta.23
       '@aurelia/runtime-html':
-        specifier: ^2.0.0-beta.22
-        version: 2.0.0-beta.22
+        specifier: ^2.0.0-beta.23
+        version: 2.0.0-beta.23
       '@faker-js/faker':
         specifier: ^9.4.0
         version: 9.4.0
@@ -239,8 +239,8 @@ importers:
         specifier: ^5.12.1
         version: 5.12.1
       aurelia:
-        specifier: ^2.0.0-beta.22
-        version: 2.0.0-beta.22
+        specifier: ^2.0.0-beta.23
+        version: 2.0.0-beta.23
       aurelia-slickgrid:
         specifier: workspace:*
         version: link:../aurelia-slickgrid
@@ -258,14 +258,14 @@ importers:
         version: 7.8.1
     devDependencies:
       '@aurelia/testing':
-        specifier: ^2.0.0-beta.22
-        version: 2.0.0-beta.22
+        specifier: ^2.0.0-beta.23
+        version: 2.0.0-beta.23
       '@aurelia/ts-jest':
-        specifier: ^2.0.0-beta.22
-        version: 2.0.0-beta.22(@babel/core@7.24.3)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.24.3))(jest@29.7.0(@types/node@22.10.10)(ts-node@10.9.2(@types/node@22.10.10)(typescript@5.7.3)))(typescript@5.7.3)
+        specifier: ^2.0.0-beta.23
+        version: 2.0.0-beta.23(@babel/core@7.24.3)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.24.3))(jest@29.7.0(@types/node@22.10.10)(ts-node@10.9.2(@types/node@22.10.10)(typescript@5.7.3)))(typescript@5.7.3)
       '@aurelia/webpack-loader':
-        specifier: ^2.0.0-beta.22
-        version: 2.0.0-beta.22
+        specifier: ^2.0.0-beta.23
+        version: 2.0.0-beta.23
       '@types/fnando__sparkline':
         specifier: ^0.3.7
         version: 0.3.7
@@ -375,69 +375,69 @@ packages:
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
     engines: {node: '>=6.0.0'}
 
-  '@aurelia/expression-parser@2.0.0-beta.22':
-    resolution: {integrity: sha512-9SVrdoAGFEv0HVQml9DGHGQSCJvIWbkwrsK773LOCIA7usYJ4hsO5QvhCnmKGiHVURTEVn/ohLzjEY0EP7QAfQ==}
-    engines: {node: '>=14.17.0'}
+  '@aurelia/expression-parser@2.0.0-beta.23':
+    resolution: {integrity: sha512-/vY9Wag+TiOSu6qYlt+5PSUSt8N2TYS7qS09ihi+zgJld+KKYeJN+0/VgDKxDgIVXG/sQM9ZvAwUf4EhJVVk3Q==}
+    engines: {node: '>=20.16.0'}
 
-  '@aurelia/fetch-client@2.0.0-beta.22':
-    resolution: {integrity: sha512-eDQz9fp7BHdkUhUylWBMbZb8gc2tGKwrqpwtZEPAGMcWUrXo6PpIl10eCQ+HQF3XW7CG/vWdvWKFzawy58cf9g==}
-    engines: {node: '>=14.17.0'}
+  '@aurelia/fetch-client@2.0.0-beta.23':
+    resolution: {integrity: sha512-eT5THfL6dL2y4B7wgK0JXDXXyfy9K/o3/OhsX117nNJMv4LI3SUlQ5dAtjuHXrE8U3GK5kOGHT4GuQj1GpnPVA==}
+    engines: {node: '>=20.16.0'}
 
-  '@aurelia/i18n@2.0.0-beta.22':
-    resolution: {integrity: sha512-GiGe8N0WrwS6NKYsbjhkP6KUskwhdRN4Cn8vVz2u5qUFNtalzLFh6Fqb/G02b4XDT00U1XMegH6JfXfWQwHOaQ==}
-    engines: {node: '>=14.17.0'}
+  '@aurelia/i18n@2.0.0-beta.23':
+    resolution: {integrity: sha512-J3Bs87qiOPgMLweFdX50CS1zgAPDOYpY3ZLeHl9jwnFpHY5rt9qASnOO1vN+Tx/1/+4LKCCtxpK8YFFV0c7bnQ==}
+    engines: {node: '>=20.16.0'}
 
-  '@aurelia/kernel@2.0.0-beta.22':
-    resolution: {integrity: sha512-WjxRI3C/i1VK3aHOn45r1+uKQIzyJ9M9giN7rqAnakk13DKNTQHU0Ap+yfy7TOmS2H2FGzd6xhoKsa2ZgcPM0Q==}
-    engines: {node: '>=14.17.0'}
+  '@aurelia/kernel@2.0.0-beta.23':
+    resolution: {integrity: sha512-JwaMfoPPIRZ+QxZMU61zBgVkcvTYHnp6UjxApiMIdS/KaJ6KRu4hhWHhRkSPHN4XsslT9HkNeUjumoZ9hPA9AA==}
+    engines: {node: '>=20.16.0'}
 
-  '@aurelia/metadata@2.0.0-beta.22':
-    resolution: {integrity: sha512-7u7TdK6mSNEwoGVMFPmUoJV16gdDaROAZZq5oy81HPPS24GOJp4lwxQAuvqby7MTi0gnXXMLLsIoE+oZU7FQcw==}
-    engines: {node: '>=14.17.0'}
+  '@aurelia/metadata@2.0.0-beta.23':
+    resolution: {integrity: sha512-CkZ7Dc45Bj9Bq+pW1okRS3fSOkGot1TrHQr6kQfwH3uguphQhY4qxYp5lMEbXgNwLagLX6D/VGn3IdIqRWya+Q==}
+    engines: {node: '>=20.16.0'}
 
-  '@aurelia/platform-browser@2.0.0-beta.22':
-    resolution: {integrity: sha512-wfnW8gZPVAOLMpsRodagSzchRxJn1EFIL79eMlz5OdlgKa+DtIoObTKiHT5nueInx9raBuv6c7rJR+ZSUsFuLQ==}
-    engines: {node: '>=14.17.0'}
+  '@aurelia/platform-browser@2.0.0-beta.23':
+    resolution: {integrity: sha512-XzAoYxat+qyg486fpIy9PP4Rzu492+7mYxFPzLwdHZTVkJX5jGhxtIDLRaCnrqLZc2bmWZiDUrUJEF1/hSdAXQ==}
+    engines: {node: '>=20.16.0'}
 
-  '@aurelia/platform@2.0.0-beta.22':
-    resolution: {integrity: sha512-tkE6xM0NYjvdUGYmTWXbi1BahQMQ/hKB8cyQSwq6k2AQfblrT+sfMOuU4RL20FU9VvKpUzBL5h2rEHC97ZJs8A==}
-    engines: {node: '>=14.17.0'}
+  '@aurelia/platform@2.0.0-beta.23':
+    resolution: {integrity: sha512-U8LDNxIOa9qOiqdoaieT7mACjUYAW7Ek/9qpkklZR4fD+wnElJKcNmTj6AY16S7sCPXvgS+YCk1FwubK9Dhbng==}
+    engines: {node: '>=20.16.0'}
 
-  '@aurelia/plugin-conventions@2.0.0-beta.22':
-    resolution: {integrity: sha512-oMbPIiBu+NwAfdYH3fIc8VodoLnz8VSsRHF7k9pl8HAzqX2Is/UhYg5L91m4dGXOXr8iY74l3EgDDewqVDVsMA==}
-    engines: {node: '>=14.17.0'}
+  '@aurelia/plugin-conventions@2.0.0-beta.23':
+    resolution: {integrity: sha512-RqGZzHdI//rqbkYa6Z665nxIy3Z2Q68GSqPpugEI8WuxisIiXc/xNez84HGygfDecneGtMvd2U5sCEhi/YwEvQ==}
+    engines: {node: '>=20.16.0'}
 
-  '@aurelia/route-recognizer@2.0.0-beta.22':
-    resolution: {integrity: sha512-jmRhAJGToTRv9rwB3en6M1hEySvhCj06s/xLeM4xIBBVZcpUhzYpRIrRsMccHdvFQIxlHvHvnLXjRSnE6iCSmg==}
-    engines: {node: '>=14.17.0'}
+  '@aurelia/route-recognizer@2.0.0-beta.23':
+    resolution: {integrity: sha512-hCjaTgiUoBIxsOMojXuNXUKMA6QZUkXMJ/fi2Q+zjV1hIQJNA2Of1Blzyd9VVupZyXjiwLnYN9O021o6YPfqzQ==}
+    engines: {node: '>=20.16.0'}
 
-  '@aurelia/router@2.0.0-beta.22':
-    resolution: {integrity: sha512-pIYY2M88gSIQe2jLHCHUN135p8WLCdb+JOLpZfjw53UdN90keejp1v8cs2nb/q+1NflWpSQgg+KaqvDcN7/g6A==}
-    engines: {node: '>=14.17.0'}
+  '@aurelia/router@2.0.0-beta.23':
+    resolution: {integrity: sha512-/ywmRbuZbtaRRhtxj+czfit/RowkElrgyoZ+ueiw/n4YSq0ZM4tYfhzvOSju+9WG6ivW0YEjLCsG/KGwsSUI/Q==}
+    engines: {node: '>=20.16.0'}
 
-  '@aurelia/runtime-html@2.0.0-beta.22':
-    resolution: {integrity: sha512-cHC1xZif/joWOr/oX0FjAJQgXnZWZo7g+TXc2SV8Jcsw1w/PcxN592SSxSWMerdr9Ux6EtwMGAPxVku86k8img==}
-    engines: {node: '>=14.17.0'}
+  '@aurelia/runtime-html@2.0.0-beta.23':
+    resolution: {integrity: sha512-zvupIX1k5SngNf5VbrQcWDTQ8yMLXDwmuMQXu2oE1fCqvRKjJG1LsZvUnE82Zbi7Ioxn8SA2nYqgicdwgLwvMQ==}
+    engines: {node: '>=20.16.0'}
 
-  '@aurelia/runtime@2.0.0-beta.22':
-    resolution: {integrity: sha512-pGR9+g8a8vTBz2ksF6QOrgDIs4rDPoS1SuHoilb1XLLaJNQ9BVho2sf3aIFikzcHBihm1720IOREB199pTqCIQ==}
-    engines: {node: '>=14.17.0'}
+  '@aurelia/runtime@2.0.0-beta.23':
+    resolution: {integrity: sha512-8rdeJbm3xitEVNcorc7ynvdEReUhMro6AuKMQ9wN4mCgMls19C6FfMyvcCz93gIMjHaceqfyf5wYsK0pYAnwBA==}
+    engines: {node: '>=20.16.0'}
 
-  '@aurelia/template-compiler@2.0.0-beta.22':
-    resolution: {integrity: sha512-LMYaf0qTAD22z1mCsExd01tqSuZHQoYPPIdg94xQpCTkY32TFU3KBwdC7dW3hvxrB2xVNpLxMchnzBX1gxd4KA==}
-    engines: {node: '>=14.17.0'}
+  '@aurelia/template-compiler@2.0.0-beta.23':
+    resolution: {integrity: sha512-GljgSJfI5ObbB+pyJldB+oyDxofczg+Vq0ofIq87KEoT+nD0RqToqz9lak+DBWyqYfxEg4xkENncuO9EkSfQxg==}
+    engines: {node: '>=20.16.0'}
 
-  '@aurelia/testing@2.0.0-beta.22':
-    resolution: {integrity: sha512-Yp1WJ9/oht3H100nBT/CtSwempc2ilg4JkUoC8x8aeZ1UrJ7ZPI+71ieY8JiqU4I277ezK1B1vx/wCYvM+eFqQ==}
-    engines: {node: '>=14.17.0'}
+  '@aurelia/testing@2.0.0-beta.23':
+    resolution: {integrity: sha512-6fOGg7qIsEjj2vosJwUqF5Whgqri3u1gTDHfeomM1ln+GJ9TcCbAgDm6ehrRFySsPrQAvRmnzLIM69yg31Hxug==}
+    engines: {node: '>=20.16.0'}
 
-  '@aurelia/ts-jest@2.0.0-beta.22':
-    resolution: {integrity: sha512-geWmVwkg+w8UIft57fheCxLz5JELL2xiw3I/2XhTIoOC5GcfQZjhn0w+jv+pl5RL9M13W3WW5DUyqSV3oCrUfA==}
-    engines: {node: '>=14.17.0'}
+  '@aurelia/ts-jest@2.0.0-beta.23':
+    resolution: {integrity: sha512-PQ/0st45589yuukzFmpK2gV3yGP46wFLs7fVw9TkwegsEn+Jq1ejaVlvXR70Kc38N0DQACKjkOcwok9xbFcNFw==}
+    engines: {node: '>=20.16.0'}
 
-  '@aurelia/webpack-loader@2.0.0-beta.22':
-    resolution: {integrity: sha512-EmMVYsFF0/ynJswhxKCRYIOoSgvUUm+Xz5ErEcPJVU4C0+YXRZEGLCb1uJesljVtKZlIq40IYHGfAiV9kioauw==}
-    engines: {node: '>=14.17.0'}
+  '@aurelia/webpack-loader@2.0.0-beta.23':
+    resolution: {integrity: sha512-Opm4xy4vGfCs2oo3EUO5YaPToxzkdVshP8Il9xdach4d6OjveitaXg82FI9pqZwTyM3eyA5DTfQLgE48l3cblg==}
+    engines: {node: '>=20.16.0'}
 
   '@babel/code-frame@7.24.2':
     resolution: {integrity: sha512-y5+tLQyV8pg3fsiln67BVLD1P13Eg4lh5RW9mF0zUuvLrv9uIQ4MCL+CRT+FTsBlBjcIan6PGsLcBN0m3ClUyQ==}
@@ -1665,9 +1665,9 @@ packages:
   aurelia-polyfills@1.3.4:
     resolution: {integrity: sha512-NvOBYi4aWnxWCxfCfyW5DObggevOwfkC0riGMicgXNQg/ngpaQpFIXQgc4jMlI6jyE+/e38J36Hd9CeUcj04BA==}
 
-  aurelia@2.0.0-beta.22:
-    resolution: {integrity: sha512-NB3R5SgE8KBJG5SLO7YOiTL7eAdZLZO4iX/ehw6U2L0Ba/p90ESmVleKbN4FuP+eYYbZXDLc7z1zeGMZZbC7wA==}
-    engines: {node: '>=14.17.0'}
+  aurelia@2.0.0-beta.23:
+    resolution: {integrity: sha512-5YeacFF3e+QSTW9MzogpxOKbwTuOKA54tykQRqmuOPw5l9qZy/22NVwKvrR3AmX7H1BdtkR/pEVfH9u6/x9D5g==}
+    engines: {node: '>=20.16.0'}
 
   autocompleter@9.3.2:
     resolution: {integrity: sha512-rLbf2TLGOD7y+gOS36ksrZdIsvoHa2KXc2A7503w+NBRPrcF73zzFeYBxEcV/iMPjaBH3jFhNIYObZ7zt1fkCQ==}
@@ -3049,9 +3049,6 @@ packages:
     resolution: {integrity: sha512-kVqnydqLVMZfVlOuP2nf71cREydlxEKLH43jUXAFdOku/GF+6b9fBg31anoos5XncdhdtiYgL9fheqMrtXRwng==}
     engines: {node: '>=18'}
 
-  i18next@23.16.4:
-    resolution: {integrity: sha512-9NIYBVy9cs4wIqzurf7nLXPyf3R78xYbxExVqHLK9od3038rjpyOEzW+XB130kZ1N4PZ9inTtJ471CRJ4Ituyg==}
-
   i18next@23.16.8:
     resolution: {integrity: sha512-06r/TitrM88Mg5FdUXAKL96dJMzgqLE5dv3ryBAra4KCwD9mJ4ndOTS95ZuymIGoE+2hzfdaMak2X11/es7ZWg==}
 
@@ -4118,9 +4115,6 @@ packages:
   parse-url@9.2.0:
     resolution: {integrity: sha512-bCgsFI+GeGWPAvAiUv63ZorMeif3/U0zaXABGJbOWt5OH2KCaPHF6S+0ok4aqM9RuIPGyZdx9tR9l13PsW4AYQ==}
     engines: {node: '>=14.13.0'}
-
-  parse5@7.1.2:
-    resolution: {integrity: sha512-Czj1WaSVpaoj0wbhMzLmWD69anp2WH7FXMB9n1Sy8/ZFF9jolSQVMu1Ij5WIyGmcBmhk7EOndpO4mIpihVqAXw==}
 
   parse5@7.2.1:
     resolution: {integrity: sha512-BuBYQYlv1ckiPdQi/ohiivi9Sagc9JG+Ozs0r7b/0iK3sKmrb0b9FdWdBbOdx6hBCM/F9Ir82ofnBhtZOjCRPQ==}
@@ -5473,103 +5467,105 @@ snapshots:
       '@jridgewell/gen-mapping': 0.3.5
       '@jridgewell/trace-mapping': 0.3.25
 
-  '@aurelia/expression-parser@2.0.0-beta.22':
+  '@aurelia/expression-parser@2.0.0-beta.23':
     dependencies:
-      '@aurelia/kernel': 2.0.0-beta.22
+      '@aurelia/kernel': 2.0.0-beta.23
 
-  '@aurelia/fetch-client@2.0.0-beta.22':
+  '@aurelia/fetch-client@2.0.0-beta.23':
     dependencies:
-      '@aurelia/kernel': 2.0.0-beta.22
-      '@aurelia/metadata': 2.0.0-beta.22
+      '@aurelia/kernel': 2.0.0-beta.23
+      '@aurelia/metadata': 2.0.0-beta.23
 
-  '@aurelia/i18n@2.0.0-beta.22':
+  '@aurelia/i18n@2.0.0-beta.23':
     dependencies:
-      '@aurelia/expression-parser': 2.0.0-beta.22
-      '@aurelia/kernel': 2.0.0-beta.22
-      '@aurelia/metadata': 2.0.0-beta.22
-      '@aurelia/platform': 2.0.0-beta.22
-      '@aurelia/runtime': 2.0.0-beta.22
-      '@aurelia/runtime-html': 2.0.0-beta.22
-      '@aurelia/template-compiler': 2.0.0-beta.22
-      i18next: 23.16.4
+      '@aurelia/expression-parser': 2.0.0-beta.23
+      '@aurelia/kernel': 2.0.0-beta.23
+      '@aurelia/metadata': 2.0.0-beta.23
+      '@aurelia/platform': 2.0.0-beta.23
+      '@aurelia/runtime': 2.0.0-beta.23
+      '@aurelia/runtime-html': 2.0.0-beta.23
+      '@aurelia/template-compiler': 2.0.0-beta.23
+      i18next: 23.16.8
 
-  '@aurelia/kernel@2.0.0-beta.22':
+  '@aurelia/kernel@2.0.0-beta.23':
     dependencies:
-      '@aurelia/metadata': 2.0.0-beta.22
-      '@aurelia/platform': 2.0.0-beta.22
+      '@aurelia/metadata': 2.0.0-beta.23
+      '@aurelia/platform': 2.0.0-beta.23
 
-  '@aurelia/metadata@2.0.0-beta.22': {}
+  '@aurelia/metadata@2.0.0-beta.23': {}
 
-  '@aurelia/platform-browser@2.0.0-beta.22':
+  '@aurelia/platform-browser@2.0.0-beta.23':
     dependencies:
-      '@aurelia/platform': 2.0.0-beta.22
+      '@aurelia/platform': 2.0.0-beta.23
 
-  '@aurelia/platform@2.0.0-beta.22': {}
+  '@aurelia/platform@2.0.0-beta.23': {}
 
-  '@aurelia/plugin-conventions@2.0.0-beta.22':
+  '@aurelia/plugin-conventions@2.0.0-beta.23':
     dependencies:
-      '@aurelia/kernel': 2.0.0-beta.22
-      '@aurelia/metadata': 2.0.0-beta.22
-      '@aurelia/platform': 2.0.0-beta.22
-      '@aurelia/runtime': 2.0.0-beta.22
-      '@aurelia/runtime-html': 2.0.0-beta.22
+      '@aurelia/expression-parser': 2.0.0-beta.23
+      '@aurelia/kernel': 2.0.0-beta.23
+      '@aurelia/metadata': 2.0.0-beta.23
+      '@aurelia/platform': 2.0.0-beta.23
+      '@aurelia/runtime': 2.0.0-beta.23
+      '@aurelia/runtime-html': 2.0.0-beta.23
+      '@aurelia/template-compiler': 2.0.0-beta.23
       modify-code: 2.1.3
-      parse5: 7.1.2
+      parse5: 7.2.1
       typescript: 5.7.3
 
-  '@aurelia/route-recognizer@2.0.0-beta.22': {}
+  '@aurelia/route-recognizer@2.0.0-beta.23': {}
 
-  '@aurelia/router@2.0.0-beta.22':
+  '@aurelia/router@2.0.0-beta.23':
     dependencies:
-      '@aurelia/kernel': 2.0.0-beta.22
-      '@aurelia/metadata': 2.0.0-beta.22
-      '@aurelia/platform': 2.0.0-beta.22
-      '@aurelia/platform-browser': 2.0.0-beta.22
-      '@aurelia/route-recognizer': 2.0.0-beta.22
-      '@aurelia/runtime': 2.0.0-beta.22
-      '@aurelia/runtime-html': 2.0.0-beta.22
-      '@aurelia/template-compiler': 2.0.0-beta.22
+      '@aurelia/kernel': 2.0.0-beta.23
+      '@aurelia/metadata': 2.0.0-beta.23
+      '@aurelia/platform': 2.0.0-beta.23
+      '@aurelia/platform-browser': 2.0.0-beta.23
+      '@aurelia/route-recognizer': 2.0.0-beta.23
+      '@aurelia/runtime': 2.0.0-beta.23
+      '@aurelia/runtime-html': 2.0.0-beta.23
+      '@aurelia/template-compiler': 2.0.0-beta.23
 
-  '@aurelia/runtime-html@2.0.0-beta.22':
+  '@aurelia/runtime-html@2.0.0-beta.23':
     dependencies:
-      '@aurelia/expression-parser': 2.0.0-beta.22
-      '@aurelia/kernel': 2.0.0-beta.22
-      '@aurelia/metadata': 2.0.0-beta.22
-      '@aurelia/platform': 2.0.0-beta.22
-      '@aurelia/platform-browser': 2.0.0-beta.22
-      '@aurelia/runtime': 2.0.0-beta.22
-      '@aurelia/template-compiler': 2.0.0-beta.22
+      '@aurelia/expression-parser': 2.0.0-beta.23
+      '@aurelia/kernel': 2.0.0-beta.23
+      '@aurelia/metadata': 2.0.0-beta.23
+      '@aurelia/platform': 2.0.0-beta.23
+      '@aurelia/platform-browser': 2.0.0-beta.23
+      '@aurelia/runtime': 2.0.0-beta.23
+      '@aurelia/template-compiler': 2.0.0-beta.23
 
-  '@aurelia/runtime@2.0.0-beta.22':
+  '@aurelia/runtime@2.0.0-beta.23':
     dependencies:
-      '@aurelia/expression-parser': 2.0.0-beta.22
-      '@aurelia/kernel': 2.0.0-beta.22
-      '@aurelia/metadata': 2.0.0-beta.22
-      '@aurelia/platform': 2.0.0-beta.22
+      '@aurelia/expression-parser': 2.0.0-beta.23
+      '@aurelia/kernel': 2.0.0-beta.23
+      '@aurelia/metadata': 2.0.0-beta.23
+      '@aurelia/platform': 2.0.0-beta.23
 
-  '@aurelia/template-compiler@2.0.0-beta.22':
+  '@aurelia/template-compiler@2.0.0-beta.23':
     dependencies:
-      '@aurelia/expression-parser': 2.0.0-beta.22
-      '@aurelia/kernel': 2.0.0-beta.22
-      '@aurelia/metadata': 2.0.0-beta.22
+      '@aurelia/expression-parser': 2.0.0-beta.23
+      '@aurelia/kernel': 2.0.0-beta.23
+      '@aurelia/metadata': 2.0.0-beta.23
 
-  '@aurelia/testing@2.0.0-beta.22':
+  '@aurelia/testing@2.0.0-beta.23':
     dependencies:
-      '@aurelia/kernel': 2.0.0-beta.22
-      '@aurelia/metadata': 2.0.0-beta.22
-      '@aurelia/platform': 2.0.0-beta.22
-      '@aurelia/platform-browser': 2.0.0-beta.22
-      '@aurelia/runtime': 2.0.0-beta.22
-      '@aurelia/runtime-html': 2.0.0-beta.22
-      '@aurelia/template-compiler': 2.0.0-beta.22
+      '@aurelia/kernel': 2.0.0-beta.23
+      '@aurelia/metadata': 2.0.0-beta.23
+      '@aurelia/platform': 2.0.0-beta.23
+      '@aurelia/platform-browser': 2.0.0-beta.23
+      '@aurelia/runtime': 2.0.0-beta.23
+      '@aurelia/runtime-html': 2.0.0-beta.23
+      '@aurelia/template-compiler': 2.0.0-beta.23
 
-  '@aurelia/ts-jest@2.0.0-beta.22(@babel/core@7.24.3)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.24.3))(jest@29.7.0(@types/node@22.10.10)(ts-node@10.9.2(@types/node@22.10.10)(typescript@5.7.3)))(typescript@5.7.3)':
+  '@aurelia/ts-jest@2.0.0-beta.23(@babel/core@7.24.3)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.24.3))(jest@29.7.0(@types/node@22.10.10)(ts-node@10.9.2(@types/node@22.10.10)(typescript@5.7.3)))(typescript@5.7.3)':
     dependencies:
-      '@aurelia/kernel': 2.0.0-beta.22
-      '@aurelia/metadata': 2.0.0-beta.22
-      '@aurelia/platform': 2.0.0-beta.22
-      '@aurelia/plugin-conventions': 2.0.0-beta.22
-      '@aurelia/runtime': 2.0.0-beta.22
+      '@aurelia/kernel': 2.0.0-beta.23
+      '@aurelia/metadata': 2.0.0-beta.23
+      '@aurelia/platform': 2.0.0-beta.23
+      '@aurelia/plugin-conventions': 2.0.0-beta.23
+      '@aurelia/runtime': 2.0.0-beta.23
       ts-jest: 29.2.5(@babel/core@7.24.3)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.24.3))(jest@29.7.0(@types/node@22.10.10)(ts-node@10.9.2(@types/node@22.10.10)(typescript@5.7.3)))(typescript@5.7.3)
     transitivePeerDependencies:
       - '@babel/core'
@@ -5580,13 +5576,13 @@ snapshots:
       - jest
       - typescript
 
-  '@aurelia/webpack-loader@2.0.0-beta.22':
+  '@aurelia/webpack-loader@2.0.0-beta.23':
     dependencies:
-      '@aurelia/kernel': 2.0.0-beta.22
-      '@aurelia/metadata': 2.0.0-beta.22
-      '@aurelia/platform': 2.0.0-beta.22
-      '@aurelia/plugin-conventions': 2.0.0-beta.22
-      '@aurelia/runtime': 2.0.0-beta.22
+      '@aurelia/kernel': 2.0.0-beta.23
+      '@aurelia/metadata': 2.0.0-beta.23
+      '@aurelia/platform': 2.0.0-beta.23
+      '@aurelia/plugin-conventions': 2.0.0-beta.23
+      '@aurelia/runtime': 2.0.0-beta.23
       loader-utils: 2.0.4
 
   '@babel/code-frame@7.24.2':
@@ -6836,7 +6832,7 @@ snapshots:
     dependencies:
       '@types/node': 22.10.10
       '@types/tough-cookie': 4.0.5
-      parse5: 7.1.2
+      parse5: 7.2.1
 
   '@types/json-schema@7.0.15': {}
 
@@ -7232,17 +7228,17 @@ snapshots:
     dependencies:
       aurelia-pal: 1.8.2
 
-  aurelia@2.0.0-beta.22:
+  aurelia@2.0.0-beta.23:
     dependencies:
-      '@aurelia/expression-parser': 2.0.0-beta.22
-      '@aurelia/fetch-client': 2.0.0-beta.22
-      '@aurelia/kernel': 2.0.0-beta.22
-      '@aurelia/metadata': 2.0.0-beta.22
-      '@aurelia/platform': 2.0.0-beta.22
-      '@aurelia/platform-browser': 2.0.0-beta.22
-      '@aurelia/runtime': 2.0.0-beta.22
-      '@aurelia/runtime-html': 2.0.0-beta.22
-      '@aurelia/template-compiler': 2.0.0-beta.22
+      '@aurelia/expression-parser': 2.0.0-beta.23
+      '@aurelia/fetch-client': 2.0.0-beta.23
+      '@aurelia/kernel': 2.0.0-beta.23
+      '@aurelia/metadata': 2.0.0-beta.23
+      '@aurelia/platform': 2.0.0-beta.23
+      '@aurelia/platform-browser': 2.0.0-beta.23
+      '@aurelia/runtime': 2.0.0-beta.23
+      '@aurelia/runtime-html': 2.0.0-beta.23
+      '@aurelia/template-compiler': 2.0.0-beta.23
 
   autocompleter@9.3.2: {}
 
@@ -8776,10 +8772,6 @@ snapshots:
 
   i18next-fetch-backend@6.0.0: {}
 
-  i18next@23.16.4:
-    dependencies:
-      '@babel/runtime': 7.24.1
-
   i18next@23.16.8:
     dependencies:
       '@babel/runtime': 7.24.1
@@ -9388,7 +9380,7 @@ snapshots:
       https-proxy-agent: 5.0.1
       is-potential-custom-element-name: 1.0.1
       nwsapi: 2.2.7
-      parse5: 7.1.2
+      parse5: 7.2.1
       saxes: 6.0.0
       symbol-tree: 3.2.4
       tough-cookie: 4.1.3
@@ -10048,10 +10040,6 @@ snapshots:
     dependencies:
       '@types/parse-path': 7.0.3
       parse-path: 7.0.0
-
-  parse5@7.1.2:
-    dependencies:
-      entities: 4.5.0
 
   parse5@7.2.1:
     dependencies:
