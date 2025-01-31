@@ -33,7 +33,7 @@ npm install @slickgrid-universal/excel-export
 
 ### Versions Compatibility
 
-> **Note** please be aware that only the latest version of Aurelia-Slickgrid is supported and will receive bug fixes. It's already a lot of work to maintain for a single developer like me.
+> **Note** please be aware that only the latest major version of Aurelia-Slickgrid will be supported and receive bug fixes (it's already a lot of work to maintain for a single developer like me).
 
 | Aurelia-Slickgrid | Aurelia version | Migration Guide | Notes |
 |-------------------|-----------------|-----------------|------|
@@ -42,7 +42,7 @@ npm install @slickgrid-universal/excel-export
 | 6.x               | 1.x             | [Migration 6.x](https://github.com/ghiscoding/aurelia-slickgrid/wiki/Migration-to-6.x)     | removal of jQuery (now uses browser native code), requires Slickgrid-Universal [3.x](https://github.com/ghiscoding/slickgrid-universal/releases/tag/v3.0.0) |
 | 5.x               | 1.x             | [Migration 5.x](https://github.com/ghiscoding/aurelia-slickgrid/wiki/Migration-to-5.x)     | removal of jQueryUI, requires Slickgrid-Universal [2.x](https://github.com/ghiscoding/slickgrid-universal/releases/tag/v2.0.0) version |
 
-For a full compatibility table of Aurelia-Slickgrid with Slickgrid-Universal, you can consult the [Versions Compatibility Table - Wiki](https://github.com/ghiscoding/aurelia-slickgrid/wiki/Versions-Compatibility-Table)
+For a full compatibility table of all Aurelia-Slickgrid versions with Slickgrid-Universal, please refer to the [Versions Compatibility Table - Wiki](https://github.com/ghiscoding/aurelia-slickgrid/wiki/Versions-Compatibility-Table)
 
 ### Styling Themes
 
@@ -52,7 +52,7 @@ Multiple styling themes are available
 - Material (see [Slickgrid-Universal](https://ghiscoding.github.io/slickgrid-universal/#/example07))
 - Salesforce (see [Slickgrid-Universal](https://ghiscoding.github.io/slickgrid-universal/#/example16))
 
-Also note that all of these themes also have **Dark Theme** equivalent and even though Bootstrap is often used for live demos, it does work as well with any other UI framework like Bulma, Material, ...
+Also note that all of these themes also have a **Dark Theme** equivalent and even though Bootstrap is often used for live demos, it does work as well with any other UI framework like Bulma, Material, ...
 
 ### Demo page
 
@@ -63,18 +63,16 @@ Also note that all of these themes also have **Dark Theme** equivalent and even 
 There are also 2 new Themes, Material & Salesforce that are available as well and if you wish to use SVG then take a look at the [Docs - SVG Icons](https://ghiscoding.gitbook.io/aurelia-slickgrid/styling/svg-icons).
 
 #### Working Demos
-For a complete set of working demos (40+ examples), we strongly suggest you to clone the [Aurelia-Slickgrid Demos](https://github.com/ghiscoding/aurelia-slickgrid-demos) repository (instructions are provided in the demo repo). The repo provides multiple demos and they are updated every time a new version is out, so it is updated frequently and is also used as the GitHub live demo page for both the [Bootstrap 5 demo](https://ghiscoding.github.io/aurelia-slickgrid) and [Bootstrap 5 demo (single Locale)](https://ghiscoding.github.io/aurelia-slickgrid-demos).
-
-For a complete working set of demos, you can clone the [Aurelia-Slickgrid Demos](https://github.com/ghiscoding/aurelia-slickgrid-demos) repository (instructions are provided in the demo repo). This repo provides multiple samples (RequireJS, WebPack, CLI, ...) and it is also worth to know that the 2 WebPacks demos are updated frequently since they are the actual live GitHub [Bootstrap 5 demo (single Locale)](https://ghiscoding.github.io/aurelia-slickgrid-demos/#/slickgrid) / [Bootstrap 5 demo](https://ghiscoding.github.io/aurelia-slickgrid).
+For a complete set of working demos (40+ examples), we strongly suggest you to clone the [Aurelia-Slickgrid Demos](https://github.com/ghiscoding/aurelia-slickgrid-demos) repository (instructions are provided inside it). The repo provides multiple examples which are updated for every new release, so it is updated frequently and is also the GitHub live demo page for both the [Bootstrap 5 demo](https://ghiscoding.github.io/aurelia-slickgrid) and [Bootstrap 5 demo (single Locale)](https://ghiscoding.github.io/aurelia-slickgrid-demos).
 
 ## License
 [MIT License](LICENSE)
 
 ### Like it? ⭐ it
-You like and use **Aurelia-Slickgrid**? Be sure to upvote ⭐ and feel free to contribute. 👷👷‍♀️
+You like and use **Aurelia-Slickgrid**? Be sure to upvote ⭐ and feel free to contribute.
 
 #### Like my work?
-You could ⭐ the lib and maybe support me with caffeine [☕](https://ko-fi.com/ghiscoding). Thanks.
+You could ⭐ the lib and maybe support me with caffeine [☕](https://ko-fi.com/ghiscoding) or GitHub sponsoring. Thanks.
 
 <a href='https://ko-fi.com/ghiscoding' target='_blank'><img height='32' style='border:0px;height:32px;' src='https://az743702.vo.msecnd.net/cdn/kofi3.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' />
 
@@ -97,9 +95,9 @@ export class Example {
 
   constructor() {
     this.columnDefinitions = [
-      { id: 'firstName', name: 'First Name', field: 'firstName'},
-      { id: 'lastName', name: 'Last Name', field: 'lastName'},
-      { id: 'age', name: 'Age', field: 'age' }
+      { id: 'firstName', name: 'First Name', field: 'firstName', sortable: true },
+      { id: 'lastName', name: 'Last Name', field: 'lastName', sortable: true },
+      { id: 'age', name: 'Age', field: 'age', type: 'number', sortable: true }
     ];
   }
 
@@ -123,6 +121,8 @@ export class Example {
 ```
 
 ## Sponsors
+
+Thanks to all my sponsors! 
 
 <div>
   <span>
