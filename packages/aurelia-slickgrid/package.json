@@ -41,8 +41,8 @@
     "build": "tsc",
     "dev": "tsc --watch",
     "postbuild": "npm run copy-i18n:dist && npm run copy-asset-lib",
-    "copy-asset-lib": "copyfiles --up 2 src/assets/lib/** dist",
-    "copy-i18n:dist": "copyfiles --up 3 src/assets/i18n/**/*.* dist/i18n",
+    "copy-asset-lib": "copyfiles src/assets/lib/** dist --up 2 --stat",
+    "copy-i18n:dist": "copyfiles src/assets/i18n/**/*.* dist/i18n --up 3 --stat",
     "pack": "npm pack"
   },
   "peerDependencies": {
@@ -64,8 +64,8 @@
     "sortablejs": "^1.15.6"
   },
   "devDependencies": {
-    "copyfiles": "^2.4.1",
     "dompurify": "^3.2.3",
+    "native-copyfiles": "^0.2.1",
     "rimraf": "^5.0.10",
     "tslib": "^2.8.1",
     "typescript": "^5.7.3"
