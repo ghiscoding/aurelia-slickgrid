@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.12.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.12.1...v8.12.2) (2025-02-08)
+
+### Bug Fixes
+
+* **deps:** update to Aurelia 2 Beta 23 ([9f5e987](https://github.com/ghiscoding/aurelia-slickgrid/commit/9f5e9872cf88f859355212e32299da1f8546ecf9)) - by @ghiscoding
+
 ## [8.12.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.12.0...v8.12.1) (2025-01-25)
 
 ### Bug Fixes
