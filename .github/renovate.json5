@@ -10,21 +10,16 @@
       packageNames: ["i18next"],
       allowedVersions: "22.5.0"
     },
-    // allow Node14/npm8 until its EOL June 2023
-    {
-      packageNames: ["node"],
-      allowedVersions: "<19.0.0",
-    },
-    {
-      packageNames: ["npm"],
-      allowedVersions: "8.5.0",
-    },
-
     // rimraf new major release dropped support for Node 18, we'll have to wait our next major to upgrade them
     {
       packageNames: ['rimraf'],
       allowedVersions: '<6.0.0',
     },
+  ],
+  ignoreDeps: [
+    'node',
+    'npm',
+    'pnpm',
   ],
   schedule: ['every 3 weeks on friday']
 }

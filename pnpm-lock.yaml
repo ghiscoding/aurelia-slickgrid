@@ -96,9 +96,6 @@ importers:
       npm-run-all2:
         specifier: ^7.0.2
         version: 7.0.2
-      pnpm:
-        specifier: ^9.15.5
-        version: 9.15.5
       rimraf:
         specifier: ^5.0.10
         version: 5.0.10
@@ -4222,11 +4219,6 @@ packages:
   pkg-dir@4.2.0:
     resolution: {integrity: sha512-HRDzbaKjC+AOWVXxAU/x54COGeIv9eb+6CkDSQoNTt4XyWoIJvuPsXizxu/Fr23EiekbtZwmh1IcIG/l/a10GQ==}
     engines: {node: '>=8'}
-
-  pnpm@9.15.5:
-    resolution: {integrity: sha512-hFGWAmqrHMPwmKBHS2TfurKv56G06R3YaJXY5Koyp6bQMEni0K13C75N4COnEi+2jBodbg0DPHB2CF+dXUgA1A==}
-    engines: {node: '>=18.12'}
-    hasBin: true
 
   postcss-loader@8.1.1:
     resolution: {integrity: sha512-0IeqyAsG6tYiDRCYKQJLAmgQr47DX6N7sFSWvQxt6AcupX8DIdmykuk/o/tx0Lze3ErGHJEp5OSRxrelC6+NdQ==}
@@ -10088,8 +10080,6 @@ snapshots:
   pkg-dir@4.2.0:
     dependencies:
       find-up: 4.1.0
-
-  pnpm@9.15.5: {}
 
   postcss-loader@8.1.1(postcss@8.5.1)(typescript@5.7.3)(webpack@5.97.1):
     dependencies:

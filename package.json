@@ -68,7 +68,6 @@
     "jest-transform-stub": "^2.0.0",
     "jsdom-global": "^3.0.2",
     "npm-run-all2": "^7.0.2",
-    "pnpm": "^9.15.5",
     "rimraf": "^5.0.10",
     "rxjs": "^7.8.1",
     "ts-jest": "^29.2.5",
@@ -81,5 +80,5 @@
       "ws": "^8.18.0"
     }
   },
-  "packageManager": "pnpm@9.15.4"
+  "packageManager": "pnpm@9.10.0"
 }
