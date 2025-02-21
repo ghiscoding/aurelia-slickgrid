@@ -1,3 +1,4 @@
+import { bindable } from 'aurelia';
 import {
   type AureliaGridInstance,
   type Column,
@@ -8,7 +9,6 @@ import {
   Formatters,
   type GridOption,
 } from 'aurelia-slickgrid';
-import { bindable } from 'aurelia';
 import { Example19Preload } from './example19-preload';
 import { Example19DetailView } from './example19-detail-view';
 
