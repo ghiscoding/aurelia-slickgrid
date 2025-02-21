@@ -11,6 +11,7 @@ import {
 } from '@slickgrid-universal/common';
 import { EventPubSubService } from '@slickgrid-universal/event-pub-sub';
 import { SlickRowDetailView as UniversalSlickRowDetailView } from '@slickgrid-universal/row-detail-view-plugin';
+import type { ICustomElementController } from '@aurelia/runtime-html';
 import { type Constructable, resolve, transient } from 'aurelia';
 
 import type { AureliaViewOutput, GridOption, RowDetailView, ViewModelBindableInputData } from '../models/index';
@@ -27,6 +28,7 @@ export interface CreatedView extends AureliaViewOutput {
 @transient()
 export class SlickRowDetailView extends UniversalSlickRowDetailView {
   protected _preloadViewModel?: Constructable;
+  protected _preloadController?: ICustomElementController;
   protected _slots: CreatedView[] = [];
   protected _subscriptions: EventSubscription[] = [];
   protected _userProcessFn?: (item: any) => Promise<any>;
@@ -138,6 +140,9 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
 
           if (this.onAsyncEndUpdate) {
             this._eventHandler.subscribe(this.onAsyncEndUpdate, async (event, args) => {
+              // dispose preload if exists
+              this._preloadController?.dispose();
+
               // triggers after backend called "onAsyncResponse.notify()"
               await this.renderViewModel(args?.item);
 
@@ -239,7 +244,8 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
   async renderPreloadView() {
     const containerElements = this.gridContainerElement.getElementsByClassName(`${PRELOAD_CONTAINER_PREFIX}`);
     if (this._preloadViewModel && containerElements?.length >= 0) {
-      await this.aureliaUtilService.createAureliaViewModelAddToSlot(this._preloadViewModel, undefined, containerElements[containerElements.length - 1] as HTMLElement);
+      const preloadComp = await this.aureliaUtilService.createAureliaViewModelAddToSlot(this._preloadViewModel, undefined, containerElements[containerElements.length - 1] as HTMLElement);
+      this._preloadController = preloadComp?.controller;
     }
   }
 
@@ -247,6 +253,7 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
   async renderViewModel(item: any) {
     const containerElements = this.gridContainerElement.getElementsByClassName(`${ROW_DETAIL_CONTAINER_PREFIX}${item[this.datasetIdPropName]}`);
     if (this._viewModel && containerElements?.length > 0) {
+      // render row detail
       const bindableData = {
         model: item,
         addon: this,
