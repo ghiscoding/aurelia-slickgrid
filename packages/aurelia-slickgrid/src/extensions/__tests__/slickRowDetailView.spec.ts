@@ -65,7 +65,6 @@ const gridOptionsMock: Partial<GridOption> = {
     panelRows: 1,
     keyPrefix: '__',
     useRowClick: true,
-    useSimpleViewportCalc: true,
     saveDetailViewOnScroll: false,
     process: () => new Promise((resolve) => resolve('process resolving')),
     // @ts-ignore

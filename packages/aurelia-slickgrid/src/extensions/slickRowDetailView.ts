@@ -74,10 +74,12 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
 
   /** Dispose of all the opened Row Detail Panels Aurelia View Slots */
   disposeAllViewSlot() {
-    if (Array.isArray(this._slots)) {
-      this._slots.forEach((slot) => this.disposeViewSlot(slot));
-    }
-    this._slots = [];
+    do {
+      const view = this._slots.pop();
+      if (view) {
+        this.disposeView(view);
+      }
+    } while (this._slots.length > 0);
   }
 
   /** Get the instance of the SlickGrid addon (control or plugin). */
@@ -157,7 +159,6 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
               // display preload template & re-render all the other Detail Views after toggling
               // the preload View will eventually go away once the data gets loaded after the "onAsyncEndUpdate" event
               await this.renderPreloadView();
-              this.renderAllViewModels();
 
               if (typeof this.rowDetailViewOptions?.onAfterRowDetailToggle === 'function') {
                 this.rowDetailViewOptions.onAfterRowDetailToggle(event, args);
@@ -185,6 +186,15 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
               if (typeof this.rowDetailViewOptions?.onRowBackToViewportRange === 'function') {
                 this.rowDetailViewOptions.onRowBackToViewportRange(event, args);
               }
+            });
+          }
+
+          if (this.onBeforeRowOutOfViewportRange) {
+            this._eventHandler.subscribe(this.onBeforeRowOutOfViewportRange, (event, args) => {
+              if (typeof this.rowDetailViewOptions?.onBeforeRowOutOfViewportRange === 'function') {
+                this.rowDetailViewOptions.onBeforeRowOutOfViewportRange(event, args);
+              }
+              this.disposeView(args.item);
             });
           }
 
@@ -224,12 +234,19 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
 
   /** Redraw (re-render) all the expanded row detail View Slots */
   async redrawAllViewSlots() {
-    await Promise.all(this._slots.map(async x => this.redrawViewSlot(x)));
+    this.resetRenderedRows();
+    const promises: Promise<void>[] = [];
+    this._slots.forEach((x) => promises.push(this.redrawViewSlot(x)));
+    await Promise.all(promises);
   }
 
   /** Render all the expanded row detail View Slots */
   async renderAllViewModels() {
-    await Promise.all(this._slots.filter(x => x?.dataContext).map(async x => this.renderViewModel(x.dataContext)));
+    const promises: Promise<void>[] = [];
+    Array.from(this._slots)
+      .filter((x) => x?.dataContext)
+      .forEach((x) => promises.push(this.renderViewModel(x.dataContext)));
+    await Promise.all(promises);
   }
 
   /** Redraw the necessary View Slot */
@@ -274,6 +291,15 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
   // protected functions
   // ------------------
 
+  protected disposeView(item: any, removeFromArray = false): void {
+    const foundSlotIndex = this._slots.findIndex((slot: CreatedView) => slot.id === item[this.datasetIdPropName]);
+    if (foundSlotIndex >= 0 && this.disposeViewSlot(this._slots[foundSlotIndex])) {
+      if (removeFromArray) {
+        this._slots.splice(foundSlotIndex, 1);
+      }
+    }
+  }
+
   protected disposeViewSlot(expandedView: CreatedView): CreatedView | void {
     if (expandedView?.controller) {
       const container = this.gridContainerElement.getElementsByClassName(`${ROW_DETAIL_CONTAINER_PREFIX}${expandedView.id}`);
@@ -297,16 +323,12 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
       // expanding row detail
       const viewInfo: CreatedView = {
         id: args.item[this.datasetIdPropName],
-        dataContext: args.item
+        dataContext: args.item,
       };
-      const idPropName = this.gridOptions.datasetIdPropertyName || 'id';
-      addToArrayWhenNotExists(this._slots, viewInfo, idPropName);
+      addToArrayWhenNotExists(this._slots, viewInfo, this.datasetIdPropName);
     } else {
       // collapsing, so dispose of the View/ViewSlot
-      const foundSlotIndex = this._slots.findIndex((slot: CreatedView) => slot.id === args.item[this.datasetIdPropName]);
-      if (foundSlotIndex >= 0 && this.disposeViewSlot(this._slots[foundSlotIndex])) {
-        this._slots.splice(foundSlotIndex, 1);
-      }
+      this.disposeView(args.item, true);
     }
   }
 
@@ -319,8 +341,9 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
     rowIdsOutOfViewport: (string | number)[];
     grid: SlickGrid;
   }) {
-    if (args?.item) {
-      await this.redrawAllViewSlots();
+    const slot = Array.from(this._slots).find((x) => x.id === args.rowId);
+    if (slot) {
+      this.redrawViewSlot(slot);
     }
   }
 
