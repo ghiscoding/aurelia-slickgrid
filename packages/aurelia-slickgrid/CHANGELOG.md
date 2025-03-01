@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.13.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.12.2...v8.13.0) (2025-03-01)
+
+### Features
+
+* Row Detail with inner grids ([#1318](https://github.com/ghiscoding/aurelia-slickgrid/issues/1318)) ([26990c4](https://github.com/ghiscoding/aurelia-slickgrid/commit/26990c4f1c01e3eb7030a533130a3eaf5749c7ae)) - by @ghiscoding
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies ([#1313](https://github.com/ghiscoding/aurelia-slickgrid/issues/1313)) ([4ec5aac](https://github.com/ghiscoding/aurelia-slickgrid/commit/4ec5aac338e5d31f5d76d3dea1cdde8bf35a715a)) - by @renovate-bot
+* Row Detail could end up unmounting wrong panel index ([#1316](https://github.com/ghiscoding/aurelia-slickgrid/issues/1316)) ([92e4f32](https://github.com/ghiscoding/aurelia-slickgrid/commit/92e4f32185315c25a0670ad0148b052e7d8a1cfa)) - by @ghiscoding
+* Row Detail preload comp should call dispose lifecycle ([#1315](https://github.com/ghiscoding/aurelia-slickgrid/issues/1315)) ([bdb16e7](https://github.com/ghiscoding/aurelia-slickgrid/commit/bdb16e715a90e4416258a54d7f0d99a23bf89430)) - by @ghiscoding
+
 ## [8.12.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.12.1...v8.12.2) (2025-02-08)
 
 ### Bug Fixes
