@@ -20,6 +20,8 @@ import { EditorSelect } from './examples/slickgrid/editor-select';
 import { FilterSelect } from './examples/slickgrid/filter-select';
 import { Example19DetailView } from './examples/slickgrid/example19-detail-view';
 import { Example19Preload } from './examples/slickgrid/example19-preload';
+import { Example45DetailView } from './examples/slickgrid/example45-detail-view';
+import { Example45Preload } from './examples/slickgrid/example45-preload';
 
 Aurelia
   /*
@@ -37,6 +39,8 @@ Aurelia
     CustomPagerComponent,
     Example19DetailView,
     Example19Preload,
+    Example45DetailView,
+    Example45Preload,
     EditorSelect,
     FilterSelect,
   )

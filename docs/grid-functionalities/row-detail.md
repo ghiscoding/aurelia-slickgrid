@@ -369,3 +369,144 @@ addNewColumn() {
   // this.aureliaGrid.slickGrid.setColumns(cols);
 }
 ```
+
+## Row Detail with Inner Grid
+
+You can also add an inner grid inside a Row Detail, however there are a few things to know off and remember. Any time a Row Detail is falling outside the main grid viewport, it will be unmounted and until it comes back into the viewport which is then remounted. The process of unmounting and remounting means that Row Detail previous states aren't preserved, however you could use Grid State & Presets to overcome this problem.
+
+##### Component
+
+Main Grid Component
+
+```ts
+import { bindable } from 'aurelia';
+import { type AureliaGridInstance, type Column, ExtensionName, type GridOption, type SlickRowDetailView, } from 'aurelia-slickgrid';
+
+export class MainGrid implements OnInit {
+  columnDefinitions: Column[] = [];
+  gridOptions!: GridOption;
+  aureliaGrid!: AureliaGridInstance;
+  dataset: Distributor[] = [];
+  showSubTitle = true;
+
+  get rowDetailInstance(): SlickRowDetailView {
+    return this.aureliaGrid?.extensionService.getExtensionInstanceByName(ExtensionName.rowDetailView);
+  }
+
+  aureliaGridReady(aureliaGrid: AureliaGridInstance) {
+    this.aureliaGrid = aureliaGrid;
+  }
+
+  constructor() {
+    this.defineGrid();
+  }
+
+  attached() {
+    this.dataset = this.getData();
+  }
+
+  defineGrid() {
+    this.columnDefinitions = [ /*...*/ ];
+    this.gridOptions = {
+      enableRowDetailView: true,
+      rowSelectionOptions: {
+        selectActiveRow: true
+      },
+      preRegisterExternalExtensions: (pubSubService) => {
+        // Row Detail View is a special case because of its requirement to create extra column definition dynamically
+        // so it must be pre-registered before SlickGrid is instantiated, we can do so via this option
+        const rowDetail = new SlickRowDetailView(pubSubService as EventPubSubService);
+        return [{ name: ExtensionName.rowDetailView, instance: rowDetail }];
+      },
+      rowDetailView: {
+        process: (item: any) => simulateServerAsyncCall(item),
+        loadOnce: false, // IMPORTANT, you can't use loadOnce with inner grid because only HTML template are re-rendered, not JS events
+        panelRows: 10,
+        preloadComponent: PreloadComponent,
+        viewComponent:  InnerGridComponent,
+      },
+    };
+  }
+}
+```
+
+Now, let's define our Inner Grid Component
+
+```html
+<div class.bind="innerGridClass">
+  <h4>Order Details (id: ${ model.id })</h4>
+  <div class="container-fluid">
+    <aurelia-slickgrid
+      grid-id.bind="gridId"
+      column-definitions.bind="innerColDefs"
+      grid-options.bind="innerGridOptions"
+      dataset.bind="innerDataset"
+      instances.bind="aureliaGrid"
+      on-aurelia-grid-created.trigger="aureliaGridReady($event.detail)"
+      on-before-grid-destroy.trigger="handleBeforeGridDestroy()">
+    </aurelia-slickgrid>
+  </div>
+</div>
+
+```
+
+```ts
+import { bindable } from 'aurelia';
+import { type AureliaGridInstance, type Column, ExtensionName, type GridOption, type SlickRowDetailView, } from 'aurelia-slickgrid';
+
+export interface Distributor { /* ... */ }
+export interface OrderData { /* ... */ }
+
+export class InnerGridComponent {
+  @bindable() model!: Distributor;
+  innerColDefs: Column[] = [];
+  innerGridOptions!: GridOption;
+  angularGrid!: AngularGridInstance;
+  innerDataset: any[] = [];
+  innerGridId = '';
+  innerGridClass = '';
+
+  attached() {
+    this.gridId = `innergrid-${this.model.id}`;
+    this.innerGridClass = `row-detail-${this.model.id}`;
+    this.defineGrid();
+    this.innerDataset = [...this.model.orderData];
+  }
+
+  aureliaGridReady(aureliaGrid: AureliaGridInstance) {
+    this.aureliaGrid = aureliaGrid;
+  }
+
+  defineGrid() {
+    // OPTIONALLY reapply Grid State as Presets before unmounting the compoment
+    let gridState: GridState | undefined;
+    const gridStateStr = sessionStorage.getItem(`gridstate_${this.innerGridClass}`);
+    if (gridStateStr) {
+      gridState = JSON.parse(gridStateStr);
+    }
+
+    this.innerColDefs = [
+      { id: 'orderId', field: 'orderId', name: 'Order ID', filterable: true, sortable: true },
+      { id: 'shipCity', field: 'shipCity', name: 'Ship City', filterable: true, sortable: true },
+      { id: 'freight', field: 'freight', name: 'Freight', filterable: true, sortable: true, type: 'number' },
+      { id: 'shipName', field: 'shipName', name: 'Ship Name', filterable: true, sortable: true },
+    ];
+
+    this.innerGridOptions = {
+      autoResize: {
+        container: `.${this.innerGridClass}`,
+      },
+      enableFiltering: true,
+      enableSorting: true,
+      datasetIdPropertyName: 'orderId',
+      presets: gridState, // reapply grid state presets
+    };
+  }
+
+  // OPTIONALLY save Grid State before unmounting the compoment
+  handleBeforeGridDestroy() {
+    const gridState = this.angularGrid.gridStateService.getCurrentGridState();
+    sessionStorage.setItem(`gridstate_${this.innerGridClass}`, JSON.stringify(gridState));
+  }
+}
+```

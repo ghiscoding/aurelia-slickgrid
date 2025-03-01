@@ -65,7 +65,6 @@ const gridOptionsMock: Partial<GridOption> = {
     panelRows: 1,
     keyPrefix: '__',
     useRowClick: true,
-    useSimpleViewportCalc: true,
     saveDetailViewOnScroll: false,
     process: () => new Promise((resolve) => resolve('process resolving')),
     // @ts-ignore
@@ -559,31 +558,6 @@ describe('SlickRowDetailView', () => {
       });
       plugin.onBeforeRowDetailToggle.notify({ item: mockColumn, grid: gridStub } as any, new SlickEventData(), gridStub);
       plugin.onAfterRowDetailToggle.notify({ item: mockColumn, grid: gridStub } as any, new SlickEventData(), gridStub);
-
-      expect(handlerSpy).toHaveBeenCalled();
-    });
-
-    it('should call "redrawViewSlot" when grid event "onRowBackToViewportRange" is triggered', () => {
-      const mockColumn = { id: 'field1', field: 'field1', width: 100, cssClass: 'red', __collapsed: true };
-      const handlerSpy = jest.spyOn(plugin.eventHandler, 'subscribe');
-      // @ts-ignore:2345
-      const appendSpy = jest.spyOn(aureliaUtilServiceStub, 'createAureliaViewModelAddToSlot').mockReturnValue({ controller: { deactivate: jest.fn() } });
-      const redrawSpy = jest.spyOn(plugin, 'redrawAllViewSlots');
-
-      plugin.init(gridStub);
-      plugin.onBeforeRowDetailToggle = new SlickEvent();
-      plugin.onRowBackToViewportRange = new SlickEvent();
-      plugin.register();
-      plugin.onRowBackToViewportRange.subscribe(() => {
-        expect(appendSpy).toHaveBeenCalledWith(
-          ExampleLoader,
-          expect.objectContaining({ model: mockColumn, addon: expect.anything(), grid: gridStub, }),
-          expect.objectContaining({ className: 'container_field1' })
-        );
-        expect(redrawSpy).toHaveBeenCalled();
-      });
-      plugin.onBeforeRowDetailToggle.notify({ item: mockColumn, grid: gridStub } as any, new SlickEventData(), gridStub);
-      plugin.onRowBackToViewportRange.notify({ item: mockColumn, grid: gridStub } as any, new SlickEventData(), gridStub);
 
       expect(handlerSpy).toHaveBeenCalled();
     });

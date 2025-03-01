@@ -40,8 +40,8 @@ importers:
         specifier: ^3.12.0
         version: 3.12.1(@types/node@22.13.5)(typescript@5.7.3)
       '@slickgrid-universal/common':
-        specifier: ^5.12.2
-        version: 5.12.2
+        specifier: ^5.13.0
+        version: 5.13.0
       '@types/jest':
         specifier: ^29.5.14
         version: 29.5.14
@@ -127,23 +127,23 @@ importers:
         specifier: ^0.1.2
         version: 0.1.2
       '@slickgrid-universal/common':
-        specifier: ~5.12.2
-        version: 5.12.2
+        specifier: ~5.13.0
+        version: 5.13.0
       '@slickgrid-universal/custom-footer-component':
-        specifier: ~5.12.2
-        version: 5.12.2
+        specifier: ~5.13.0
+        version: 5.13.0
       '@slickgrid-universal/empty-warning-component':
-        specifier: ~5.12.2
-        version: 5.12.2
+        specifier: ~5.13.0
+        version: 5.13.0
       '@slickgrid-universal/event-pub-sub':
-        specifier: ~5.12.2
-        version: 5.12.2
+        specifier: ~5.13.0
+        version: 5.13.0
       '@slickgrid-universal/pagination-component':
-        specifier: ~5.12.2
-        version: 5.12.2
+        specifier: ~5.13.0
+        version: 5.13.0
       '@slickgrid-universal/row-detail-view-plugin':
-        specifier: ~5.12.2
-        version: 5.12.2
+        specifier: ~5.13.0
+        version: 5.13.0
       '@slickgrid-universal/utils':
         specifier: ~5.12.0
         version: 5.12.0
@@ -209,32 +209,32 @@ importers:
         specifier: ^2.11.8
         version: 2.11.8
       '@slickgrid-universal/common':
-        specifier: ^5.12.2
-        version: 5.12.2
+        specifier: ^5.13.0
+        version: 5.13.0
       '@slickgrid-universal/composite-editor-component':
-        specifier: ^5.12.2
-        version: 5.12.2
+        specifier: ^5.13.0
+        version: 5.13.0
       '@slickgrid-universal/custom-tooltip-plugin':
-        specifier: ^5.12.2
-        version: 5.12.2
+        specifier: ^5.13.0
+        version: 5.13.0
       '@slickgrid-universal/excel-export':
-        specifier: ^5.12.2
-        version: 5.12.2
+        specifier: ^5.13.0
+        version: 5.13.0
       '@slickgrid-universal/graphql':
-        specifier: ^5.12.2
-        version: 5.12.2
+        specifier: ^5.13.0
+        version: 5.13.0
       '@slickgrid-universal/odata':
-        specifier: ^5.12.2
-        version: 5.12.2
+        specifier: ^5.13.0
+        version: 5.13.0
       '@slickgrid-universal/row-detail-view-plugin':
-        specifier: ^5.12.2
-        version: 5.12.2
+        specifier: ^5.13.0
+        version: 5.13.0
       '@slickgrid-universal/rxjs-observable':
-        specifier: ^5.12.2
-        version: 5.12.2
+        specifier: ^5.13.0
+        version: 5.13.0
       '@slickgrid-universal/text-export':
-        specifier: ^5.12.2
-        version: 5.12.2
+        specifier: ^5.13.0
+        version: 5.13.0
       aurelia:
         specifier: ^2.0.0-beta.23
         version: 2.0.0-beta.23
@@ -1168,45 +1168,45 @@ packages:
   '@slickgrid-universal/binding@5.12.2':
     resolution: {integrity: sha512-o7dTmmW4DVBZi01VQHjO/cIJEH5RNz+rIrnQKwldTRoKC05vKOQTF/vuQAqTkhI7YHzFaspfvdy92oagEt5niw==}
 
-  '@slickgrid-universal/common@5.12.2':
-    resolution: {integrity: sha512-TLhU9FnPyqUfq276I+6AYBmgFuxNFca0JoFFYyZ2EB68vKxKVo/+EoQzJ9H5btP3xheWqatd660tHvMNvuwq8Q==}
+  '@slickgrid-universal/common@5.13.0':
+    resolution: {integrity: sha512-iP1pN25uSAIoLrDnhmTt3uX+QQAL7+GPfbO/qA7zQYSP0vtP1VRtx4aA/l8g7gHvA+KMAmN+k4kybVq2LOeGFg==}
     engines: {node: ^18.0.0 || >=20.0.0}
 
-  '@slickgrid-universal/composite-editor-component@5.12.2':
-    resolution: {integrity: sha512-w2pK+tlvkOR8y75LgdfSgKQ6BBC03UBds6AEYcSbrL7bjjmJc4knIy0dwf6pwVGYoOpel+r+YqRNoDFYeRbHEg==}
+  '@slickgrid-universal/composite-editor-component@5.13.0':
+    resolution: {integrity: sha512-1PU5Cf5AUnR6szMbM4Adi9s7d/bNs+93vyzPUl3X7yChyG3yr36L318NImseuLYUSG5eom5p32lEybfcFwbCvA==}
 
-  '@slickgrid-universal/custom-footer-component@5.12.2':
-    resolution: {integrity: sha512-aEWgqm2z1EXvl9auh2PJk7U49U2zAf2nGvPEknXd36Q5zdMLmzJjVsgS9CWFa4Y2mrJtJZ0yMoybNNnSzL55fg==}
+  '@slickgrid-universal/custom-footer-component@5.13.0':
+    resolution: {integrity: sha512-3pFxtT686N++BqjQc1tgc8gRmmO3S+plTRKnmG2QEu4YjL44gUAnSdch0mHNfAo/wztvombw1CbtNu1UJsyolg==}
 
-  '@slickgrid-universal/custom-tooltip-plugin@5.12.2':
-    resolution: {integrity: sha512-jSFX7eBxy1L8aJtEwwU9gX0zlynA1+cFPztME0GyHyjJY5EilMmOZgsCIwN3B26neRUJuN7m+DibV75WhMsMHA==}
+  '@slickgrid-universal/custom-tooltip-plugin@5.13.0':
+    resolution: {integrity: sha512-uvRI3xISJhl75cH1201a3roIJipv2mdc0I0SE2PumhR4gBg3gha3dYVbmt/XBLSD3V6qpid1fTmxYZIAwvWAwQ==}
 
-  '@slickgrid-universal/empty-warning-component@5.12.2':
-    resolution: {integrity: sha512-EfFzcjp5dw5tqsZRT/eLpQuxXbVr5kmpvxg7U9dO7ms/00TzPiZEz1mQIP0pKOq8mn01QgQJh1++grjx9DIvGg==}
+  '@slickgrid-universal/empty-warning-component@5.13.0':
+    resolution: {integrity: sha512-YsMCRz8dqapDSAxYuOSN+BCaiWjk1aR85eNpD00uu11DU0bE+hZbP2nqmUscerDAT+5BLF6GJzAdE+J9TjV2mQ==}
 
-  '@slickgrid-universal/event-pub-sub@5.12.2':
-    resolution: {integrity: sha512-VgFIBN/n2fQ71usKxZcFlIfqRDk6mcwq7klug0jyreD3v73iy560GqSXW8vdddinbovGr3pzCbGYjazdkQBzRA==}
+  '@slickgrid-universal/event-pub-sub@5.13.0':
+    resolution: {integrity: sha512-hjmfRw7fRoyfRgsN3ZsOiNuHmPn/+IxKJTkIhwL2HtWq2j+lP+vHfa7fqUmdMRSg/ResYYHXcF2wlCAVtln/+Q==}
 
-  '@slickgrid-universal/excel-export@5.12.2':
-    resolution: {integrity: sha512-JxXwxrqQjN1FfzXkt0M7cXxWJjulB0iCMTHkoCOHYKFZcLfSWidvDpqvah6xTh+KBsCqDQTD3moseL5tazLH3w==}
+  '@slickgrid-universal/excel-export@5.13.0':
+    resolution: {integrity: sha512-6uPHhy25pxkj/XKCDghvQTnrDRsoEc1d/vsp9HDgoxbpIy7vKnBLqDAT+pnT+1n4R0nZsnyqEhnrIgV+k+d0Ew==}
 
-  '@slickgrid-universal/graphql@5.12.2':
-    resolution: {integrity: sha512-ETKNwkG2EGl0SLAvULqvgzm30DTQAkMK6bQKE4OjjiWgOhRSIxXy2rvfp7h5SPggZgxhCgiB95Jbn88iUAmBhA==}
+  '@slickgrid-universal/graphql@5.13.0':
+    resolution: {integrity: sha512-OX73GJ9bgvM0yv1EHbrel+RHIu6pDQ7TccSLs3fgtHkdWAqvJzrB54uOZRDHupgXnedajc+UkL3Exj3yBAjr/w==}
 
-  '@slickgrid-universal/odata@5.12.2':
-    resolution: {integrity: sha512-WvVIXoAJPhhDAoDI1Q+wWlFEhzzGYNLjMZn9TkJmCNwm1GQvVJAd8bFwjJdSWwxTm3pdv3IdNrmXXkShe+Ngvg==}
+  '@slickgrid-universal/odata@5.13.0':
+    resolution: {integrity: sha512-ko2Wjja1S//AYrrNTSs4Bi+X3Ha6fdGt3t9RTUY36EznSp9lCORuZsXB5Y9TZTPE+URIyV2JfIiC6IyIb8Pblg==}
 
-  '@slickgrid-universal/pagination-component@5.12.2':
-    resolution: {integrity: sha512-nC+EUZRvMYWPV8ntJ2RVagf4y1wfKqhXlkxi+m6tYF/Xa7+of5GFwi/Z4O+hta50OCWSwile1l07o9vdm3mDOw==}
+  '@slickgrid-universal/pagination-component@5.13.0':
+    resolution: {integrity: sha512-Ripo9qYvTrH/hXRHnN2OPE6vPbV3j6HSacbh6UXPFb1LWl2fHxoi49iZMrdZh7w+k2F3ElentmcjAQ3OA3FFwQ==}
 
-  '@slickgrid-universal/row-detail-view-plugin@5.12.2':
-    resolution: {integrity: sha512-QMUVlq394m8kmz7P/e3bd5K3Wq+uC8OVdLF3DPGKyJkC0rT9MJhVxqOWhCxV2NAr3cXPtwWxbJOOHibpBQEsfQ==}
+  '@slickgrid-universal/row-detail-view-plugin@5.13.0':
+    resolution: {integrity: sha512-dYQYZdHSZ5QF/J13UZFZD9KzDu6z2z0E7iWe3HU9lEhR66vE+byNyM7JWfb1n8mDP/3x4agsn3QoEbKNwOPyDQ==}
 
-  '@slickgrid-universal/rxjs-observable@5.12.2':
-    resolution: {integrity: sha512-AxGSKgrCJrNif6YaMLdsGve4jkrNEPBe3AtkgYGKSibQcvV7FMa5IbHLmD9Z/cu4CusGyr4EWFB5murtGPHsQA==}
+  '@slickgrid-universal/rxjs-observable@5.13.0':
+    resolution: {integrity: sha512-rUtNusMx4wrnCqIU3G0JrD5JQ9PKIprtKp9i1FN6tvGPBmRO3upR7EXURGquCE/DYS9m0OR+SqtX0tfhqJh5wA==}
 
-  '@slickgrid-universal/text-export@5.12.2':
-    resolution: {integrity: sha512-qIE2dbnvyz6mp1EOHM8sH6Dmpo47x/pqwKjbmUNq3Ry7rLTCNBoq3RZZILRZUZPJHY9Xi9pE6gKuV3Qj6aUTqQ==}
+  '@slickgrid-universal/text-export@5.13.0':
+    resolution: {integrity: sha512-innFVhDtfDyHPSgB7ibGyqL9gOhIS86duf0lfBbj1hmPP1MUgtKcK9vb0x54TlI3estNzPXp4Kf4iSHL5XZd+Q==}
 
   '@slickgrid-universal/utils@5.12.0':
     resolution: {integrity: sha512-vw5Is2bdY+EjYw8dAJaAW6f+Iir0trwcz43cVI+Cpic9sTC6c7+UP89cvyW1sISN7YsWYRdtJjDT+BW9i6sSwg==}
@@ -6551,12 +6551,12 @@ snapshots:
 
   '@slickgrid-universal/binding@5.12.2': {}
 
-  '@slickgrid-universal/common@5.12.2':
+  '@slickgrid-universal/common@5.13.0':
     dependencies:
       '@excel-builder-vanilla/types': 3.0.14
       '@formkit/tempo': 0.1.2
       '@slickgrid-universal/binding': 5.12.2
-      '@slickgrid-universal/event-pub-sub': 5.12.2
+      '@slickgrid-universal/event-pub-sub': 5.13.0
       '@slickgrid-universal/utils': 5.12.0
       '@types/sortablejs': 1.15.8
       '@types/trusted-types': 2.0.7
@@ -6567,65 +6567,65 @@ snapshots:
       un-flatten-tree: 2.0.12
       vanilla-calendar-pro: 2.9.10
 
-  '@slickgrid-universal/composite-editor-component@5.12.2':
+  '@slickgrid-universal/composite-editor-component@5.13.0':
     dependencies:
       '@slickgrid-universal/binding': 5.12.2
-      '@slickgrid-universal/common': 5.12.2
+      '@slickgrid-universal/common': 5.13.0
       '@slickgrid-universal/utils': 5.12.0
 
-  '@slickgrid-universal/custom-footer-component@5.12.2':
+  '@slickgrid-universal/custom-footer-component@5.13.0':
     dependencies:
       '@formkit/tempo': 0.1.2
       '@slickgrid-universal/binding': 5.12.2
-      '@slickgrid-universal/common': 5.12.2
+      '@slickgrid-universal/common': 5.13.0
 
-  '@slickgrid-universal/custom-tooltip-plugin@5.12.2':
+  '@slickgrid-universal/custom-tooltip-plugin@5.13.0':
     dependencies:
-      '@slickgrid-universal/common': 5.12.2
+      '@slickgrid-universal/common': 5.13.0
       '@slickgrid-universal/utils': 5.12.0
 
-  '@slickgrid-universal/empty-warning-component@5.12.2':
+  '@slickgrid-universal/empty-warning-component@5.13.0':
     dependencies:
-      '@slickgrid-universal/common': 5.12.2
+      '@slickgrid-universal/common': 5.13.0
 
-  '@slickgrid-universal/event-pub-sub@5.12.2':
+  '@slickgrid-universal/event-pub-sub@5.13.0':
     dependencies:
       '@slickgrid-universal/utils': 5.12.0
 
-  '@slickgrid-universal/excel-export@5.12.2':
+  '@slickgrid-universal/excel-export@5.13.0':
     dependencies:
-      '@slickgrid-universal/common': 5.12.2
+      '@slickgrid-universal/common': 5.13.0
       '@slickgrid-universal/utils': 5.12.0
       excel-builder-vanilla: 3.0.14
 
-  '@slickgrid-universal/graphql@5.12.2':
+  '@slickgrid-universal/graphql@5.13.0':
     dependencies:
-      '@slickgrid-universal/common': 5.12.2
+      '@slickgrid-universal/common': 5.13.0
       '@slickgrid-universal/utils': 5.12.0
 
-  '@slickgrid-universal/odata@5.12.2':
+  '@slickgrid-universal/odata@5.13.0':
     dependencies:
-      '@slickgrid-universal/common': 5.12.2
+      '@slickgrid-universal/common': 5.13.0
       '@slickgrid-universal/utils': 5.12.0
 
-  '@slickgrid-universal/pagination-component@5.12.2':
+  '@slickgrid-universal/pagination-component@5.13.0':
     dependencies:
       '@slickgrid-universal/binding': 5.12.2
-      '@slickgrid-universal/common': 5.12.2
+      '@slickgrid-universal/common': 5.13.0
 
-  '@slickgrid-universal/row-detail-view-plugin@5.12.2':
+  '@slickgrid-universal/row-detail-view-plugin@5.13.0':
     dependencies:
-      '@slickgrid-universal/common': 5.12.2
+      '@slickgrid-universal/common': 5.13.0
       '@slickgrid-universal/utils': 5.12.0
 
-  '@slickgrid-universal/rxjs-observable@5.12.2':
+  '@slickgrid-universal/rxjs-observable@5.13.0':
     dependencies:
-      '@slickgrid-universal/common': 5.12.2
+      '@slickgrid-universal/common': 5.13.0
       rxjs: 7.8.2
 
-  '@slickgrid-universal/text-export@5.12.2':
+  '@slickgrid-universal/text-export@5.13.0':
     dependencies:
-      '@slickgrid-universal/common': 5.12.2
+      '@slickgrid-universal/common': 5.13.0
       '@slickgrid-universal/utils': 5.12.0
       text-encoding-utf-8: 1.0.2
 

@@ -48,6 +48,7 @@ export class MyApp {
     { path: 'example42', component: () => import('./examples/slickgrid/example42'), title: '42- Custom Pagination' },
     { path: 'example43', component: () => import('./examples/slickgrid/example43'), title: '43- Colspan/Rowspan (timesheets)' },
     { path: 'example44', component: () => import('./examples/slickgrid/example44'), title: '44- Colspan/Rowspan (large data)' },
+    { path: 'example45', component: () => import('./examples/slickgrid/example45'), title: '45- Row Detail with inner Grid' },
     { path: 'home', component: () => import('./home-page'), title: 'Home' },
   ];
 
@@ -59,9 +60,7 @@ export class MyApp {
     // scroll to active link route, there's probably a better way to do this but couldn't find lifecycle for it
     window.setTimeout(() => {
       const linkElm = document.querySelector('.nav-link.active');
-      if (linkElm) {
-        linkElm.scrollIntoView({ block: 'nearest' });
-      }
+      linkElm?.scrollIntoView({ block: 'nearest' });
     }, 45);
   }
 
