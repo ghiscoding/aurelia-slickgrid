@@ -152,6 +152,12 @@ export class Example45 {
     }
   }
 
+  changeUsingInnerGridStatePresets() {
+    this.isUsingInnerGridStatePresets = !this.isUsingInnerGridStatePresets;
+    this.closeAllRowDetail();
+    return true;
+  }
+
   closeAllRowDetail() {
     if (this.aureliaGrid?.extensionService) {
       this.rowDetailInstance.collapseAll();
