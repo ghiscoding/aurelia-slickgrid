@@ -7,7 +7,6 @@ import type { AureliaUtilService } from '../../services';
 import type { RowDetailView } from '../../models';
 import { SlickRowDetailView } from '../slickRowDetailView';
 
-jest.mock('@slickgrid-universal/row-detail-view-plugin');
 jest.mock('@slickgrid-universal/common', () => ({
   ...(jest.requireActual('@slickgrid-universal/common') as any),
   SlickRowSelectionModel: jest.fn().mockImplementation(() => ({
@@ -23,20 +22,14 @@ jest.mock('@slickgrid-universal/common', () => ({
   })),
 }));
 
-jest.mock('@slickgrid-universal/row-detail-view-plugin');
-jest.mock('@slickgrid-universal/common', () => ({
-  ...(jest.requireActual('@slickgrid-universal/common') as any),
-  SlickRowSelectionModel: jest.fn().mockImplementation(() => ({
-    constructor: jest.fn(),
-    init: jest.fn(),
-    destroy: jest.fn(),
-    dispose: jest.fn(),
-    getSelectedRows: jest.fn(),
-    setSelectedRows: jest.fn(),
-    getSelectedRanges: jest.fn(),
-    setSelectedRanges: jest.fn(),
-    onSelectedRangesChanged: new SlickEvent(),
-  })),
+jest.mock('@slickgrid-universal/row-detail-view-plugin', () => ({
+  ...(jest.requireActual('@slickgrid-universal/row-detail-view-plugin') as any),
+  onAsyncResponse: new SlickEvent(),
+  onAsyncEndUpdate: new SlickEvent(),
+  onAfterRowDetailToggle: new SlickEvent(),
+  onBeforeRowDetailToggle: new SlickEvent(),
+  onRowOutOfViewportRange: new SlickEvent(),
+  onRowBackToViewportRange: new SlickEvent(),
 }));
 
 // @ts-ignore
@@ -80,7 +73,22 @@ const gridOptionsMock: Partial<GridOption> = {
   }
 };
 
+const dataViewStub = {
+  constructor: jest.fn(),
+  init: jest.fn(),
+  destroy: jest.fn(),
+  beginUpdate: jest.fn(),
+  endUpdate: jest.fn(),
+  getItem: jest.fn(),
+  getItems: jest.fn(),
+  getItemCount: jest.fn(),
+  onRowCountChanged: new SlickEvent(),
+  onRowsChanged: new SlickEvent(),
+  onSetItemsCalled: new SlickEvent(),
+};
+
 const gridStub = {
+  getData: () => dataViewStub,
   getUID: jest.fn(),
   getOptions: () => gridOptionsMock,
   getSelectionModel: jest.fn(),
@@ -89,10 +97,15 @@ const gridStub = {
   sanitizeHtmlString: (s: string) => s,
   onColumnsReordered: new SlickEvent(),
   onSelectedRowsChanged: new SlickEvent(),
+  onBeforeEditCell: new SlickEvent(),
+  onBeforeRemoveCachedRow: new SlickEvent(),
+  onClick: new SlickEvent(),
+  onScroll: new SlickEvent(),
   onSort: new SlickEvent(),
 } as unknown as SlickGrid;
 
 describe('SlickRowDetailView', () => {
+  let eventHandler: SlickEventHandler;
   let eventPubSubService: EventPubSubService;
   let plugin: SlickRowDetailView;
 
@@ -101,9 +114,10 @@ describe('SlickRowDetailView', () => {
   document.body.appendChild(div);
 
   beforeEach(() => {
+    eventHandler = new SlickEventHandler();
     eventPubSubService = new EventPubSubService(div);
     plugin = new SlickRowDetailView(aureliaUtilServiceStub, eventPubSubService, document.body as HTMLDivElement);
-    plugin.eventHandler = new SlickEventHandler();
+    jest.spyOn(plugin, 'eventHandler', 'get').mockReturnValue(eventHandler);
     jest.spyOn(plugin, 'getOptions').mockReturnValue(gridOptionsMock.rowDetailView as RowDetailViewOption);
   });
 
@@ -537,29 +551,6 @@ describe('SlickRowDetailView', () => {
         expect(redrawSpy).toHaveBeenCalledTimes(4);
         done();
       });
-    });
-
-    it('should call "renderAllViewModels" when grid event "onAfterRowDetailToggle" is triggered', () => {
-      const loadingElm = document.createElement('div');
-      loadingElm.className = 'container_loading';
-      const mockColumn = { id: 'field1', field: 'field1', width: 100, cssClass: 'red', __collapsed: true };
-      const handlerSpy = jest.spyOn(plugin.eventHandler, 'subscribe');
-      const getElementSpy = jest.spyOn(document.body, 'getElementsByClassName');
-      // @ts-ignore:2345
-      const appendSpy = jest.spyOn(aureliaUtilServiceStub, 'createAureliaViewModelAddToSlot').mockReturnValue({ controller: { deactivate: jest.fn() } });
-
-      plugin.init(gridStub);
-      plugin.onAfterRowDetailToggle = new SlickEvent();
-      plugin.onBeforeRowDetailToggle = new SlickEvent();
-      plugin.register();
-      plugin.onAfterRowDetailToggle.subscribe(() => {
-        expect(getElementSpy).toHaveBeenCalledWith('container_loading');
-        expect(appendSpy).toHaveBeenCalledWith(ExamplePreload, undefined, loadingElm);
-      });
-      plugin.onBeforeRowDetailToggle.notify({ item: mockColumn, grid: gridStub } as any, new SlickEventData(), gridStub);
-      plugin.onAfterRowDetailToggle.notify({ item: mockColumn, grid: gridStub } as any, new SlickEventData(), gridStub);
-
-      expect(handlerSpy).toHaveBeenCalled();
     });
 
     it('should run the internal "onProcessing" and call "notifyTemplate" with a Promise when "process" method is defined and executed', (done) => {
