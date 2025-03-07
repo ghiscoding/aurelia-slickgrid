@@ -46,3 +46,4 @@ export {
   TranslaterService,
   disposeAllSubscriptions
 } from './services/index';
+export { SlickRowDetailView } from './extensions/slickRowDetailView'
