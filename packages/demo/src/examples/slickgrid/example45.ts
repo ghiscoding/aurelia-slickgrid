@@ -26,8 +26,8 @@ export class Example45 {
   isUsingInnerGridStatePresets = false;
   showSubTitle = true;
 
-  get rowDetailInstance(): SlickRowDetailView {
-    return this.aureliaGrid?.extensionService.getExtensionInstanceByName(ExtensionName.rowDetailView);
+  get rowDetailInstance() {
+    return this.aureliaGrid?.extensionService.getExtensionInstanceByName(ExtensionName.rowDetailView) as SlickRowDetailView;
   }
 
   aureliaGridReady(aureliaGrid: AureliaGridInstance) {
@@ -98,6 +98,7 @@ export class Example45 {
     this.gridOptions = {
       autoResize: {
         container: '#demo-container',
+        rightPadding: 20,
         bottomPadding: 20,
       },
       autoHeight: false,
@@ -159,9 +160,11 @@ export class Example45 {
   }
 
   closeAllRowDetail() {
-    if (this.aureliaGrid?.extensionService) {
-      this.rowDetailInstance.collapseAll();
-    }
+    this.rowDetailInstance?.collapseAll();
+  }
+
+  redrawAllRowDetail() {
+    this.rowDetailInstance?.redrawAllViewSlots(true);
   }
 
   /** Just for demo purposes, we will simulate an async server call and return more details on the selected row item */
@@ -230,5 +233,6 @@ export class Example45 {
     this.showSubTitle = !this.showSubTitle;
     const action = this.showSubTitle ? 'remove' : 'add';
     document.querySelector('.subtitle')?.classList[action]('hidden');
+    this.aureliaGrid.resizerService?.resizeGrid(10);
   }
 }

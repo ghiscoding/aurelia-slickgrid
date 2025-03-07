@@ -46,6 +46,10 @@ export class Example45DetailView {
     this.showGrid = true;
   }
 
+  // detaching() {
+  //   console.log('row detail detaching');
+  // }
+
   aureliaGridReady(aureliaGrid: AureliaGridInstance) {
     this.aureliaGrid = aureliaGrid;
   }

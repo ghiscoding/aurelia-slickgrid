@@ -211,10 +211,13 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
   }
 
   /** Redraw (re-render) all the expanded row detail View Slots */
-  async redrawAllViewSlots() {
+  async redrawAllViewSlots(forceRedraw = false) {
     this.resetRenderedRows();
     const promises: Promise<void>[] = [];
-    this._slots.forEach((x) => promises.push(this.redrawViewSlot(x)));
+    this._slots.forEach((x) => {
+      forceRedraw && x.controller?.deactivate(x.controller, null);
+      promises.push(this.redrawViewSlot(x))
+    });
     await Promise.all(promises);
   }
 
