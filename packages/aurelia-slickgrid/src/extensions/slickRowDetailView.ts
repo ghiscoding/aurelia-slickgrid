@@ -334,9 +334,7 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
    * @param item
    */
   protected notifyTemplate(item: any) {
-    if (this.onAsyncResponse) {
-      this.onAsyncResponse.notify({ item, itemDetail: item }, new SlickEventData(), this);
-    }
+    this.onAsyncResponse.notify({ item, itemDetail: item }, new SlickEventData(), this);
   }
 
   /**
@@ -360,8 +358,10 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
       }
 
       if (!awaitedItemDetail || !awaitedItemDetail.hasOwnProperty(this.datasetIdPropName)) {
-        throw new Error('[Aurelia-Slickgrid] could not process the Row Detail, please make sure that your "process" callback ' +
-          '(a Promise or an HttpClient call returning an Observable) returns an item object that has an "${this.datasetIdPropName}" property');
+        throw new Error(
+          '[Aurelia-Slickgrid] could not process the Row Detail, please make sure that your "process" callback ' +
+          `returns an item object that has an "${this.datasetIdPropName}" property`
+        );
       }
 
       // notify the plugin with the new item details
