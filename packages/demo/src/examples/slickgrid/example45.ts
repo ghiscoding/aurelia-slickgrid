@@ -98,10 +98,10 @@ export class Example45 {
     this.gridOptions = {
       autoResize: {
         container: '#demo-container',
+        autoHeight: false, // works with/without autoHeight
         rightPadding: 20,
         bottomPadding: 20,
       },
-      autoHeight: false,
       enableFiltering: true,
       enableRowDetailView: true,
       darkMode: this._darkMode,
