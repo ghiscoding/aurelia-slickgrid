@@ -12,11 +12,14 @@ import {
 import { Example19Preload } from './example19-preload';
 import { Example19DetailView } from './example19-detail-view';
 
+const FAKE_SERVER_DELAY = 250;
 const NB_ITEMS = 1000;
 
 export class Example19 {
   private _darkMode = false;
   @bindable detailViewRowCount = 9;
+  @bindable serverWaitDelay = FAKE_SERVER_DELAY;
+
   title = 'Example 19: Row Detail View';
   subTitle = `
     Add functionality to show extra information with a Row Detail View, (<a href="https://ghiscoding.gitbook.io/aurelia-slickgrid/grid-functionalities/row-detail" target="_blank">Wiki docs</a>)
@@ -225,7 +228,7 @@ export class Example19 {
 
         // resolve the data after delay specified
         resolve(itemDetail);
-      }, 1000);
+      }, this.serverWaitDelay);
     });
   }
 
