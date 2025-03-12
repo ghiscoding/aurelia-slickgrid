@@ -23,6 +23,7 @@ export class Example45 {
   gridOptions!: GridOption;
   aureliaGrid!: AureliaGridInstance;
   dataset: Distributor[] = [];
+  isUsingAutoHeight = false;
   isUsingInnerGridStatePresets = false;
   showSubTitle = true;
 
@@ -98,7 +99,7 @@ export class Example45 {
     this.gridOptions = {
       autoResize: {
         container: '#demo-container',
-        autoHeight: false, // works with/without autoHeight
+        autoHeight: this.isUsingAutoHeight, // works with/without autoHeight
         rightPadding: 20,
         bottomPadding: 20,
       },
@@ -156,6 +157,13 @@ export class Example45 {
   changeUsingInnerGridStatePresets() {
     this.isUsingInnerGridStatePresets = !this.isUsingInnerGridStatePresets;
     this.closeAllRowDetail();
+    return true;
+  }
+
+  changeUsingResizerAutoHeight() {
+    this.isUsingAutoHeight = !this.isUsingAutoHeight;
+    this.aureliaGrid.slickGrid?.setOptions({ autoResize: { ...this.gridOptions.autoResize, autoHeight: this.isUsingAutoHeight } });
+    this.aureliaGrid.resizerService.resizeGrid();
     return true;
   }
 
