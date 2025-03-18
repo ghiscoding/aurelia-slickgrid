@@ -155,6 +155,7 @@ export class Example43 {
       enableCellNavigation: true,
       enableColumnReorder: true,
       enableCellRowSpan: true,
+      enableHeaderMenu: false,
       enableExcelExport: true,
       externalResources: [this.excelExportService],
       enableExcelCopyBuffer: true,
