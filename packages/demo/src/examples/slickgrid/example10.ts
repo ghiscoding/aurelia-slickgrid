@@ -22,6 +22,7 @@ export class Example10 {
   gridOptions2!: GridOption;
   dataset1: any[] = [];
   dataset2: any[] = [];
+  hideSubTitle = false;
   selectedTitles = '';
   selectedTitle = '';
   selectedGrid2IDs: number[] = [];

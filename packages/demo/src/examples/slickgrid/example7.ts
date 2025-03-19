@@ -30,6 +30,7 @@ export class Example7 {
   dataset2: any[] = [];
   aureliaGrid1!: AureliaGridInstance;
   aureliaGrid2!: AureliaGridInstance;
+  hideSubTitle = false;
 
   constructor() {
     // define the grid options & columns and then create the grid itself

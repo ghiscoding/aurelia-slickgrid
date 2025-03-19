@@ -52,6 +52,7 @@ export class Example25 {
   metrics!: Metrics;
 
   graphqlQuery = '';
+  hideSubTitle = false;
   processing = false;
   status = { text: '', class: '' };
 

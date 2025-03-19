@@ -98,6 +98,7 @@ export class Example36 {
   dataset: GroceryItem[] = [];
   aureliaGrid!: AureliaGridInstance;
   excelExportService: ExcelExportService;
+  hideSubTitle = false;
   isDataGrouped = false;
   taxRate = 7.5;
 

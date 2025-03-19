@@ -28,6 +28,7 @@ export class Example8 {
   columnDefinitions: Column[] = [];
   gridOptions!: GridOption;
   dataset: any[] = [];
+  hideSubTitle = false;
   selectedLanguage: string;
   visibleColumns: Column[] = [];
 

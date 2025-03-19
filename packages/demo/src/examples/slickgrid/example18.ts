@@ -44,6 +44,7 @@ export class Example18 {
   durationOrderByCount = false;
   gridObj!: SlickGrid;
   gridOptions!: GridOption;
+  hideSubTitle = false;
   processing = false;
   selectedGroupingFields: Array<string | GroupingGetterFunction> = ['', '', ''];
   excelExportService = new ExcelExportService();

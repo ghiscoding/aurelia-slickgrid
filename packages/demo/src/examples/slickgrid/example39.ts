@@ -33,6 +33,7 @@ export class Example39 {
   metrics!: Partial<Metrics>;
   tagDataClass = '';
   graphqlQuery = '...';
+  hideSubTitle = false;
   processing = false;
   selectedLanguage: string;
   status = { text: 'processing...', class: 'alert alert-danger' };

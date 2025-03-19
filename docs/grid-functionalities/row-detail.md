@@ -387,7 +387,6 @@ export class MainGrid implements OnInit {
   gridOptions!: GridOption;
   aureliaGrid!: AureliaGridInstance;
   dataset: Distributor[] = [];
-  showSubTitle = true;
 
   get rowDetailInstance(): SlickRowDetailView {
     return this.aureliaGrid?.extensionService.getExtensionInstanceByName(ExtensionName.rowDetailView);

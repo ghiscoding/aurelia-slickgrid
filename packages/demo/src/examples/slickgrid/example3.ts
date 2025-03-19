@@ -76,6 +76,7 @@ export class Example3 {
   columnDefinitions: Column[] = [];
   dataset: any[] = [];
   updatedObject: any;
+  hideSubTitle = false;
   isAutoEdit = true;
   alertWarning: any;
   duplicateTitleHeaderCount = 1;

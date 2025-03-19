@@ -19,7 +19,7 @@ export class Example44 {
   columnDefinitions: Column[] = [];
   dataLn: number | string = 'loading...';
   dataset: any[] = [];
-  showSubTitle = true;
+  hideSubTitle = false;
   scrollToRow = 100;
   metadata: Record<number, ItemMetadata> = {
     0: {
@@ -276,6 +276,7 @@ export class Example44 {
       enableCellNavigation: true,
       enableColumnReorder: true,
       enableCellRowSpan: true,
+      enableHeaderMenu: false,
       gridHeight: 600,
       gridWidth: 900,
       rowHeight: 30,
@@ -372,11 +373,5 @@ export class Example44 {
     // const args = event.detail && event.detail.args;
     this.aureliaGrid.slickGrid?.scrollRowToTop(this.scrollToRow);
     return false;
-  }
-
-  toggleSubTitle() {
-    this.showSubTitle = !this.showSubTitle;
-    const action = this.showSubTitle ? 'remove' : 'add';
-    document.querySelector('.subtitle')?.classList[action]('hidden');
   }
 }

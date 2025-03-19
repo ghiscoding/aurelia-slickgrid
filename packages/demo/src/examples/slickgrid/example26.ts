@@ -25,7 +25,7 @@ const NB_ITEMS = 100;
 export class Example26 {
   title = 'Example 26: Use of Aurelia Custom Elements';
   subTitle = `
-  <h3>Filters, Editors, AsyncPostRender with Aurelia Custom Elements</h3>
+  <h5>Filters, Editors, AsyncPostRender with Aurelia Custom Elements</h5>
   Grid with usage of Aurelia Custom Elements as Editor &amp; AsyncPostRender (similar to Formatter).
   <ul>
     <li>Support of Aurelia Custom Element as Custom Editor (click on any "Assignee" name cell)</li>
@@ -50,6 +50,7 @@ export class Example26 {
   columnDefinitions: Column[] = [];
   dataset: any[] = [];
   updatedObject: any;
+  hideSubTitle = false;
   isAutoEdit = true;
   alertWarning: any;
   assignees = [

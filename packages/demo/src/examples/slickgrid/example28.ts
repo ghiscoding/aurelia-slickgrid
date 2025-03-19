@@ -30,6 +30,7 @@ export class Example28 {
   gridOptions!: GridOption;
   columnDefinitions: Column[] = [];
   datasetHierarchical: any[] = [];
+  hideSubTitle = false;
   isExcludingChildWhenFiltering = false;
   isAutoApproveParentItemWhenTreeColumnIsValid = true;
   isAutoRecalcTotalsOnFilterChange = false;

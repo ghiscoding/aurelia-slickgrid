@@ -92,6 +92,7 @@ export class Example24 {
   gridOptions!: GridOption;
   columnDefinitions: Column[] = [];
   dataset: any[] = [];
+  hideSubTitle = false;
   selectedLanguage: string;
 
   constructor(private readonly i18n: I18N = resolve(I18N)) {

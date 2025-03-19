@@ -25,7 +25,7 @@ export class Example45 {
   dataset: Distributor[] = [];
   isUsingAutoHeight = false;
   isUsingInnerGridStatePresets = false;
-  showSubTitle = true;
+  hideSubTitle = false;
 
   get rowDetailInstance() {
     return this.aureliaGrid?.extensionService.getExtensionInstanceByName(ExtensionName.rowDetailView) as SlickRowDetailView;
@@ -235,12 +235,5 @@ export class Example45 {
       document.querySelector('.panel-wm-content')!.classList.remove('dark-mode');
       document.querySelector<HTMLDivElement>('#demo-container')!.dataset.bsTheme = 'light';
     }
-  }
-
-  toggleSubTitle() {
-    this.showSubTitle = !this.showSubTitle;
-    const action = this.showSubTitle ? 'remove' : 'add';
-    document.querySelector('.subtitle')?.classList[action]('hidden');
-    this.aureliaGrid.resizerService?.resizeGrid(10);
   }
 }

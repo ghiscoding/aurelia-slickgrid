@@ -28,6 +28,7 @@ export class Example42 {
   dataset: any[] = [];
   paginationPosition: 'bottom' | 'top' = 'top';
   aureliaGrid: AureliaGridInstance;
+  hideSubTitle = false;
   paginationOptions!: Pagination;
 
   constructor() {
