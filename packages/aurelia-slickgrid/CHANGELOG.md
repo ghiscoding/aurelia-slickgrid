@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.13.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.13.0...v8.13.1) (2025-03-19)
+
+### Bug Fixes
+
+* Row Detail code cleanup, remove unnecessary if condition wrappers ([#1319](https://github.com/ghiscoding/aurelia-slickgrid/issues/1319)) ([4d190a1](https://github.com/ghiscoding/aurelia-slickgrid/commit/4d190a137503cd2636d3b1b40c3f512839397b28)) - by @ghiscoding
+* Row Detail redraw all should work as expected ([#1322](https://github.com/ghiscoding/aurelia-slickgrid/issues/1322)) ([6f72d1a](https://github.com/ghiscoding/aurelia-slickgrid/commit/6f72d1a483d28d56faad179a98bcf213b2a33830)) - by @ghiscoding
+* Row Detail should also work with fixed grid height or w/o autoHeight ([#1324](https://github.com/ghiscoding/aurelia-slickgrid/issues/1324)) ([3af3e8f](https://github.com/ghiscoding/aurelia-slickgrid/commit/3af3e8f1528c106d292b7f4a402a573387495283)) - by @ghiscoding
+
 ## [8.13.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.12.2...v8.13.0) (2025-03-01)
 
 ### Features
