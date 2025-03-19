@@ -4,7 +4,7 @@
   ignorePaths: ["**/__tests__/**"],
   dependencyDashboard: false,
   lockFileMaintenance: {
-    enabled: false,
+    enabled: true,
   },
   pin: false,
   rangeStrategy: "bump",
