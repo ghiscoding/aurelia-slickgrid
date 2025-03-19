@@ -38,6 +38,7 @@ export class Example15 {
   columnDefinitions: Column[] = [];
   gridOptions!: GridOption;
   dataset: any[] = [];
+  hideSubTitle = false;
   selectedLanguage: string;
 
   constructor(private readonly i18n: I18N = resolve(I18N)) {

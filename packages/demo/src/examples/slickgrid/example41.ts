@@ -16,6 +16,7 @@ export class Example41 {
   dragHelper?: HTMLElement;
   dragRows: number[] = [];
   dragMode = '';
+  hideSubTitle = false;
 
   constructor() {
     this.defineGrid();

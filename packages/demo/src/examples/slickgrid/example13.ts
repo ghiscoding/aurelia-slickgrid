@@ -34,6 +34,7 @@ export class Example13 {
   dataset: any[] = [];
   dataviewObj!: SlickDataView;
   gridObj!: SlickGrid;
+  hideSubTitle = false;
   processing = false;
   excelExportService = new ExcelExportService();
   textExportService = new TextExportService();

@@ -36,6 +36,7 @@ export class Example19 {
   dataset: any[] = [];
   // extensions!: ExtensionList<any>;
   flashAlertType = 'info';
+  hideSubTitle = false;
   message = '';
 
   constructor() {

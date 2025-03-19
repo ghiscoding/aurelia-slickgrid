@@ -63,6 +63,7 @@ export class Example12 {
   selectedLanguage: string;
   duplicateTitleHeaderCount = 1;
   gridObj!: SlickGrid;
+  hideSubTitle = false;
   excelExportService = new ExcelExportService();
   textExportService = new TextExportService();
 

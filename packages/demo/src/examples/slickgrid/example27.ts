@@ -21,6 +21,7 @@ export class Example27 {
   dataset: any[] = [];
   datasetHierarchical: any[] = [];
   loadingClass = '';
+  hideSubTitle = false;
   isLargeDataset = false;
   hasNoExpandCollapseChanged = true;
   treeToggleItems: TreeToggledItem[] = [];

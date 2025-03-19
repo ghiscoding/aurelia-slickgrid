@@ -19,6 +19,7 @@ export class Example14 {
   gridOptions2!: GridOption;
   dataset1: any[] = [];
   dataset2: any[] = [];
+  hideSubTitle = false;
 
   constructor() {
     this.definedGrid1();

@@ -21,6 +21,7 @@ export class Example22 {
   columnDefinitions2: Column[] = [];
   dataset1: any[] = [];
   dataset2: any[] = [];
+  hideSubTitle = false;
 
   constructor(readonly http: IHttpClient = resolve(newInstanceOf(IHttpClient))) {
     // define the grid options & columns and then create the grid itself

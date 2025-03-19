@@ -90,6 +90,7 @@ export class Example34 {
   gridOptions!: GridOption;
   columnDefinitions: Column[] = [];
   dataset: any[] = [];
+  hideSubTitle = false;
   isFullScreen = false;
   highlightDuration = 150;
   itemCount = 200;

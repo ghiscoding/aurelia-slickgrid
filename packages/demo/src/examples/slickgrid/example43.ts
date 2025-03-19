@@ -15,7 +15,7 @@ export class Example43 {
   columnDefinitions: Column[] = [];
   dataset: any[] = [];
   isEditable = false;
-  showSubTitle = true;
+  hideSubTitle = false;
   showEmployeeId = true;
   excelExportService = new ExcelExportService();
   metadata: ItemMetadata | Record<number, ItemMetadata> = {
@@ -447,11 +447,5 @@ export class Example43 {
     this.metadata = newMetadata;
     this.aureliaGrid.slickGrid.remapAllColumnsRowSpan();
     this.aureliaGrid.slickGrid.invalidate();
-  }
-
-  toggleSubTitle() {
-    this.showSubTitle = !this.showSubTitle;
-    const action = this.showSubTitle ? 'remove' : 'add';
-    document.querySelector('.subtitle')?.classList[action]('hidden');
   }
 }

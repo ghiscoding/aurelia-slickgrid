@@ -30,6 +30,7 @@ export class Example38 {
   metrics!: Partial<Metrics>;
   tagDataClass = '';
   odataQuery = '';
+  hideSubTitle = false;
   processing = false;
   errorStatus = '';
   errorStatusClass = 'hidden';

@@ -23,6 +23,7 @@ export class Example16 {
   columnDefinitions: Column[] = [];
   gridOptions!: GridOption;
   dataset: any[] = [];
+  hideSubTitle = false;
 
   constructor() {
     this.defineGrid();

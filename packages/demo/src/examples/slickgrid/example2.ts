@@ -53,6 +53,7 @@ export class Example2 {
   gridOptions!: GridOption;
   columnDefinitions: Column<DataItem>[] = [];
   dataset: any[] = [];
+  hideSubTitle = false;
   resizerPaused = false;
 
   constructor() {

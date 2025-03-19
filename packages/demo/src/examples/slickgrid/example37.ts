@@ -19,6 +19,7 @@ export class Example37 {
   gridOptions!: GridOption;
   columnDefinitions: Column[] = [];
   dataset: any[] = [];
+  hideSubTitle = false;
   resizerPaused = false;
 
   constructor() {

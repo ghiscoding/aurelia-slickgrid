@@ -20,9 +20,10 @@ export class Example35 {
   gridOptions!: GridOption;
   columnDefinitions!: Column[];
   dataset!: any[];
+  fetchResult = '';
+  hideSubTitle = false;
   selectedLanguage: string;
   selectedLanguageFile: string;
-  fetchResult = '';
   statusClass = 'alert alert-light';
   statusStyle = 'display: none';
 

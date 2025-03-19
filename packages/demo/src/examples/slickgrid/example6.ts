@@ -49,6 +49,7 @@ export class Example6 {
   graphqlService = new GraphqlService();
 
   graphqlQuery = '';
+  hideSubTitle = false;
   processing = false;
   selectedLanguage: string;
   status = { text: '', class: '' };
