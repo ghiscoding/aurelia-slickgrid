@@ -30,7 +30,7 @@ export class Example31 {
   dataset: any[] = [];
   metrics!: Metrics;
   paginationOptions!: Pagination;
-
+  hideSubTitle = false;
   isCountEnabled = true;
   isSelectEnabled = false;
   isExpandEnabled = false;

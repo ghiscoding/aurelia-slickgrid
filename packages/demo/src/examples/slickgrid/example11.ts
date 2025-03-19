@@ -40,6 +40,7 @@ export class Example11 {
   columnDefinitions: Column[] = [];
   gridOptions!: GridOption;
   dataset: any[] = [];
+  hideSubTitle = false;
 
   constructor() {
     // define the grid options & columns and then create the grid itself

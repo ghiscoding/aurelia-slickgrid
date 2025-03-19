@@ -57,6 +57,7 @@ export class Example23 {
   columnDefinitions: Column[] = [];
   gridOptions!: GridOption;
   dataset: any[] = [];
+  hideSubTitle = false;
   selectedLanguage: string;
   metrics!: Metrics;
   filterList = [

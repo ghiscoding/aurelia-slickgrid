@@ -21,6 +21,7 @@ export class Example40 {
   dataset: any[] = [];
   gridOptions!: GridOption;
   metrics!: Partial<Metrics>;
+  hideSubTitle = false;
   shouldResetOnSort = false;
 
   constructor() {

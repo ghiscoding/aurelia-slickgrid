@@ -53,6 +53,7 @@ export class Example32 {
   dataset: any[] = [];
   editQueue: any[] = [];
   editedItems: any = {};
+  hideSubTitle = false;
   isUsingDefaultResize = false;
   isGridEditable = true;
   isMassSelectionDisabled = true;

@@ -51,6 +51,7 @@ export class Example4 {
   columnDefinitions: Column[] = [];
   gridOptions!: GridOption;
   dataset: any[] = [];
+  hideSubTitle = false;
   metrics!: Metrics;
 
   constructor(readonly http: IHttpClient = resolve(newInstanceOf(IHttpClient))) {

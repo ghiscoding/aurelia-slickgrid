@@ -9,6 +9,7 @@ export class Example29 {
   gridOptions!: GridOption;
   columnDefinitions: Column[] = [];
   dataset: any[] = [];
+  hideSubTitle = false;
 
   constructor() {
     // define the grid options & columns and then create the grid itself

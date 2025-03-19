@@ -32,6 +32,7 @@ export class Example20 {
   gridOptions!: GridOption;
   frozenColumnCount = 2;
   frozenRowCount = 3;
+  hideSubTitle = false;
   isFrozenBottom = false;
   dataset: any[] = [];
   slickEventHandler: any;

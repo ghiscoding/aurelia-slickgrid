@@ -37,6 +37,7 @@ export class Example33 {
   gridOptions!: GridOption;
   editCommandQueue: EditCommand[] = [];
   dataset: any[] = [];
+  hideSubTitle = false;
   serverApiDelay = 500;
 
   constructor() {

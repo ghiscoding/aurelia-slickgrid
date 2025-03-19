@@ -34,6 +34,7 @@ export class Example9 {
   dataset: any[] = [];
   dataView!: SlickDataView;
   gridObj!: SlickGrid;
+  hideSubTitle = false;
   selectedLanguage: string;
 
   constructor(private readonly i18n: I18N = resolve(I18N)) {
