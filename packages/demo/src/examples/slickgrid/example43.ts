@@ -447,5 +447,4 @@ export class Example43 {
     this.metadata = newMetadata;
     this.aureliaGrid.slickGrid.remapAllColumnsRowSpan();
     this.aureliaGrid.slickGrid.invalidate();
-  }
 }
