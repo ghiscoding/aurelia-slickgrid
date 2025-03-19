@@ -83,6 +83,17 @@
             Use Inner Grid State/Presets
           </span>
         </label>
+
+        <label class="checkbox-inline control-label ms-2" for="useResizeAutoHeight">
+          <input
+            type="checkbox"
+            id="useResizeAutoHeight"
+            data-test="use-auto-height"
+            checked.bind="isUsingAutoHeight"
+            click.trigger="changeUsingResizerAutoHeight()"
+          />
+            Use <code>autoResize.autoHeight</code>
+        </label>
       </span>
     </div>
   </div>
