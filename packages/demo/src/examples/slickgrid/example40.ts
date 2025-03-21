@@ -160,4 +160,11 @@ export class Example40 {
       { columnId: 'title', direction: 'DESC' },
     ]);
   }
+
+  toggleSubTitle() {
+    this.hideSubTitle = !this.hideSubTitle;
+    const action = this.hideSubTitle ? 'add' : 'remove';
+    document.querySelector('.subtitle')?.classList[action]('hidden');
+    this.aureliaGrid.resizerService.resizeGrid(0);
+  }
 }

@@ -14,7 +14,7 @@
       class="ms-2 btn btn-outline-secondary btn-sm btn-icon"
       type="button"
       data-test="toggle-subtitle"
-      click.trigger="hideSubTitle = !hideSubTitle"
+      click.trigger="toggleSubTitle()"
     >
       <span class="mdi mdi-information-outline" title="Toggle example sub-title details"></span>
     </button>
@@ -24,7 +24,7 @@
     </button>
   </h2>
 
-  <div class="subtitle" hidden.bind="hideSubTitle">
+  <div class="subtitle">
     Add functionality to show extra information with a Row Detail View, (<a
       href="https://ghiscoding.gitbook.io/aurelia-slickgrid/grid-functionalities/row-detail"
       target="_blank"

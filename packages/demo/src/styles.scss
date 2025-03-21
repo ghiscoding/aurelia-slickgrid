@@ -3,6 +3,7 @@
 $navbar-height: 56px;
 $side-menu-width: 250px;
 $button-border-color: #ababab;
+$button-style-bg-color: #fff;
 $primary-color: #0e6cfa;
 
 @use 'bootstrap/scss/bootstrap' with (
@@ -12,8 +13,7 @@ $primary-color: #0e6cfa;
 // -- 1. load with modern `@use`
 // @use '@slickgrid-universal/common/dist/styles/sass/slickgrid-theme-bootstrap.scss';
 @use '@slickgrid-universal/common/dist/styles/sass/slickgrid-theme-bootstrap.scss' with (
-  $slick-primary-color: $primary-color,
-  // $slick-input-focus-box-shadow: 0 0 0 0.25rem rgba($primary-color, 0.25),
+  $slick-primary-color: $primary-color // $slick-input-focus-box-shadow: 0 0 0 0.25rem rgba($primary-color, 0.25),
 );
 
 // -- 2. load with legacy `@import`
@@ -23,19 +23,24 @@ $primary-color: #0e6cfa;
 
 :root {
   --ms-choice-border: var(--bs-border-width) solid var(--bs-border-color);
-//   --slick-button-style-bg-color: #fff;
-//   --slick-button-border-color: #c7c7c7;
+  //   --slick-button-style-bg-color: #fff;
+  //   --slick-button-border-color: #c7c7c7;
 }
 
-.btn-group-xs > .btn, .btn-xs {
-  padding  : 1px 5px;
-  font-size  : 12px;
-  line-height  : 1.5;
-  border-radius : 3px;
-  margin: 0;
-  font-size: 12px;
-  height: 22px;
-  vertical-align: middle;
+.bold {
+  font-weight: bold;
+}
+
+.italic {
+  font-style: italic;
+}
+
+.font18 {
+  font-size: 18px;
+}
+
+.hidden {
+  display: none;
 }
 
 .btn-icon {
@@ -48,6 +53,18 @@ $primary-color: #0e6cfa;
   gap: 4px;
 }
 
+.btn-group-xs > .btn,
+.btn-xs {
+  padding: 1px 5px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 3px;
+  margin: 0;
+  font-size: 12px;
+  height: 22px;
+  vertical-align: middle;
+}
+
 .mdi-pencil.pointer:hover {
   color: #00bfff;
 }
@@ -55,67 +72,47 @@ $primary-color: #0e6cfa;
   color: #ff002b;
 }
 
-body {
-  margin: 0;
-}
-.bold {
-  font-weight: bold;
-}
-.italic {
-  font-style: italic;
-}
-.faded {
-  opacity: 0.7;
-}
-.faded:hover {
-  opacity: 1;
-}
-.page-host {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50px;
-  bottom: 0;
-  overflow-x: hidden;
-  overflow-y: auto;
+.body-content {
+  margin-top: $navbar-height;
 }
 
 .lightblue {
   color: lightblue;
 }
+
 .red {
   color: red;
 }
+
 .subtitle {
-  font-size: 15px;
+  font-size: 0.875em;
   font-style: italic;
   color: grey;
   margin-bottom: 10px;
 }
 
-.btn:focus, .btn:active:focus, .btn.active:focus {
-outline: 0 none;
+.faded {
+  opacity: 0.7;
+}
+
+.faded:hover {
+  opacity: 0.9;
+}
+
+section {
+  margin: 0;
 }
 
 /** Sidebar (left) and Content (right) */
 @media (min-width: 1200px) {
   .panel-wm-content .container {
-      width: calc(1170px - $side-menu-width);
+    width: calc(1170px - #{$side-menu-width});
   }
 }
 
 .nav-docs {
   background-color: #fff;
   border-bottom: 1px solid #d6d6d6;
-}
-
-.navbar {
-  .navbar-brand {
-    margin-right: 0px;
-  }
-  .logo {
-    margin: 0 8px;
-  }
 }
 
 .panel-wm {
@@ -136,11 +133,7 @@ outline: 0 none;
 
   .panel-wm-content {
     margin-left: $side-menu-width;
-    padding: 0 20px;
-
-    #demo-container {
-      padding-bottom: 15px;
-    }
+    padding: 0 1rem;
   }
 
   .panel-wm-left {
@@ -157,41 +150,32 @@ outline: 0 none;
     width: $side-menu-width;
   }
 }
-.github-button-container {
-  position: relative;
-  top: -2px;
-  margin: 0 5px;
-}
 
-.homepage-container {
-  width: calc(100% - 250px);
-  margin-left: 250px;
-}
-
-.button-style {
-  cursor: pointer;
-  background-color: white;
-  border: 1px solid #{$button-border-color};
-  border-radius: 2px;
-  justify-content: center;
-  text-align: center;
-  &:hover {
-    border-color: color.adjust($button-border-color, $lightness: -10%);
+.navbar {
+  .navbar-brand {
+    margin-right: 0px;
+  }
+  .logo {
+    margin: 0 8px;
   }
 }
 
+.github-button-container {
+  position: relative;
+  margin: 0 5px;
+}
 
 .slick-dark-mode {
   --slick-button-style-bg-color: #212121;
   --slick-button-border-color: #626262;
   .text-primary {
-    color: #599BFE !important;
+    color: #599bfe !important;
   }
 }
 
 .button-style {
   cursor: pointer;
-  background-color: var(--slick-button-style-bg-color, #fff);
+  background-color: var(--slick-button-style-bg-color, $button-style-bg-color);
   border: 1px solid #{var(--slick-button-border-color, $button-border-color)};
   border-radius: 2px;
   justify-content: center;
@@ -206,6 +190,7 @@ outline: 0 none;
   background-color: #fff;
   /* the height is 100% minus the 2 navbars */
   height: calc(100vh - 56px);
+  padding: 0 10px;
 
   h3 {
     color: #333;
@@ -234,7 +219,8 @@ outline: 0 none;
 }
 
 /* editable field with outline border */
-.slick-cell .editing-field, .slick-cell.selected .editing-field {
+.slick-cell .editing-field,
+.slick-cell.selected .editing-field {
   border: 1px solid #dddbda;
   padding: 3px 5px 3px 4px;
   margin: -2px;

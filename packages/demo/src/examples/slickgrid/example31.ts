@@ -435,6 +435,13 @@ export class Example31 {
     return true;
   }
 
+  toggleSubTitle() {
+    this.hideSubTitle = !this.hideSubTitle;
+    const action = this.hideSubTitle ? 'add' : 'remove';
+    document.querySelector('.subtitle')?.classList[action]('hidden');
+    this.aureliaGrid.resizerService.resizeGrid(0);
+  }
+
   private resetOptions(options: Partial<OdataOption>) {
     this.displaySpinner(true);
     const odataService = this.gridOptions.backendServiceApi!.service as GridOdataService;

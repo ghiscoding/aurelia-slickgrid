@@ -448,4 +448,11 @@ export class Example43 {
     this.aureliaGrid.slickGrid.remapAllColumnsRowSpan();
     this.aureliaGrid.slickGrid.invalidate();
   }
+
+  toggleSubTitle() {
+    this.hideSubTitle = !this.hideSubTitle;
+    const action = this.hideSubTitle ? 'add' : 'remove';
+    document.querySelector('.subtitle')?.classList[action]('hidden');
+    this.aureliaGrid.resizerService.resizeGrid(0);
+  }
 }

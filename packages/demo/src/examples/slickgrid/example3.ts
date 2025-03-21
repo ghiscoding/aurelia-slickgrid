@@ -622,4 +622,11 @@ export class Example3 {
       this.aureliaGrid.slickGrid.gotoCell(command.row, command.cell, false);
     }
   }
+
+  toggleSubTitle() {
+    this.hideSubTitle = !this.hideSubTitle;
+    const action = this.hideSubTitle ? 'add' : 'remove';
+    document.querySelector('.subtitle')?.classList[action]('hidden');
+    this.aureliaGrid.resizerService.resizeGrid(0);
+  }
 }

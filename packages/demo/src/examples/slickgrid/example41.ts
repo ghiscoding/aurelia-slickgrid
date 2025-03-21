@@ -213,4 +213,11 @@ export class Example41 {
     this.aureliaGrid.slickGrid?.setSelectedRows([]);
     this.dataset = [...this.dataset];
   }
+
+  toggleSubTitle() {
+    this.hideSubTitle = !this.hideSubTitle;
+    const action = this.hideSubTitle ? 'add' : 'remove';
+    document.querySelector('.subtitle')?.classList[action]('hidden');
+    this.aureliaGrid.resizerService.resizeGrid(0);
+  }
 }

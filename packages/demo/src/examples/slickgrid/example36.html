@@ -12,13 +12,13 @@
       class="ms-2 btn btn-outline-secondary btn-sm btn-icon"
       type="button"
       data-test="toggle-subtitle"
-      click.trigger="hideSubTitle = !hideSubTitle"
+      click.trigger="toggleSubTitle()"
     >
       <span class="mdi mdi-information-outline" title="Toggle example sub-title details"></span>
     </button>
   </h2>
 
-  <div class="subtitle" hidden.bind="hideSubTitle">
+  <div class="subtitle" >
     Grid with Excel Formulas (<a href="https://ghiscoding.gitbook.io/aurelia-slickgrid/grid-functionalities/export-to-excel#cell-value-parser" target="_blank">Wiki docs</a>).
     Calculate Totals via Formatters in the UI, but use Excel Formula when exporting via <code>excelExportOptions.valueParserCallback</code>
     When Grouped we will also calculate the Group Totals in the UI via Group Formatter and we again use Excel Formula to calculate the Group Totals (sum) dynamically.

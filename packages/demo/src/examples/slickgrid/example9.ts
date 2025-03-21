@@ -261,6 +261,13 @@ export class Example9 {
     }
   }
 
+  toggleSubTitle() {
+    this.hideSubTitle = !this.hideSubTitle;
+    const action = this.hideSubTitle ? 'add' : 'remove';
+    document.querySelector('.subtitle')?.classList[action]('hidden');
+    this.aureliaGrid.resizerService.resizeGrid(0);
+  }
+
   private isObjectEmpty(obj: any) {
     for (const key in obj) {
       if (obj.hasOwnProperty(key) && obj[key] !== '') {

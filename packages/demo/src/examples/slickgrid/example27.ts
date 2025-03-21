@@ -334,4 +334,11 @@ export class Example27 {
   reapplyToggledItems() {
     this.aureliaGrid.treeDataService.applyToggledItemStateChanges(this.treeToggleItems);
   }
+
+  toggleSubTitle() {
+    this.hideSubTitle = !this.hideSubTitle;
+    const action = this.hideSubTitle ? 'add' : 'remove';
+    document.querySelector('.subtitle')?.classList[action]('hidden');
+    this.aureliaGrid.resizerService.resizeGrid(0);
+  }
 }
