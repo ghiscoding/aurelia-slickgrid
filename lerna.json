@@ -19,7 +19,7 @@
       "syncWorkspaceLock": true
     }
   },
-  "changelogPreset": "conventional-changelog-conventionalcommits",
+  "changelogPreset": "conventionalcommits",
   "packages": [
     "packages/aurelia-slickgrid"
   ]
