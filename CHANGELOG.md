@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.13.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.13.1...v8.13.2) (2025-03-29)
+
+### Bug Fixes
+
+* shift + a should not select all cells upwards ([#1334](https://github.com/ghiscoding/aurelia-slickgrid/issues/1334)) ([5327ab5](https://github.com/ghiscoding/aurelia-slickgrid/commit/5327ab5929e34ec1679f5239d4385048d0eb3e9b)) - by @ghiscoding
+
 ## [8.13.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.13.0...v8.13.1) (2025-03-19)
 
 ### Bug Fixes
