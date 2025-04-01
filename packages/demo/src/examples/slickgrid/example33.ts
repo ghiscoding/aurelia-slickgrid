@@ -237,7 +237,7 @@ export class Example33 {
         type: FieldType.string,
         editor: {
           // OR 1- use "fetch client", they are both supported
-          // collectionAsync: fetch(URL_SAMPLE_COLLECTION_DATA),
+          // collectionAsync: fetch(SAMPLE_COLLECTION_DATA_URL),
 
           // OR 2- use a Promise
           collectionAsync: new Promise<any>((resolve) => {
@@ -256,7 +256,7 @@ export class Example33 {
           model: Editors.multipleSelect,
         },
         filter: {
-          // collectionAsync: fetch(URL_SAMPLE_COLLECTION_DATA),
+          // collectionAsync: fetch(SAMPLE_COLLECTION_DATA_URL),
           collectionAsync: new Promise((resolve) => {
             window.setTimeout(() => {
               resolve(Array.from(Array(this.dataset.length).keys()).map(k => ({ value: k, label: `Task ${k}` })));

@@ -14,8 +14,7 @@ import {
 } from 'aurelia-slickgrid';
 
 import './example39.scss';
-
-const sampleDataRoot = 'assets/data';
+import SAMPLE_DATA_URL from './data/customers_100.json?url';
 
 const GRAPHQL_QUERY_DATASET_NAME = 'users';
 const FAKE_SERVER_DELAY = 250;
@@ -84,7 +83,7 @@ export class Example39 {
             property: 'company',
             sortDesc: false
           },
-          collectionAsync: this.http.fetch(`${sampleDataRoot}/customers_100.json`).then(e => e.json()),
+          collectionAsync: this.http.fetch(SAMPLE_DATA_URL).then(e => e.json()),
           filterOptions: {
             filter: true // adds a filter on top of the multi-select dropdown
           } as MultipleSelectOption
@@ -198,7 +197,7 @@ export class Example39 {
       let orderByField = '';
       let orderByDir = '';
 
-      this.http.fetch(`${sampleDataRoot}/customers_100.json`)
+      this.http.fetch(SAMPLE_DATA_URL)
         .then(e => e.json())
         .then((data: any) => {
           let filteredData: Array<{ id: number; name: string; gender: string; company: string; category: { id: number; name: string; }; }> = data;

@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
     "allowJs": true,
-    "target": "es2022",
+    "baseUrl": "./",
     "lib": ["es2022", "DOM"],
-    "module": "esnext",
+    "target": "ESNext",
+    "module": "ESNext",
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
@@ -13,6 +14,9 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noImplicitReturns": false,
+    "paths": {
+      "@/*": ["src/*"]
+    },
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "sourceMap": true,
@@ -21,5 +25,5 @@
       "./node_modules/@types"
     ]
   },
-  "include": ["./src/**/*.ts"]
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.html"]
 }
