@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.13.3](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.13.2...v8.13.3) (2025-04-02)
+
+### Bug Fixes
+
+* findItemInTreeStructure() shouldn't throw w/large dataset ([#1336](https://github.com/ghiscoding/aurelia-slickgrid/issues/1336)) ([7f94b1e](https://github.com/ghiscoding/aurelia-slickgrid/commit/7f94b1ef9ce9cac6ae31690463e2845bc96bbffa)) - by @ghiscoding
+
 ## [8.13.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.13.1...v8.13.2) (2025-03-29)
 
 ### Bug Fixes
