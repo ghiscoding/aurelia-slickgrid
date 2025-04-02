@@ -237,7 +237,7 @@ describe('Example 3 - Grid with Editors', () => {
 
   it('should open the "Prerequisites" Filter and expect to have Task 500 & 101 in the Filter', () => {
     cy.get('div.ms-filter.filter-prerequisites')
-      .trigger('click');
+      .trigger('click', { force: true });
 
     cy.get('.ms-drop')
       .find('span:nth(1)')
