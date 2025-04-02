@@ -21,12 +21,12 @@ import {
 
 import { CustomInputEditor } from './custom-inputEditor';
 import { CustomInputFilter } from './custom-inputFilter';
+import SAMPLE_COLLECTION_DATA_URL from './data/collection_100_numbers.json?url';
+import COUNTRIES_COLLECTION_URL from './data/countries.json?url';
+import COUNTRY_NAMES_URL from './data/country_names.json?url';
 import fetchJsonp from './jsonp';
 
 const NB_ITEMS = 100;
-const URL_SAMPLE_COLLECTION_DATA = 'assets/data/collection_100_numbers.json';
-const URL_COUNTRIES_COLLECTION = 'assets/data/countries.json';
-const URL_COUNTRY_NAMES = 'assets/data/country_names.json';
 
 // you can create custom validator to pass to an inline editor
 const myCustomTitleValidator: EditorValidator = (value: any) => {
@@ -292,7 +292,7 @@ export class Example3 {
           // placeholder: '🔎︎ search city',
 
           // We can use the autocomplete through 3 ways "collection", "collectionAsync" or with your own autocomplete options
-          // collectionAsync: this.http.fetch(URL_COUNTRIES_COLLECTION),
+          // collectionAsync: this.http.fetch(COUNTRIES_COLLECTION_URL),
 
           // OR use the autocomplete through 3 ways "collection", "collectionAsync" or with your own autocomplete options
           // use your own autocomplete options, instead of fetch-jsonp, use HttpClient or FetchClient
@@ -319,12 +319,12 @@ export class Example3 {
         editor: {
           model: Editors.autocompleter,
           customStructure: { label: 'name', value: 'code' },
-          collectionAsync: this.http.fetch(URL_COUNTRIES_COLLECTION),
+          collectionAsync: this.http.fetch(COUNTRIES_COLLECTION_URL),
         },
         filter: {
           model: Filters.autocompleter,
           customStructure: { label: 'name', value: 'code' },
-          collectionAsync: this.http.fetch(URL_COUNTRIES_COLLECTION),
+          collectionAsync: this.http.fetch(COUNTRIES_COLLECTION_URL),
         }
       }, {
         id: 'countryOfOriginName', name: 'Country of Origin Name', field: 'countryOfOriginName',
@@ -333,11 +333,11 @@ export class Example3 {
         minWidth: 100,
         editor: {
           model: Editors.autocompleter,
-          collectionAsync: this.http.fetch(URL_COUNTRY_NAMES),
+          collectionAsync: this.http.fetch(COUNTRY_NAMES_URL),
         },
         filter: {
           model: Filters.autocompleter,
-          collectionAsync: this.http.fetch(URL_COUNTRY_NAMES),
+          collectionAsync: this.http.fetch(COUNTRY_NAMES_URL),
         }
       }, {
         id: 'effort-driven',
@@ -370,10 +370,10 @@ export class Example3 {
           // 3 ways are supported (aurelia-http-client, aurelia-fetch-client OR even Promise)
 
           // 1- USE HttpClient from "aurelia-http-client" to load collection asynchronously
-          // collectionAsync: this.http.createRequest(URL_SAMPLE_COLLECTION_DATA).asGet().send(),
+          // collectionAsync: this.http.createRequest(SAMPLE_COLLECTION_DATA_URL).asGet().send(),
 
           // OR 2- use "aurelia-fetch-client", they are both supported
-          collectionAsync: this.http.fetch(URL_SAMPLE_COLLECTION_DATA),
+          collectionAsync: this.http.fetch(SAMPLE_COLLECTION_DATA_URL),
 
           // OR 3- use a Promise
           // collectionAsync: new Promise<any>((resolve) => {
@@ -400,7 +400,7 @@ export class Example3 {
           model: Editors.multipleSelect,
         },
         filter: {
-          collectionAsync: this.http.fetch(URL_SAMPLE_COLLECTION_DATA),
+          collectionAsync: this.http.fetch(SAMPLE_COLLECTION_DATA_URL),
           // collectionAsync: new Promise((resolve) => {
           //   window.setTimeout(() => {
           //     resolve(Array.from(Array(this.dataset.length).keys()).map(k => ({ value: k, label: `Task ${k}` })));

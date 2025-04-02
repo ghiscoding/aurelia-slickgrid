@@ -20,10 +20,11 @@ import {
   type SearchTerm,
   type VanillaCalendarOption,
 } from 'aurelia-slickgrid';
+
 import './example32.scss'; // provide custom CSS/SASS styling
+import COUNTRIES_COLLECTION_URL from './data/countries.json?url';
 
 const NB_ITEMS = 400;
-const URL_COUNTRIES_COLLECTION = 'assets/data/countries.json';
 
 const customEditableInputFormatter: Formatter = (_row, _cell, value, columnDef, _dataContext, grid) => {
   const gridOptions = grid.getOptions() as GridOption;
@@ -283,7 +284,7 @@ export class Example32 {
           model: Editors.autocompleter,
           massUpdate: true,
           customStructure: { label: 'name', value: 'code' },
-          collectionAsync: this.http.fetch(URL_COUNTRIES_COLLECTION),
+          collectionAsync: this.http.fetch(COUNTRIES_COLLECTION_URL),
         },
         filter: {
           model: Filters.inputText,

@@ -13,8 +13,9 @@ import {
   type Pagination,
 } from 'aurelia-slickgrid';
 
+import SAMPLE_DATA_URL from './data/customers_100.json?url';
+
 const defaultPageSize = 20;
-const sampleDataRoot = 'assets/data';
 const CARET_HTML_ESCAPED = '%5E';
 const PERCENT_HTML_ESCAPED = '%25';
 
@@ -292,7 +293,7 @@ export class Example5 {
       }
 
       // read the json and create a fresh copy of the data that we are free to modify
-      this.http.fetch(`${sampleDataRoot}/customers_100.json`)
+      this.http.fetch(SAMPLE_DATA_URL)
         .then(e => e.json())
         .then((data: any) => {
           // Sort the data

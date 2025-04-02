@@ -11,6 +11,10 @@ describe('Example 3 - Grid with Editors', () => {
     cy.get('h2').should('contain', 'Example 3: Editors / Delete');
   });
 
+  it('should hide sub-title', () => {
+    cy.get('[data-test=toggle-subtitle]').click();
+  });
+
   it('should have exact Column Titles in the grid', () => {
     cy.get('#grid3')
       .find('.slick-header-columns')

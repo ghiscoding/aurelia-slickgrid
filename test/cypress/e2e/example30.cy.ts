@@ -20,6 +20,10 @@ describe('Example 30  Composite Editor Modal', () => {
     cy.get('h2').should('contain', 'Example 30: Composite Editor Modal');
   });
 
+  it('should hide sub-title', () => {
+    cy.get('[data-test=toggle-subtitle]').click();
+  });
+
   it('should have exact Column Pre-Header & Column Header Titles in the grid', () => {
     cy.get('#grid30')
       .find('.slick-header-columns:nth(0)')
@@ -614,7 +618,7 @@ describe('Example 30  Composite Editor Modal', () => {
   });
 
   it('should open Edit Composite Editor from Cell Menu and expect Task 4 on 6th row', () => {
-    cy.get(`[style="top: ${GRID_ROW_HEIGHT * 6}px;"] > .slick-cell:nth(11)`).click();
+    cy.get(`[style="top: ${GRID_ROW_HEIGHT * 6}px;"] > .slick-cell:nth(11)`).click({ force: true });
 
     cy.get('.slick-menu-item .slick-menu-content')
       .first()
@@ -629,7 +633,7 @@ describe('Example 30  Composite Editor Modal', () => {
   });
 
   it('should open Clone Composite Editor from Cell Menu and expect Task 4 on 6th row', () => {
-    cy.get(`[style="top: ${GRID_ROW_HEIGHT * 6}px;"] > .slick-cell:nth(11)`).click();
+    cy.get(`[style="top: ${GRID_ROW_HEIGHT * 6}px;"] > .slick-cell:nth(11)`).click({ force: true });
 
     cy.get('.slick-menu-item .slick-menu-content:nth(1)')
       .should('contain', 'Clone Row')

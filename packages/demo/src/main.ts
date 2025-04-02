@@ -7,7 +7,7 @@ import 'bootstrap';
 import { AureliaSlickGridConfiguration } from 'aurelia-slickgrid';
 import DOMPurify from 'dompurify';
 import { I18nConfiguration } from '@aurelia/i18n';
-import Fetch from 'i18next-fetch-backend';
+// import Fetch from 'i18next-fetch-backend';
 import { RouterConfiguration } from '@aurelia/router';
 
 import { MyApp } from './my-app';
@@ -22,6 +22,9 @@ import { Example19DetailView } from './examples/slickgrid/example19-detail-view'
 import { Example19Preload } from './examples/slickgrid/example19-preload';
 import { Example45DetailView } from './examples/slickgrid/example45-detail-view';
 import { Example45Preload } from './examples/slickgrid/example45-preload';
+
+import localeEn from './assets/i18n/en/aurelia-slickgrid.json';
+import localeFr from './assets/i18n/fr/aurelia-slickgrid.json';
 
 Aurelia
   /*
@@ -47,15 +50,31 @@ Aurelia
   .register(I18nConfiguration.customize((options) => {
     options.translationAttributeAliases = ['i18n', 'tr'];
     options.initOptions = {
-      backend: {
-        loadPath: './assets/i18n/{{lng}}/{{ns}}.json',
+      // backend: {
+      //   loadPath: './assets/i18n/{{lng}}/{{ns}}.json',
+      // },
+      // // resources: {
+      // //   en: { translation: localeEn },
+      // //   fr: { translation: localeFr },
+      // // },
+      // lng: 'en',
+      // fallbackLng: 'en',
+      // ns: ['aurelia-slickgrid'],
+      // defaultNS: 'aurelia-slickgrid',
+      // debug: false,
+      // plugins: [Fetch],
+      resources: {
+        en: { translation: localeEn },
+        fr: { translation: localeFr },
       },
+      //   ns: ['translation'],
+      //   defaultNS: 'translation',
       lng: 'en',
       fallbackLng: 'en',
-      ns: ['aurelia-slickgrid'],
-      defaultNS: 'aurelia-slickgrid',
       debug: false,
-      plugins: [Fetch],
+      interpolation: {
+        escapeValue: false,
+      },
     };
   }))
   .register(AureliaSlickGridConfiguration.customize(config => {

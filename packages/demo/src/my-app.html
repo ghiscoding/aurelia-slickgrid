@@ -4,7 +4,7 @@
       <i class="mdi mdi-github"></i>
       <span>Aurelia-Slickgrid</span>
     </a>
-    <img src="assets/aurelia-logo.png" class="logo" height="35" alt="image">
+    <img src.bind="aureliaLogo" class="logo" height="35" alt="image">
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-target="#navbarContent"
             aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -24,10 +24,6 @@
           <a class="nav-link" href="https://ghiscoding.gitbook.io/aurelia-slickgrid/" target="_blank">
             Documentation
           </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="https://ghiscoding.github.io/Aurelia-Bootstrap-Plugins/"
-             target="_blank">Aurelia-Bootstrap-Plugins</a>
         </li>
         <li class="loader" if.bind="router.isNavigating">
           <i class="mdi mdi-sync mdi-spin mdi-20px"></i>

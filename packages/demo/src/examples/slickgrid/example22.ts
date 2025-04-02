@@ -4,16 +4,9 @@ import { newInstanceOf, resolve } from '@aurelia/kernel';
 import { type AureliaGridInstance, type Column, Filters, type GridOption } from 'aurelia-slickgrid';
 import './example22.scss';
 
-const URL_CUSTOMERS = 'assets/data/customers_100.json';
+import CUSTOMERS_URL from './data/customers_100.json?url';
 
 export class Example22 {
-  title = 'Example 22: Grids in Bootstrap Tabs';
-  subTitle = `This example demonstrate the creation of multiple grids in Bootstrap Tabs
-   <ol>
-    <li>Regular mocked data with javascript</li>
-    <li>Load dataset through Fetch-Client. Also note we need to call a "resizeGrid()" after focusing on this tab</li>
-  </ol>`;
-
   aureliaGrid2!: AureliaGridInstance;
   gridOptions1!: GridOption;
   gridOptions2!: GridOption;
@@ -38,7 +31,7 @@ export class Example22 {
     this.dataset1 = this.mockData();
 
     // load data with Fetch-Client
-    const response2 = await this.http.fetch(URL_CUSTOMERS);
+    const response2 = await fetch(CUSTOMERS_URL);
     this.dataset2 = await response2['json']();
   }
 

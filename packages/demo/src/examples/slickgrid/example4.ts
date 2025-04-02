@@ -1,8 +1,6 @@
 import { IHttpClient } from '@aurelia/fetch-client';
 import { newInstanceOf, resolve } from '@aurelia/kernel';
 import { ExcelExportService } from '@slickgrid-universal/excel-export';
-
-import { CustomInputFilter } from './custom-inputFilter';
 import {
   type AureliaGridInstance,
   type Column,
@@ -17,11 +15,13 @@ import {
   type VanillaCalendarOption,
 } from 'aurelia-slickgrid';
 
+import { CustomInputFilter } from './custom-inputFilter';
+import SAMPLE_COLLECTION_DATA_URL from './data/collection_500_numbers.json?url';
+
 function randomBetween(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 const NB_ITEMS = 10500;
-const URL_SAMPLE_COLLECTION_DATA = 'assets/data/collection_500_numbers.json';
 
 export class Example4 {
   title = 'Example 4: Client Side Sort/Filter';
@@ -104,10 +104,10 @@ export class Example4 {
           // 3 ways are supported (aurelia-http-client, aurelia-fetch-client OR even Promise)
 
           // 1- USE HttpClient from "aurelia-http-client" to load collection asynchronously
-          // collectionAsync: this.http.createRequest(URL_SAMPLE_COLLECTION_DATA).asGet().send(),
+          // collectionAsync: this.http.createRequest(SAMPLE_COLLECTION_DATA_URL).asGet().send(),
 
           // OR 2- use "aurelia-fetch-client", they are both supported
-          collectionAsync: this.http.fetch(URL_SAMPLE_COLLECTION_DATA),
+          collectionAsync: this.http.fetch(SAMPLE_COLLECTION_DATA_URL),
 
           // collectionFilterBy & collectionSortBy accept a single or multiple options
           // we can exclude certains values 365 & 360 from the dropdown filter

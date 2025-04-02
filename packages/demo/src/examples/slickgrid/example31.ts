@@ -15,10 +15,11 @@ import {
   OperatorType,
   type Pagination,
 } from 'aurelia-slickgrid';
+
 import './example31.scss'; // provide custom CSS/SASS styling
+import SAMPLE_DATA_URL from './data/customers_100.json?url';
 
 const defaultPageSize = 20;
-const sampleDataRoot = 'assets/data';
 
 export class Example31 {
   title = 'Example 31: Grid with OData Backend Service using RxJS Observables';
@@ -255,7 +256,7 @@ export class Example31 {
       }
 
       // read the json and create a fresh copy of the data that we are free to modify
-      this.http.fetch(`${sampleDataRoot}/customers_100.json`)
+      this.http.fetch(SAMPLE_DATA_URL)
         .then(e => e.json())
         .then(data => {
           // Sort the data

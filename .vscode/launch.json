@@ -5,28 +5,23 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Launch Edge",
+      "name": "Chrome Debugger",
       "request": "launch",
-      "type": "pwa-msedge",
+      "type": "chrome",
       "url": "http://localhost:9000",
-      "webRoot": "${workspaceRoot}/src",
-      "userDataDir": "${workspaceRoot}/.chrome",
-      "sourceMapPathOverrides": {
-        "webpack:///./src/*": "${webRoot}/*",
-        "webpack://aurelia-slickgrid/./src/*": "${webRoot}/*"
+      "webRoot": "${workspaceRoot}/packages/demo/src",
+      "pathMapping": {
+        "/@fs/": ""
       }
     },
     {
-      "name": "Chrome Debugger",
-      "type": "chrome",
+      "type": "msedge",
       "request": "launch",
-      "breakOnLoad": false,
+      "name": "Ms Edge Debugger",
       "url": "http://localhost:9000",
-      "webRoot": "${workspaceRoot}/src",
-      "userDataDir": "${workspaceRoot}/.chrome",
-      "sourceMapPathOverrides": {
-        "webpack:///./src/*": "${webRoot}/*",
-        "webpack://aurelia-slickgrid/./src/*": "${webRoot}/*"
+      "webRoot": "${workspaceRoot}/packages/demo/src",
+      "pathMapping": {
+        "/@fs/": ""
       }
     },
     {

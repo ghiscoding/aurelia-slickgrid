@@ -15,8 +15,8 @@ import {
 } from 'aurelia-slickgrid';
 
 import './example38.scss';
+import SAMPLE_DATA_URL from './data/customers_100.json?url';
 
-const sampleDataRoot = 'assets/data';
 const CARET_HTML_ESCAPED = '%5E';
 const PERCENT_HTML_ESCAPED = '%25';
 
@@ -255,7 +255,7 @@ export class Example38 {
         throw new Error('Server could not sort using the field "Company"');
       }
 
-      this.http.fetch(`${sampleDataRoot}/customers_100.json`)
+      this.http.fetch(SAMPLE_DATA_URL)
         .then(e => e.json())
         .then((data: any) => {
           // Sort the data

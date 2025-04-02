@@ -25,10 +25,11 @@ import {
   SortComparers,
   type VanillaCalendarOption,
 } from 'aurelia-slickgrid';
+
 import './example30.scss'; // provide custom CSS/SASS styling
+import COUNTRIES_COLLECTION_URL from './data/countries.json?url';
 
 const NB_ITEMS = 500;
-const URL_COUNTRIES_COLLECTION = 'assets/data/countries.json';
 
 /**
  * Check if the current item (cell) is editable or not
@@ -319,7 +320,7 @@ export class Example30 {
           model: Editors.autocompleter,
           massUpdate: true,
           customStructure: { label: 'name', value: 'code' },
-          collectionAsync: this.http.fetch(URL_COUNTRIES_COLLECTION),
+          collectionAsync: this.http.fetch(COUNTRIES_COLLECTION_URL),
           editorOptions: { minLength: 0 }
         },
         filter: {

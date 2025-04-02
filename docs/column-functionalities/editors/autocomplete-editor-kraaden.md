@@ -83,7 +83,7 @@ this.columnDefinitions = [
         showOnFocus: true, // display the list on focus of the autocomplete (without the need to type anything)
       } as AutocompleterOption,
       enableRenderHtml: true, // this flag only works with a fixed Collection
-      // collectionAsync: this.http.get(URL_COUNTRIES_COLLECTION),
+      // collectionAsync: this.http.get(COUNTRIES_COLLECTION_URL),
       collection: [
         { value: '', label: '' },
         { value: true, label: 'True', labelPrefix: `<i class="mdi mdi-plus"></i> ` },
