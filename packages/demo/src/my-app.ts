@@ -1,10 +1,13 @@
 import { type IRoute } from '@aurelia/router';
-
+// @ts-ignore
+import AureliaLogo from './assets/aurelia-logo.png?url';
 import './styles.scss';
+
 export class MyApp {
+  aureliaLogo = AureliaLogo;
   static routes: IRoute[] = [
     { path: '', redirectTo: 'example1' },
-    { path: 'example1', component: import('./examples/slickgrid/example1'), title: '1- Basic Grid / 2 Grids' },
+    { path: 'example1', component: () => import('./examples/slickgrid/example1'), title: '1- Basic Grid / 2 Grids' },
     { path: 'example2', component: () => import('./examples/slickgrid/example2'), title: '2- Formatters' },
     { path: 'example3', component: () => import('./examples/slickgrid/example3'), title: '3- Editors / Delete' },
     { path: 'example4', component: () => import('./examples/slickgrid/example4'), title: '4- Client Side Sort/Filter' },
