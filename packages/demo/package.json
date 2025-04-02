@@ -27,7 +27,7 @@
   "scripts": {
     "dev": "vite",
     "prebuild": "rimraf website",
-    "build": "vite build",
+    "build:demo": "vite build",
     "serve:demo": "vite preview"
   },
   "dependencies": {
@@ -77,7 +77,6 @@
     "postcss-loader": "^8.1.1",
     "rimraf": "^5.0.10",
     "sass": "^1.86.0",
-    "servor": "^4.0.2",
     "ts-node": "^10.9.2",
     "tslib": "^2.8.1",
     "typescript": "^5.8.2",

@@ -36,7 +36,7 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: 'dist',
+    outDir: 'website',
     emptyOutDir: true,
     sourcemap: true
   }
