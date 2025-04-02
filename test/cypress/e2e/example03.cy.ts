@@ -254,7 +254,7 @@ describe('Example 3 - Grid with Editors', () => {
   it('should open the "Prerequisites" Editor and expect to have Task 100 & 101 in the Editor', () => {
     cy.get(`[style="top: ${GRID_ROW_HEIGHT * 0}px;"] > .slick-cell:nth(12)`)
       .should('contain', '')
-      .click();
+      .click({ force: true });
 
     cy.get('.ms-drop')
       .find('span:nth(1)')
