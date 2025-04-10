@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.13.4](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.13.3...v8.13.4) (2025-04-10)
+
+### Bug Fixes
+
+* error in CSS file ([#1339](https://github.com/ghiscoding/aurelia-slickgrid/issues/1339)) ([26347ef](https://github.com/ghiscoding/aurelia-slickgrid/commit/26347ef7b907449896222d3c4d1f5eaae927a86a)) - by @ghiscoding
+
 ## [8.13.3](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.13.2...v8.13.3) (2025-04-02)
 
 ### Bug Fixes
