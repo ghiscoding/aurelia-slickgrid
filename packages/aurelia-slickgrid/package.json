@@ -53,21 +53,21 @@
     "@aurelia/runtime": "^2.0.0-beta.23",
     "@aurelia/runtime-html": "^2.0.0-beta.23",
     "@formkit/tempo": "^0.1.2",
-    "@slickgrid-universal/common": "~5.13.3",
-    "@slickgrid-universal/custom-footer-component": "~5.13.3",
-    "@slickgrid-universal/empty-warning-component": "~5.13.3",
+    "@slickgrid-universal/common": "~5.13.4",
+    "@slickgrid-universal/custom-footer-component": "~5.13.4",
+    "@slickgrid-universal/empty-warning-component": "~5.13.4",
     "@slickgrid-universal/event-pub-sub": "~5.13.0",
-    "@slickgrid-universal/pagination-component": "~5.13.3",
-    "@slickgrid-universal/row-detail-view-plugin": "~5.13.3",
+    "@slickgrid-universal/pagination-component": "~5.13.4",
+    "@slickgrid-universal/row-detail-view-plugin": "~5.13.4",
     "@slickgrid-universal/utils": "~5.12.0",
     "dequal": "^2.0.3",
     "sortablejs": "^1.15.6"
   },
   "devDependencies": {
-    "dompurify": "^3.2.4",
+    "dompurify": "^3.2.5",
     "native-copyfiles": "^0.3.2",
     "rimraf": "^5.0.10",
     "tslib": "^2.8.1",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.3"
   }
 }
