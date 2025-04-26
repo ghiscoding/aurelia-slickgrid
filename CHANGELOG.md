@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.14.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.13.4...v8.14.0) (2025-04-26)
+
+### Features
+
+* allow providing custom date format via base Date Formatter ([#1345](https://github.com/ghiscoding/aurelia-slickgrid/issues/1345)) ([cadfb9b](https://github.com/ghiscoding/aurelia-slickgrid/commit/cadfb9b7d04cd56ea45b388da2da3e1fba0f3ee4)) - by @ghiscoding
+* **filter:** add `collectionLazy` callback to Column Filter ([#1344](https://github.com/ghiscoding/aurelia-slickgrid/issues/1344)) ([c5e4837](https://github.com/ghiscoding/aurelia-slickgrid/commit/c5e48373271b9cd267c279fb0940bb8ae53ae8dc)) - by @ghiscoding
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies ([#1342](https://github.com/ghiscoding/aurelia-slickgrid/issues/1342)) ([25e86eb](https://github.com/ghiscoding/aurelia-slickgrid/commit/25e86eb3826f10b3004761d3d2197d9071bb9277)) - by @renovate-bot
+
 ## [8.13.4](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.13.3...v8.13.4) (2025-04-10)
 
 ### Bug Fixes

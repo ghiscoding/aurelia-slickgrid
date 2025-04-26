@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.14.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.13.4...v8.14.0) (2025-04-26)
+
+### Features
+
+* **filter:** add `collectionLazy` callback to Column Filter ([#1344](https://github.com/ghiscoding/aurelia-slickgrid/issues/1344)) ([c5e4837](https://github.com/ghiscoding/aurelia-slickgrid/commit/c5e48373271b9cd267c279fb0940bb8ae53ae8dc)) - by @ghiscoding
+
 ## [8.13.4](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.13.3...v8.13.4) (2025-04-10)
 
 ### Bug Fixes
