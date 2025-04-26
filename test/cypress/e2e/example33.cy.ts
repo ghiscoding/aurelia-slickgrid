@@ -1,5 +1,18 @@
 describe('Example 33 - Regular & Custom Tooltips', () => {
-  const titles = ['', 'Title', 'Duration', 'Description', 'Description 2', 'Cost', '% Complete', 'Start', 'Finish', 'Effort Driven', 'Prerequisites', 'Action'];
+  const titles = [
+    '',
+    'Title',
+    'Duration',
+    'Description',
+    'Description 2',
+    'Cost',
+    '% Complete',
+    'Start',
+    'Finish',
+    'Effort Driven',
+    'Prerequisites',
+    'Action',
+  ];
   const GRID_ROW_HEIGHT = 33;
 
   it('should display Example title', () => {
@@ -15,7 +28,7 @@ describe('Example 33 - Regular & Custom Tooltips', () => {
   });
 
   it('should change server delay to 10ms for faster testing', () => {
-    cy.get('[data-test="server-delay"]').type('{backspace}{backspace}{backspace}10');
+    cy.get('[data-test="server-delay"]').clear().type('50');
   });
 
   it('should mouse over 1st row checkbox column and NOT expect any tooltip to show since it is disabled on that column', () => {
@@ -98,8 +111,11 @@ describe('Example 33 - Regular & Custom Tooltips', () => {
     cy.get('@desc6-cell').trigger('mouseover');
 
     cy.get('.slick-custom-tooltip').should('be.visible');
-    cy.get('.slick-custom-tooltip').should('not.contain', `regular tooltip (from title attribute)\nTask 6 cell value:\n\nThis is a sample task description.\nIt can be multiline\n\nAnother line...`);
-    cy.get('.slick-custom-tooltip').should('contain', `This is a sample task description.\nIt can be multiline\n\nAnother line...`);
+    cy.get('.slick-custom-tooltip').should(
+      'not.contain',
+      'regular tooltip (from title attribute)\nTask 6 cell value:\n\nThis is a sample task description.\nIt can be multiline\n\nAnother line...'
+    );
+    cy.get('.slick-custom-tooltip').should('contain', 'This is a sample task description.\nIt can be multiline\n\nAnother line...');
 
     cy.get('@desc6-cell').trigger('mouseout');
   });
@@ -110,7 +126,10 @@ describe('Example 33 - Regular & Custom Tooltips', () => {
     cy.get('@desc2-5-cell').trigger('mouseover');
 
     cy.get('.slick-custom-tooltip').should('be.visible');
-    cy.get('.slick-custom-tooltip').should('contain', `regular tooltip (from title attribute)\nTask 6 cell value:\n\nThis is a sample task description.\nIt can be multiline\n\nAnother line...`);
+    cy.get('.slick-custom-tooltip').should(
+      'contain',
+      'regular tooltip (from title attribute)\nTask 6 cell value:\n\nThis is a sample task description.\nIt can be multiline\n\nAnother line...'
+    );
 
     cy.get('@desc2-5-cell').trigger('mouseout');
   });
@@ -189,19 +208,30 @@ describe('Example 33 - Regular & Custom Tooltips', () => {
     cy.get('@finish-filter').trigger('mouseout');
   });
 
+  it('should open PreRequisite dropdown and expect it be lazily loaded', () => {
+    cy.get('.slick-headerrow-columns .slick-headerrow-column:nth(10)').as('checkbox10-header');
+    cy.get('@checkbox10-header').click();
+    cy.get('[data-test="alert-lazy"]').should('be.visible');
+    cy.wait(50);
+    cy.get('@checkbox10-header').click();
+    cy.get('[data-test="alert-lazy"]').should('not.be.visible');
+  });
+
   it('should mouse over header-row (filter) Prerequisite column and expect to see tooltip of selected filter options', () => {
-    cy.get(`.slick-headerrow-columns .slick-headerrow-column:nth(10)`).as('checkbox10-header');
+    cy.get('.slick-headerrow-columns .slick-headerrow-column:nth(10)').as('checkbox10-header');
     cy.get('@checkbox10-header').trigger('mouseover');
 
-    cy.get('.filter-prerequisites .ms-choice span').contains('15 of 500 selected');
+    cy.get('.filter-prerequisites .ms-choice span').contains('15 of 1000 selected');
     cy.get('.slick-custom-tooltip').should('be.visible');
-    cy.get('.slick-custom-tooltip').contains('Task 1, Task 3, Task 5, Task 7, Task 9, Task 12, Task 15, Task 18, Task 21, Task 25, Task 28, Task 29, Task 30, Task 32, Task 34');
+    cy.get('.slick-custom-tooltip').contains(
+      'Task 1, Task 3, Task 5, Task 7, Task 9, Task 12, Task 15, Task 18, Task 21, Task 25, Task 28, Task 29, Task 30, Task 32, Task 34'
+    );
 
     cy.get('@checkbox10-header').trigger('mouseout');
   });
 
   it('should mouse over header title on 1st column with checkbox and NOT expect any tooltip to show since it is disabled on that column', () => {
-    cy.get(`.slick-header-columns .slick-header-column:nth(0)`).as('checkbox-header');
+    cy.get('.slick-header-columns .slick-header-column:nth(0)').as('checkbox-header');
     cy.get('@checkbox-header').trigger('mouseover');
 
     cy.get('.slick-custom-tooltip').should('not.exist');
@@ -209,7 +239,7 @@ describe('Example 33 - Regular & Custom Tooltips', () => {
   });
 
   it('should mouse over header title on 2nd column with Title name and expect a tooltip to show rendered from an headerFormatter', () => {
-    cy.get(`.slick-header-columns .slick-header-column:nth(1)`).as('checkbox0-header');
+    cy.get('.slick-header-columns .slick-header-column:nth(1)').as('checkbox0-header');
     cy.get('@checkbox0-header').trigger('mouseover');
 
     cy.get('.slick-custom-tooltip').should('be.visible');
@@ -222,7 +252,7 @@ describe('Example 33 - Regular & Custom Tooltips', () => {
   });
 
   it('should mouse over header title on 2nd column with Finish name and NOT expect any tooltip to show since it is disabled on that column', () => {
-    cy.get(`.slick-header-columns .slick-header-column:nth(8)`).as('finish-header');
+    cy.get('.slick-header-columns .slick-header-column:nth(8)').as('finish-header');
     cy.get('@finish-header').trigger('mouseover');
 
     cy.get('.slick-custom-tooltip').should('not.exist');
@@ -231,27 +261,16 @@ describe('Example 33 - Regular & Custom Tooltips', () => {
 
   it('should click Prerequisite editor of 1st row (Task 2) and expect Task1 & 2 to be selected in the multiple-select drop', () => {
     cy.get(`[style="top: ${GRID_ROW_HEIGHT * 0}px;"] > .slick-cell:nth(10)`).as('prereq-cell');
-    cy.get('@prereq-cell')
-      .should('contain', 'Task 2, Task 1')
-      .click();
+    cy.get('@prereq-cell').should('contain', 'Task 2, Task 1').click();
 
-    cy.get('div.ms-drop[data-name=editor-prerequisites]')
-      .find('li.selected')
-      .should('have.length', 2);
+    cy.get('div.ms-drop[data-name=editor-prerequisites]').find('li.selected').should('have.length', 2);
 
-    cy.get('div.ms-drop[data-name=editor-prerequisites]')
-      .find('li.selected:nth(0) span')
-      .should('contain', 'Task 1');
+    cy.get('div.ms-drop[data-name=editor-prerequisites]').find('li.selected:nth(0) span').should('contain', 'Task 1');
 
-    cy.get('div.ms-drop[data-name=editor-prerequisites]')
-      .find('li.selected:nth(1) span')
-      .should('contain', 'Task 2');
+    cy.get('div.ms-drop[data-name=editor-prerequisites]').find('li.selected:nth(1) span').should('contain', 'Task 2');
 
-    cy.get('div.ms-drop[data-name=editor-prerequisites]')
-      .find('.ms-ok-button')
-      .click();
+    cy.get('div.ms-drop[data-name=editor-prerequisites]').find('.ms-ok-button').click();
 
-    cy.get('div.ms-drop[data-name=editor-prerequisites]')
-      .should('not.exist');
+    cy.get('div.ms-drop[data-name=editor-prerequisites]').should('not.exist');
   });
 });
