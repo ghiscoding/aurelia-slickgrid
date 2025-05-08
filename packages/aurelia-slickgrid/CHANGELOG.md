@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.14.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.14.0...v8.14.1) (2025-05-08)
+
+### Bug Fixes
+
+* Row Detail open/close multiple times should always re-render ([#1349](https://github.com/ghiscoding/aurelia-slickgrid/issues/1349)) ([fe9d56f](https://github.com/ghiscoding/aurelia-slickgrid/commit/fe9d56ff3de379bf8697f2609300ea5ab2925d68)) - by @ghiscoding
+
 ## [8.14.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v8.13.4...v8.14.0) (2025-04-26)
 
 ### Features
