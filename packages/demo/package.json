@@ -62,7 +62,7 @@
   "devDependencies": {
     "@aurelia/testing": "^2.0.0-beta.24",
     "@aurelia/ts-jest": "^2.0.0-beta.24",
-    "@aurelia/vite-plugin": "2.0.0-beta.23",
+    "@aurelia/vite-plugin": "^2.0.0-beta.24",
     "@types/fnando__sparkline": "^0.3.7",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.15.2",

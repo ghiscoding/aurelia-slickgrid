@@ -1,5 +1,4 @@
 import type { ICollectionObserver, ICollectionSubscriber } from '@aurelia/runtime';
-import type { RefBinding } from '@aurelia/runtime-html';
 import { bindable, BindingMode, customElement, IContainer, IEventAggregator, type IDisposable, IObserverLocator, resolve } from 'aurelia';
 import { dequal } from 'dequal/lite';
 import type {
@@ -71,7 +70,7 @@ const WARN_NO_PREPARSE_DATE_SIZE = 10000; // data size to warn user when pre-par
   <au-slot name="slickgrid-header"></au-slot>
 
   <div id.bind="gridId" class="slickgrid-container"
-    ref="gridContainerRef">
+    ref="gridContainer">
   </div>
 
   <!-- Footer slot if you need to create a complex custom footer -->
@@ -126,7 +125,7 @@ export class AureliaSlickgridCustomElement {
   extensionUtility: ExtensionUtility;
   filterFactory!: FilterFactory;
   filterService: FilterService;
-  gridContainerRef: RefBinding;
+  gridContainer!: HTMLDivElement;
   gridEventService: GridEventService;
   gridService: GridService;
   gridStateService: GridStateService;
@@ -359,8 +358,7 @@ export class AureliaSlickgridCustomElement {
     }
 
     // build SlickGrid Grid, also user might optionally pass a custom dataview (e.g. remote model)
-    this.grid = new SlickGrid(this.gridContainerRef.target as HTMLElement, this.customDataView || this.dataview, this._columnDefinitions, this.gridOptions, this._eventPubSubService);
-    this.sharedService.dataView = this.dataview;
+    this.grid = new SlickGrid(this.gridContainer, this.customDataView || this.dataview, this._columnDefinitions, this.gridOptions, this._eventPubSubService); this.sharedService.dataView = this.dataview;
     this.sharedService.slickGrid = this.grid;
     this.sharedService.gridContainerElement = this.elm as HTMLDivElement;
     if (this.groupItemMetadataProvider) {
