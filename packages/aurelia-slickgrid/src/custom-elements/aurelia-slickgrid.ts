@@ -125,6 +125,7 @@ export class AureliaSlickgridCustomElement {
   extensionUtility: ExtensionUtility;
   filterFactory!: FilterFactory;
   filterService: FilterService;
+  gridContainer!: HTMLDivElement;
   gridEventService: GridEventService;
   gridService: GridService;
   gridStateService: GridStateService;
@@ -135,7 +136,6 @@ export class AureliaSlickgridCustomElement {
   sharedService: SharedService;
   sortService: SortService;
   treeDataService: TreeDataService;
-  gridContainer!: HTMLDivElement;
 
   @bindable({ mode: BindingMode.twoWay }) columnDefinitions: Column[] = [];
   @bindable({ mode: BindingMode.twoWay }) element!: Element;
@@ -358,8 +358,7 @@ export class AureliaSlickgridCustomElement {
     }
 
     // build SlickGrid Grid, also user might optionally pass a custom dataview (e.g. remote model)
-    this.grid = new SlickGrid(this.gridContainer, this.customDataView || this.dataview, this._columnDefinitions, this.gridOptions, this._eventPubSubService);
-    this.sharedService.dataView = this.dataview;
+    this.grid = new SlickGrid(this.gridContainer, this.customDataView || this.dataview, this._columnDefinitions, this.gridOptions, this._eventPubSubService); this.sharedService.dataView = this.dataview;
     this.sharedService.slickGrid = this.grid;
     this.sharedService.gridContainerElement = this.elm as HTMLDivElement;
     if (this.groupItemMetadataProvider) {
