@@ -10,11 +10,11 @@
 [![jest](https://jestjs.io/img/jest-badge.svg)](https://github.com/facebook/jest)
 <!-- [![codecov](https://codecov.io/gh/ghiscoding/aurelia-slickgrid/branch/master/graph/badge.svg)](https://codecov.io/gh/ghiscoding/aurelia-slickgrid) -->
 
-## Project moved under [Slickgrid-Universal](https://github.com/ghiscoding/slickgrid-universal)
+## Project is moving under [Slickgrid-Universal](https://github.com/ghiscoding/slickgrid-universal) repo
 > [!CAUTION]
-> This project (and all other supported frameworks) were moved directly into the [Slickgrid-Universal](https://github.com/ghiscoding/slickgrid-universal) project.
-> Any new code change will now happen directly under Slickgrid-Universal and no more code will be pushed in here
-> Aurelia-Slickgrid installation remains the same `npm install aurelia-slickgrid`, head over [Slickgrid-Universal](https://github.com/ghiscoding/slickgrid-universal) for more details.
+> This project (and all other supported frameworks) got moved into the [Slickgrid-Universal](https://github.com/ghiscoding/slickgrid-universal) project.
+> From v9.0 and above, any new code change will happen stricly under the [Slickgrid-Universal](https://github.com/ghiscoding/slickgrid-universal) project and no longer in here.
+> Note that Aurelia-Slickgrid installation remains the same `npm install aurelia-slickgrid`, head over to [Slickgrid-Universal](https://github.com/ghiscoding/slickgrid-universal) for more details.
 
 ### Brief introduction
 One of the best JavasSript data grid [SlickGrid](https://github.com/mleibman/SlickGrid), which was originally developed by @mleibman, is now available to the Aurelia world. SlickGrid beats most other data grids in terms of features, customizability & performance (running smoothly with even a million rows). Aurelia-Slickgrid is a wrapper on top of [Slickgrid-Universal](https://github.com/ghiscoding/slickgrid-universal/) (which is a dependency), in the early beginning we used the `6pac/SlickGrid` fork but that was dropped in >=[v7.0](https://github.com/ghiscoding/aurelia-slickgrid/releases/tag/v7.0.3) since Slickgrid-Universal is now a standalone project. SlickGrid was also recently rewritten with browser native code (no more ~jQuery~ 🎉).
