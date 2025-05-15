@@ -10,11 +10,11 @@
 [![jest](https://jestjs.io/img/jest-badge.svg)](https://github.com/facebook/jest)
 <!-- [![codecov](https://codecov.io/gh/ghiscoding/aurelia-slickgrid/branch/master/graph/badge.svg)](https://codecov.io/gh/ghiscoding/aurelia-slickgrid) -->
 
-## Project is moving under [Slickgrid-Universal](https://github.com/ghiscoding/slickgrid-universal) repo
+## Project got moved under [Slickgrid-Universal](https://github.com/ghiscoding/slickgrid-universal) repo
 > [!CAUTION]
 > This project (and all other supported frameworks) got moved into the [Slickgrid-Universal](https://github.com/ghiscoding/slickgrid-universal) project.
 > From v9.0 and above, any new code change will happen strictly and only under the [Slickgrid-Universal](https://github.com/ghiscoding/slickgrid-universal) project and no longer in here.
-> Note that Aurelia-Slickgrid installation remains the same `npm install aurelia-slickgrid`, head over to [Slickgrid-Universal](https://github.com/ghiscoding/slickgrid-universal) for more details.
+> Note that Aurelia-Slickgrid installation remains the same as before `npm install aurelia-slickgrid`, head over to [Slickgrid-Universal](https://github.com/ghiscoding/slickgrid-universal) for more details and latest codebase.
 
 ### Brief introduction
 One of the best JavasSript data grid [SlickGrid](https://github.com/mleibman/SlickGrid), which was originally developed by @mleibman, is now available to the Aurelia world. SlickGrid beats most other data grids in terms of features, customizability & performance (running smoothly with even a million rows). Aurelia-Slickgrid is a wrapper on top of [Slickgrid-Universal](https://github.com/ghiscoding/slickgrid-universal/) (which is a dependency), in the early beginning we used the `6pac/SlickGrid` fork but that was dropped in >=[v7.0](https://github.com/ghiscoding/aurelia-slickgrid/releases/tag/v7.0.3) since Slickgrid-Universal is now a standalone project. SlickGrid was also recently rewritten with browser native code (no more ~jQuery~ 🎉).
@@ -43,6 +43,7 @@ npm install @slickgrid-universal/excel-export
 
 | Aurelia-Slickgrid | Aurelia version | Migration Guide | Notes |
 |-------------------|-----------------|-----------------|------|
+| 9.x               | Aurelia 2       | [Migration 9.x](https://ghiscoding.gitbook.io/aurelia-slickgrid/migrations/migration-to-9.x)     | ESM-Only and project move [9.x](https://github.com/ghiscoding/slickgrid-universal/releases/tag/v9.0.0) |
 | 8.x               | Aurelia 2       | [Migration 8.x](https://ghiscoding.gitbook.io/aurelia-slickgrid/migrations/migration-to-8.x)     | modern UI / Dark Mode, requires Slickgrid-Universal [5.x](https://github.com/ghiscoding/slickgrid-universal/releases/tag/v5.0.0) |
 | 7.x               | Aurelia 2       | [Migration 7.x](https://ghiscoding.gitbook.io/aurelia-slickgrid/migrations/migration-to-7.x)     | merge SlickGrid into Slickgrid-Universal, requires Slickgrid-Universal [4.x](https://github.com/ghiscoding/slickgrid-universal/releases/tag/v4.0.2) |
 | 6.x               | 1.x             | [Migration 6.x](https://github.com/ghiscoding/aurelia-slickgrid/wiki/Migration-to-6.x)     | removal of jQuery (now uses browser native code), requires Slickgrid-Universal [3.x](https://github.com/ghiscoding/slickgrid-universal/releases/tag/v3.0.0) |
