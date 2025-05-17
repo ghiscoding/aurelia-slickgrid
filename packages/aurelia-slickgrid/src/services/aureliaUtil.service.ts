@@ -15,6 +15,7 @@ export class AureliaUtilService {
       const parentBindable = bindableData?.parent ? 'parent.bind="bindableData.parent"' : '';
 
       targetElement.innerHTML = `<${def.name} model.bind="bindableData.model" ${addonBindable} ${gridBindable} ${dataViewBindable} ${parentBindable}></${def.name}>`.trim();
+      delete (targetElement as any)['$au']?.['au:resource:custom-element'];
 
       return await this.au.enhance({
         host: targetElement,
