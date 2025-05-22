@@ -3,6 +3,7 @@ import {
   type AureliaGridInstance,
   AureliaUtilService,
   type Column,
+  type CreatedView,
   type EditCommand,
   Editors,
   FieldType,
@@ -45,6 +46,7 @@ export class Example26 {
   </ul>
   `;
   private _commandQueue: EditCommand[] = [];
+  private _slots: CreatedView[] = [];
   aureliaGrid!: AureliaGridInstance;
   gridOptions!: GridOption;
   columnDefinitions: Column[] = [];
@@ -332,13 +334,28 @@ export class Example26 {
     return true;
   }
 
-  renderAureliaComponent(cellNode: HTMLElement, _row: number, dataContext: any, colDef: Column) {
+  async renderAureliaComponent(cellNode: HTMLElement, _row: number, dataContext: any, colDef: Column) {
     if (colDef.params.viewModel && cellNode) {
       const bindableData = {
         model: dataContext,
         grid: this.aureliaGrid.slickGrid,
       } as ViewModelBindableInputData;
-      this.aureliaUtilService.createAureliaViewModelAddToSlot(colDef.params.viewModel, bindableData, cellNode);
+      const slotIdx = this._slots.findIndex(obj => obj.id === dataContext.id);
+      const slotObj = this._slots[slotIdx];
+      if (slotObj?.controller) {
+        await slotObj.controller.deactivate(slotObj.controller, slotObj?.controller.parent ?? null);
+        this._slots.slice(slotIdx, 1);
+      }
+      const comp = await this.aureliaUtilService.createAureliaViewModelAddToSlot(colDef.params.viewModel, bindableData, cellNode);
+      if (!slotObj) {
+        const viewInfo: CreatedView = {
+          id: dataContext.id,
+          dataContext,
+          root: comp,
+          controller: comp.controller
+        };
+        this._slots.push(viewInfo);
+      }
     }
   }
 

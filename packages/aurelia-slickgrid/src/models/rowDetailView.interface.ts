@@ -1,5 +1,6 @@
 import type { RowDetailView as UniversalRowDetailView } from '@slickgrid-universal/common';
 import type { Constructable } from 'aurelia';
+import type { AureliaViewOutput } from './aureliaViewOutput.interface';
 
 export interface RowDetailView extends UniversalRowDetailView {
   /**
@@ -13,4 +14,9 @@ export interface RowDetailView extends UniversalRowDetailView {
 
   /** View Model template that will be loaded once the async function finishes */
   viewModel?: Constructable;
+}
+
+export interface CreatedView extends AureliaViewOutput {
+  id: string | number;
+  dataContext: any;
 }

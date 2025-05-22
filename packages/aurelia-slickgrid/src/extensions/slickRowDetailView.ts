@@ -14,16 +14,11 @@ import { SlickRowDetailView as UniversalSlickRowDetailView } from '@slickgrid-un
 import type { ICustomElementController } from '@aurelia/runtime-html';
 import { type Constructable, resolve, transient } from 'aurelia';
 
-import type { AureliaViewOutput, GridOption, RowDetailView, ViewModelBindableInputData } from '../models/index';
+import type { CreatedView, GridOption, RowDetailView, ViewModelBindableInputData } from '../models/index';
 import { AureliaUtilService } from '../services/aureliaUtil.service';
 
 const ROW_DETAIL_CONTAINER_PREFIX = 'container_';
 const PRELOAD_CONTAINER_PREFIX = 'container_loading';
-
-export interface CreatedView extends AureliaViewOutput {
-  id: string | number;
-  dataContext: any;
-}
 
 @transient()
 export class SlickRowDetailView extends UniversalSlickRowDetailView {
